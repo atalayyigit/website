@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LunaSoft – Microsoft Defender Consulting</title>
+  <meta name="description" content="Professional Microsoft Defender technical support and consulting services. Protect your organization with expert security solutions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <span class="logo-luna">Luna</span><span class="logo-soft">Soft</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#services" data-en="Services" data-tr="Hizmetler">Services</a></li>
+        <li><a href="#why" data-en="Why Us" data-tr="Neden Biz">Why Us</a></li>
+        <li><a href="#about" data-en="About" data-tr="Hakkımızda">About</a></li>
+        <li><a href="#contact" class="nav-cta" data-en="Contact" data-tr="İletişim">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLang()">TR</button>
+        <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <div class="ms-trust-badge">
+        <svg viewBox="0 0 24 24" width="18" height="18"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="13" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="13" width="10" height="10" fill="#00A4EF"/><rect x="13" y="13" width="10" height="10" fill="#FFB900"/></svg>
+        <span data-en="Microsoft 365 Security &amp; Compliance Expert" data-tr="Microsoft 365 Güvenlik ve Uyumluluk Uzmanı">Microsoft 365 Güvenlik ve Uyumluluk Uzmanı</span>
+      </div>
+      <h1 class="hero-title">
+        <span data-en="Unlock the Full Security" data-tr="Microsoft 365 Lisansınızın">Microsoft 365 Lisansınızın</span><br />
+        <span class="accent" data-en="Power of Microsoft 365." data-tr="Güvenlik Gücünü Açığa Çıkarın.">Güvenlik Gücünü Açığa Çıkarın.</span>
+      </h1>
+      <p class="hero-sub" data-en="Your Microsoft 365 license already includes world-class security and compliance tools. We help you deploy, configure, and operate them effectively — so you get real protection, not just a subscription." data-tr="Microsoft 365 lisansınız dünya standartlarında güvenlik ve uyumluluk araçlarını zaten içeriyor. Biz bu araçları sizin için kuruyoruz, yapılandırıyoruz ve etkin biçimde işletilmesini sağlıyoruz — sadece bir abonelik değil, gerçek bir koruma.">Your Microsoft 365 license already includes world-class security and compliance tools. We help you deploy, configure, and operate them effectively — so you get real protection, not just a subscription.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary" data-en="Get Free Consultation" data-tr="Ücretsiz Danışmanlık Al">Get Free Consultation</a>
+        <a href="#services" class="btn-ghost" data-en="Our Services" data-tr="Hizmetlerimiz">Our Services</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">24/7</span>
+          <span class="stat-label" data-en="Technical Support" data-tr="Teknik Destek">Technical Support</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">
+            <svg viewBox="0 0 24 24" fill="none" width="28" style="vertical-align:middle"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#0078D4" stroke-width="1.8" stroke-linejoin="round" fill="rgba(0,120,212,0.15)"/></svg>
+          </span>
+          <span class="stat-label" data-en="License Optimization" data-tr="Lisans Optimizasyonu">Lisans Optimizasyonu</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-shield">
+      <svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 5L10 25V70C10 100 32 125 60 135C88 125 110 100 110 70V25L60 5Z" fill="url(#shieldGrad)" opacity="0.15"/>
+        <path d="M60 5L10 25V70C10 100 32 125 60 135C88 125 110 100 110 70V25L60 5Z" stroke="url(#shieldStroke)" stroke-width="2" fill="none"/>
+        <path d="M45 68L55 78L78 55" stroke="#0078D4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="shieldGrad" x1="10" y1="5" x2="110" y2="135">
+            <stop offset="0%" stop-color="#0078D4"/>
+            <stop offset="100%" stop-color="#00BCF2"/>
+          </linearGradient>
+          <linearGradient id="shieldStroke" x1="10" y1="5" x2="110" y2="135">
+            <stop offset="0%" stop-color="#0078D4"/>
+            <stop offset="100%" stop-color="#00BCF2"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-label" data-en="What We Do" data-tr="Ne Yapıyoruz">What We Do</div>
+      <h2 class="section-title" data-en="Microsoft Security &amp; Compliance Solutions" data-tr="Microsoft Güvenlik ve Uyumluluk Çözümleri">Microsoft Security &amp; Compliance Solutions</h2>
+      <p class="section-sub" data-en="Professional consulting, deployment, and technical support across the Microsoft security and compliance product family." data-tr="Microsoft güvenlik ve uyumluluk ürün ailesinin tamamında profesyonel danışmanlık, kurulum ve teknik destek hizmetleri.">Professional consulting, deployment, and technical support across the Microsoft security and compliance product family.</p>
+
+      <div class="services-grid">
+
+        <div class="service-card featured">
+          <div class="featured-badge" data-en="Most Requested" data-tr="En Çok Talep Edilen">En Çok Talep Edilen</div>
+          <div class="service-icon">
+            <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0078D4" opacity=".12"/><path d="M16 6L8 10V17C8 21.4 11.6 25.5 16 27C20.4 25.5 24 21.4 24 17V10L16 6Z" stroke="#0078D4" stroke-width="1.5" fill="none"/><path d="M12 17L15 20L21 14" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 data-en="Defender for Endpoint" data-tr="Defender for Endpoint">Defender for Endpoint</h3>
+          <p data-en="Deployment, configuration, and optimization of Microsoft Defender for Endpoint to protect all your devices." data-tr="Tüm cihazlarınızı korumak için Microsoft Defender for Endpoint kurulumu, yapılandırması ve optimizasyonu.">Deployment, configuration, and optimization of Microsoft Defender for Endpoint to protect all your devices.</p>
+          <ul class="service-list">
+            <li data-en="EDR configuration &amp; optimization" data-tr="EDR yapılandırma ve optimizasyonu">EDR configuration &amp; optimization</li>
+            <li data-en="Attack surface reduction" data-tr="Saldırı yüzeyini azaltma">Attack surface reduction</li>
+            <li data-en="Incident response" data-tr="Olay müdahalesi">Incident response</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0078D4" opacity=".12"/><circle cx="16" cy="16" r="8" stroke="#0078D4" stroke-width="1.5"/><path d="M13 16l2 2 4-4" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 data-en="Defender for Identity" data-tr="Defender for Identity">Defender for Identity</h3>
+          <p data-en="Detect and investigate advanced threats, compromised identities, and malicious insider actions in your Active Directory environment." data-tr="Active Directory ortamınızdaki gelişmiş tehditleri, güvenliği ihlal edilmiş kimlikleri ve kötü niyetli içeriden eylemleri tespit edin ve araştırın.">Detect and investigate advanced threats, compromised identities, and malicious insider actions in your Active Directory environment.</p>
+          <ul class="service-list">
+            <li data-en="AD security assessment" data-tr="AD güvenlik değerlendirmesi">AD security assessment</li>
+            <li data-en="Lateral movement detection" data-tr="Yanal hareket tespiti">Lateral movement detection</li>
+            <li data-en="Privileged access protection" data-tr="Ayrıcalıklı erişim koruması">Privileged access protection</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0078D4" opacity=".12"/><rect x="8" y="10" width="16" height="12" rx="2" stroke="#0078D4" stroke-width="1.5"/><path d="M12 10V8a4 4 0 018 0v2" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3 data-en="Defender for Office 365" data-tr="Defender for Office 365">Defender for Office 365</h3>
+          <p data-en="Protect your organization against phishing, malware, and business email compromise threats in Microsoft 365." data-tr="Microsoft 365'teki kimlik avı, kötü amaçlı yazılım ve iş e-postası tehditlerinden kurumunuzu koruyun.">Protect your organization against phishing, malware, and business email compromise threats in Microsoft 365.</p>
+          <ul class="service-list">
+            <li data-en="Anti-phishing policies" data-tr="Anti-phishing politikaları">Anti-phishing policies</li>
+            <li data-en="Safe Links &amp; Attachments" data-tr="Güvenli Bağlantılar ve Ekler">Safe Links &amp; Attachments</li>
+            <li data-en="Threat investigation" data-tr="Tehdit araştırması">Threat investigation</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0078D4" opacity=".12"/><path d="M8 22l5-5 4 4 7-9" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 data-en="Microsoft Sentinel" data-tr="Microsoft Sentinel">Microsoft Sentinel</h3>
+          <p data-en="SIEM/SOAR implementation and management for centralized security monitoring and automated response across your environment." data-tr="Ortamınızdaki merkezi güvenlik izleme ve otomatik yanıt için SIEM/SOAR uygulaması ve yönetimi.">SIEM/SOAR implementation and management for centralized security monitoring and automated response across your environment.</p>
+          <ul class="service-list">
+            <li data-en="Workspace setup &amp; data connectors" data-tr="Çalışma alanı kurulumu">Workspace setup &amp; data connectors</li>
+            <li data-en="Custom analytics rules" data-tr="Özel analitik kuralları">Custom analytics rules</li>
+            <li data-en="Playbook automation" data-tr="Playbook otomasyonu">Playbook automation</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0078D4" opacity=".12"/><path d="M16 8v4M16 20v4M8 16h4M20 16h4" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="16" r="3" stroke="#0078D4" stroke-width="1.5"/></svg>
+          </div>
+          <h3 data-en="Security Assessment" data-tr="Güvenlik Değerlendirmesi">Security Assessment</h3>
+          <p data-en="Comprehensive evaluation of your current security posture with actionable recommendations and a prioritized remediation roadmap." data-tr="Mevcut güvenlik durumunuzun kapsamlı değerlendirmesi ve öncelikli iyileştirme yol haritası.">Comprehensive evaluation of your current security posture with actionable recommendations and a prioritized remediation roadmap.</p>
+          <ul class="service-list">
+            <li data-en="Security gap analysis" data-tr="Güvenlik açığı analizi">Security gap analysis</li>
+            <li data-en="Compliance mapping" data-tr="Uyumluluk haritalama">Compliance mapping</li>
+            <li data-en="Remediation roadmap" data-tr="İyileştirme yol haritası">Remediation roadmap</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0078D4" opacity=".12"/><path d="M10 8h12v2H10zM10 13h12v2H10zM10 18h8v2H10z" fill="#0078D4" opacity=".5"/><path d="M22 20l2 2 4-4" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="6" width="16" height="20" rx="2" stroke="#0078D4" stroke-width="1.5" fill="none"/></svg>
+          </div>
+          <h3 data-en="Compliance Solutions" data-tr="Uyumluluk Çözümleri">Compliance Solutions</h3>
+          <p data-en="Protect sensitive data and manage insider risks with Microsoft Purview — covering Information Protection, DLP, and Insider Risk Management." data-tr="Microsoft Purview ile hassas verilerinizi koruyun ve içeriden gelen riskleri yönetin; Information Protection, DLP ve Insider Risk Management çözümlerini kapsıyor.">Protect sensitive data and manage insider risks with Microsoft Purview — covering Information Protection, DLP, and Insider Risk Management.</p>
+          <ul class="service-list">
+            <li data-en="Microsoft Information Protection (MIP)" data-tr="Microsoft Information Protection (MIP)">Microsoft Information Protection (MIP)</li>
+            <li data-en="Data Loss Prevention (DLP)" data-tr="Data Loss Prevention (DLP)">Data Loss Prevention (DLP)</li>
+            <li data-en="Insider Risk Manager" data-tr="Insider Risk Manager">Insider Risk Manager</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0078D4" opacity=".12"/><path d="M10 12h12M10 16h8M10 20h10" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3 data-en="Training &amp; Workshops" data-tr="Eğitim ve Atölyeler">Training &amp; Workshops</h3>
+          <p data-en="Hands-on training sessions to upskill your security team on Microsoft Defender products and best practices." data-tr="Güvenlik ekibinizi Microsoft Defender ürünleri ve en iyi uygulamalar konusunda geliştirmek için uygulamalı eğitim oturumları.">Hands-on training sessions to upskill your security team on Microsoft Defender products and best practices.</p>
+          <ul class="service-list">
+            <li data-en="Product deep-dives" data-tr="Ürün derinlemesine inceleme">Product deep-dives</li>
+            <li data-en="SOC analyst training" data-tr="SOC analist eğitimi">SOC analyst training</li>
+            <li data-en="Custom workshops" data-tr="Özel atölyeler">Custom workshops</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why" id="why">
+    <div class="container">
+      <div class="why-inner">
+        <div class="why-text">
+          <div class="section-label" data-en="Why LunaSoft" data-tr="Neden LunaSoft">Why LunaSoft</div>
+          <h2 class="section-title" data-en="Security expertise you can trust." data-tr="Güvenebileceğiniz güvenlik uzmanlığı.">Security expertise you can trust.</h2>
+          <p data-en="We specialize exclusively in Microsoft security technologies, giving us deep, focused expertise that generalist IT firms simply cannot match." data-tr="Yalnızca Microsoft güvenlik teknolojilerine odaklanıyoruz; bu da genel IT firmalarının sağlayamayacağı derin ve odaklı bir uzmanlık sunmamızı sağlıyor.">We specialize exclusively in Microsoft security technologies, giving us deep, focused expertise that generalist IT firms simply cannot match.</p>
+          <div class="why-features">
+            <div class="why-feature">
+              <div class="why-icon">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#0078D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#0078D4" stroke-width="1.5"/></svg>
+              </div>
+              <div>
+                <h4 data-en="Microsoft-Focused" data-tr="Microsoft Odaklı">Microsoft-Focused</h4>
+                <p data-en="100% focus on Microsoft security ecosystem — no distractions, maximum depth." data-tr="Microsoft güvenlik ekosistemine %100 odak — dağılma yok, maksimum derinlik.">100% focus on Microsoft security ecosystem — no distractions, maximum depth.</p>
+              </div>
+            </div>
+            <div class="why-feature">
+              <div class="why-icon">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#0078D4" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <h4 data-en="Proven Track Record" data-tr="Kanıtlanmış Sicil">Proven Track Record</h4>
+                <p data-en="Hundreds of successful deployments across various industries and company sizes." data-tr="Çeşitli sektörler ve şirket büyüklüklerinde yüzlerce başarılı dağıtım.">Hundreds of successful deployments across various industries and company sizes.</p>
+              </div>
+            </div>
+            <div class="why-feature">
+              <div class="why-icon">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#0078D4" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <h4 data-en="Fast Response Time" data-tr="Hızlı Yanıt Süresi">Fast Response Time</h4>
+                <p data-en="Critical issues are addressed within 1 hour. We are available when you need us most." data-tr="Kritik sorunlar 1 saat içinde çözülür. En çok ihtiyaç duyduğunuzda yanınızdayız.">Critical issues are addressed within 1 hour. We are available when you need us most.</p>
+              </div>
+            </div>
+            <div class="why-feature">
+              <div class="why-icon">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#0078D4" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#0078D4" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <h4 data-en="Dedicated Support" data-tr="Özel Destek">Dedicated Support</h4>
+                <p data-en="A named consultant assigned to your account — not a ticket queue." data-tr="Hesabınıza atanmış bir danışman — bilet kuyruğu değil.">A named consultant assigned to your account — not a ticket queue.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="why-visual">
+          <div class="ms-badge-stack">
+            <div class="ms-badge">
+              <svg viewBox="0 0 24 24" fill="none" width="28"><rect x="2" y="2" width="9" height="9" fill="#F25022"/><rect x="13" y="2" width="9" height="9" fill="#7FBA00"/><rect x="2" y="13" width="9" height="9" fill="#00A4EF"/><rect x="13" y="13" width="9" height="9" fill="#FFB900"/></svg>
+              <span>Microsoft Partner</span>
+            </div>
+            <div class="score-ring">
+              <svg viewBox="0 0 120 120" width="120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#1a2740" stroke-width="8"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#0078D4" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="28" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                <text x="60" y="55" text-anchor="middle" fill="white" font-size="22" font-weight="700">98%</text>
+                <text x="60" y="72" text-anchor="middle" fill="#7a9bc4" font-size="9">Secure Score</text>
+              </svg>
+            </div>
+            <div class="floating-card fc1">
+              <span class="fc-dot green"></span>
+              <span data-en="Threat Blocked" data-tr="Tehdit Engellendi">Threat Blocked</span>
+            </div>
+            <div class="floating-card fc2">
+              <span class="fc-dot blue"></span>
+              <span data-en="Incident Resolved" data-tr="Olay Çözüldü">Incident Resolved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-label" data-en="About Us" data-tr="Hakkımızda">About Us</div>
+      <h2 class="section-title" data-en="Dedicated to Microsoft Security." data-tr="Microsoft Güvenliğine Adanmış.">Dedicated to Microsoft Security.</h2>
+      <p class="section-sub" data-en="LunaSoft is a boutique cybersecurity consultancy based in Turkey, specializing exclusively in Microsoft Defender technologies. We help businesses of all sizes strengthen their security posture, respond to threats, and stay compliant." data-tr="LunaSoft, Türkiye merkezli, yalnızca Microsoft Defender teknolojilerinde uzmanlaşmış bir siber güvenlik danışmanlık firmasıdır. Her ölçekteki işletmenin güvenlik durumunu güçlendirmesine, tehditlere yanıt vermesine ve uyumlu kalmasına yardımcı oluyoruz.">LunaSoft is a boutique cybersecurity consultancy based in Turkey, specializing exclusively in Microsoft Defender technologies. We help businesses of all sizes strengthen their security posture, respond to threats, and stay compliant.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="contact-text">
+          <div class="section-label" data-en="Get In Touch" data-tr="Bize Ulaşın">Get In Touch</div>
+          <h2 class="section-title" data-en="Let's secure your organization." data-tr="Kuruluşunuzu birlikte güvence altına alalım.">Let's secure your organization.</h2>
+          <p data-en="Tell us about your security challenges. We'll get back to you within one business day." data-tr="Güvenlik zorluklarınızı bize anlatın. Bir iş günü içinde size döneceğiz.">Tell us about your security challenges. We'll get back to you within one business day.</p>
+          <div class="contact-info">
+            <div class="contact-item">
+              <svg viewBox="0 0 24 24" fill="none" width="20"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#0078D4" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="#0078D4" stroke-width="1.5"/></svg>
+              <a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a>
+            </div>
+            <div class="contact-item">
+              <svg viewBox="0 0 24 24" fill="none" width="20"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="#0078D4" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" stroke="#0078D4" stroke-width="1.5"/></svg>
+              <span>Turkey</span>
+            </div>
+          </div>
+        </div>
+        <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label data-en="Full Name" data-tr="Ad Soyad">Full Name</label>
+              <input type="text" id="fieldName" placeholder="John Smith" required />
+            </div>
+            <div class="form-group">
+              <label data-en="Company" data-tr="Şirket">Company</label>
+              <input type="text" id="fieldCompany" placeholder="Acme Corp" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-en="Email Address" data-tr="E-posta Adresi">Email Address</label>
+            <input type="email" id="fieldEmail" placeholder="john@company.com" required />
+          </div>
+          <div class="form-group">
+            <label data-en="Service Interested In" data-tr="İlgilenilen Hizmet">Service Interested In</label>
+            <select id="fieldService">
+              <option value="" data-en="Select a service..." data-tr="Hizmet seçin...">Select a service...</option>
+              <option data-en="Defender for Endpoint" data-tr="Defender for Endpoint">Defender for Endpoint</option>
+              <option data-en="Defender for Identity" data-tr="Defender for Identity">Defender for Identity</option>
+              <option data-en="Defender for Office 365" data-tr="Defender for Office 365">Defender for Office 365</option>
+              <option data-en="Microsoft Sentinel" data-tr="Microsoft Sentinel">Microsoft Sentinel</option>
+              <option data-en="Security Assessment" data-tr="Güvenlik Değerlendirmesi">Security Assessment</option>
+              <option data-en="Compliance Solutions" data-tr="Uyumluluk Çözümleri">Compliance Solutions</option>
+              <option data-en="Training &amp; Workshops" data-tr="Eğitim ve Atölyeler">Training &amp; Workshops</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-en="Message" data-tr="Mesaj">Message</label>
+            <textarea rows="4" id="fieldMessage" placeholder="Describe your security needs..." data-en-placeholder="Describe your security needs..." data-tr-placeholder="Güvenlik ihtiyaçlarınızı açıklayın..."></textarea>
+          </div>
+          <button type="submit" class="btn-primary full-width" data-en="Send Message" data-tr="Mesaj Gönder">Mesaj Gönder</button>
+          <div class="form-success" id="formSuccess">
+            <svg viewBox="0 0 24 24" fill="none" width="20"><path d="M9 12l2 2 4-4" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#22c55e" stroke-width="1.5"/></svg>
+            <span data-en="Thank you! We'll be in touch soon." data-tr="Teşekkürler! En kısa sürede iletişime geçeceğiz.">Thank you! We'll be in touch soon.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="#" class="logo"><span class="logo-luna">Luna</span><span class="logo-soft">Soft</span></a>
+          <p data-en="Microsoft Security &amp; Compliance Solutions." data-tr="Microsoft Güvenlik ve Uyumluluk Çözümleri.">Microsoft Security &amp; Compliance Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#services" data-en="Services" data-tr="Hizmetler">Services</a>
+          <a href="#why" data-en="Why Us" data-tr="Neden Biz">Why Us</a>
+          <a href="#about" data-en="About" data-tr="Hakkımızda">About</a>
+          <a href="#contact" data-en="Contact" data-tr="İletişim">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 LunaSoft. <span data-en="All rights reserved." data-tr="Tüm hakları saklıdır.">All rights reserved.</span></span>
+        <span>lunasoft.com.tr</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
