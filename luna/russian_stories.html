@@ -10,6 +10,9 @@
 <link rel="icon" type="image/png" href="assets/luna_512.png" />
 <link rel="apple-touch-icon" href="assets/luna_512.png" />
 
+<!-- Apple Smart App Banner (iOS Safari only) -->
+<meta name="apple-itunes-app" content="app-id=6740998772" />
+
 <!-- Canonical -->
 <link rel="canonical" href="https://lunasoft.com.tr/luna/russian_stories.html" />
 
@@ -395,6 +398,43 @@
   .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
   .foot-links{display:flex;gap:24px}
   .foot-links a:hover{color:var(--navy)}
+
+  /* ---------- Sticky mobile CTA ---------- */
+  .sticky-cta{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:saturate(180%) blur(14px);
+    -webkit-backdrop-filter:saturate(180%) blur(14px);
+    border-top:1px solid var(--line);
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom)) 16px;
+    display:none;align-items:center;gap:12px;
+    box-shadow:0 -8px 24px rgba(10,19,48,.08);
+    transform:translateY(100%);
+    transition:transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .sticky-cta.visible{transform:translateY(0)}
+  .sticky-cta img{width:42px;height:42px;border-radius:10px;flex-shrink:0;object-fit:contain;background:#fff;padding:3px;border:1px solid var(--line)}
+  .sticky-cta .sc-text{flex:1;min-width:0;line-height:1.25}
+  .sticky-cta .sc-title{font-size:14px;font-weight:700;color:var(--navy);letter-spacing:-.01em}
+  .sticky-cta .sc-sub{font-size:12px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sticky-cta .sc-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    background:linear-gradient(135deg,var(--navy) 0%, #14306E 100%);
+    color:#fff;padding:11px 16px;border-radius:11px;
+    font-size:14px;font-weight:700;flex-shrink:0;
+    box-shadow:0 4px 12px rgba(11,31,77,.28);
+  }
+  .sticky-cta .sc-close{
+    width:28px;height:28px;border-radius:50%;
+    display:grid;place-items:center;color:var(--muted);
+    background:transparent;flex-shrink:0;
+  }
+  .sticky-cta .sc-close:hover{background:var(--surface);color:var(--navy)}
+  body.has-sticky{padding-bottom:80px}
+  @media(min-width:768px){
+    .sticky-cta{display:none !important}
+    body.has-sticky{padding-bottom:0}
+  }
 
   /* ---------- Responsive ---------- */
   @media(max-width:980px){
@@ -869,6 +909,22 @@
   </div>
 </footer>
 
+<!-- Sticky mobile CTA bar -->
+<div class="sticky-cta" id="sticky-cta" role="complementary" aria-label="Download Luna app">
+  <img src="assets/luna_512.png" alt="Luna" />
+  <div class="sc-text">
+    <div class="sc-title">Luna · Russian Stories</div>
+    <div class="sc-sub" id="sc-sub">Learn Russian by reading real stories.</div>
+  </div>
+  <a class="sc-btn" id="sc-btn" href="#download" target="_blank" rel="noopener">
+    <span id="sc-btn-text">Get</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+  <button class="sc-close" id="sc-close" aria-label="Dismiss">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
 <script>
   (function(){
     var APP_STORE  = 'https://apps.apple.com/app/id6740998772';
@@ -877,9 +933,51 @@
     var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     var isAndroid = /Android/i.test(ua);
     var target = isIOS ? APP_STORE : (isAndroid ? PLAY_STORE : null);
+
+    // Nav button platform-aware redirect
     if (target) {
       var btn = document.getElementById('nav-download');
       if (btn) { btn.href = target; btn.target = '_blank'; btn.rel = 'noopener'; }
+    }
+
+    // Sticky mobile CTA — only show on actual mobile (iOS or Android)
+    var STORAGE_KEY = 'luna_sticky_dismissed';
+    var bar = document.getElementById('sticky-cta');
+    var scBtn = document.getElementById('sc-btn');
+    var scBtnText = document.getElementById('sc-btn-text');
+    var scSub = document.getElementById('sc-sub');
+    var scClose = document.getElementById('sc-close');
+
+    function showBar(){
+      document.body.classList.add('has-sticky');
+      bar.style.display = 'flex';
+      // tiny delay so the slide-up transition fires
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ bar.classList.add('visible'); });
+      });
+    }
+    function hideBar(){
+      bar.classList.remove('visible');
+      document.body.classList.remove('has-sticky');
+      try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch(e){}
+      setTimeout(function(){ bar.style.display = 'none'; }, 350);
+    }
+
+    var dismissed = false;
+    try { dismissed = sessionStorage.getItem(STORAGE_KEY) === '1'; } catch(e){}
+
+    if (target && !dismissed) {
+      scBtn.href = target;
+      if (isIOS) {
+        scBtnText.textContent = 'App Store';
+        scSub.textContent = 'Free · iPhone & iPad';
+      } else {
+        scBtnText.textContent = 'Google Play';
+        scSub.textContent = 'Free · Android';
+      }
+      // small delay so user sees hero first
+      setTimeout(showBar, 700);
+      scClose.addEventListener('click', hideBar);
     }
   })();
 </script>
