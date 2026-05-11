@@ -1,0 +1,6 @@
+{
+  "name": "luna-api",
+  "version": "1.0.0",
+  "description": "Meta CAPI server-side tracking",
+  "main": "index.js"
+}
