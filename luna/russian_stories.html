@@ -1006,6 +1006,13 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"
       // small delay so user sees hero first
       setTimeout(showBar, 700);
       scClose.addEventListener('click', hideBar);
+
+      scBtn.addEventListener('click', function(){
+        var eid = (isIOS ? 'as_' : 'gp_') + Date.now();
+        var evName = isIOS ? 'AppStoreClick' : 'GooglePlayClick';
+        if (window.gtag) gtag('event', isIOS ? 'appstore_click' : 'googleplay_click', {location:'sticky'});
+        if (window.fbq) fbq('trackCustom', evName, {location:'sticky', content_name:'russian_stories'}, {eventID: eid});
+      });
     }
   })();
 </script>
