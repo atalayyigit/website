@@ -1000,5 +1000,34 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"
   })();
 </script>
 
+<!-- CAPI: Server-side PageView (iOS 14+ desteği) -->
+<script>
+(function() {
+  try {
+    var eventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    var fbc = document.cookie.match(/_fbc=([^;]+)/);
+    var fbp = document.cookie.match(/_fbp=([^;]+)/);
+
+    // Pixel ile aynı event_id (deduplication)
+    if (window.fbq) {
+      fbq('track', 'PageView', {}, { eventID: eventId });
+    }
+
+    // CAPI sunucu taraflı gönderim
+    fetch('/api/capi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_name: 'PageView',
+        event_id: eventId,
+        url: window.location.href,
+        fbc: fbc ? fbc[1] : undefined,
+        fbp: fbp ? fbp[1] : undefined
+      })
+    }).catch(function(){});
+  } catch(e) {}
+})();
+</script>
+
 </body>
 </html>
