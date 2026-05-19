@@ -67,8 +67,8 @@ module.exports = async function (context, req) {
         const ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 
         if (!PIXEL_ID || !ACCESS_TOKEN) {
-            context.log.error('[CAPI] Missing env vars');
-            reply(500, { error: 'Server configuration missing' });
+            context.log.error('[CAPI] Missing env vars', { hasPixelId: !!PIXEL_ID, hasToken: !!ACCESS_TOKEN });
+            reply(500, { error: 'Server configuration missing', detail: 'META_PIXEL_ID or META_ACCESS_TOKEN not set' });
             return;
         }
 
@@ -78,9 +78,18 @@ module.exports = async function (context, req) {
         }
         body = body || {};
 
-        const clientIp = (req.headers['x-forwarded-for'] || '')
-            .split(',')[0]
-            .trim() || req.headers['client-ip'] || '';
+        function pickFirstIp(h) {
+            if (!h) return '';
+            return String(h).split(',')[0].trim();
+        }
+        const clientIp =
+            pickFirstIp(req.headers['x-forwarded-for']) ||
+            pickFirstIp(req.headers['x-azure-clientip']) ||
+            pickFirstIp(req.headers['x-azure-socketip']) ||
+            pickFirstIp(req.headers['x-real-ip']) ||
+            pickFirstIp(req.headers['client-ip']) ||
+            pickFirstIp(req.headers['cf-connecting-ip']) ||
+            '';
 
         const eventPayload = {
             event_name: body.event_name || 'PageView',
@@ -110,13 +119,20 @@ module.exports = async function (context, req) {
             requestBody.test_event_code = body.test_event_code;
         }
 
-        const apiPath = `/v18.0/${PIXEL_ID}/events?access_token=${encodeURIComponent(ACCESS_TOKEN)}`;
-        const result = await postJson('graph.facebook.com', apiPath, requestBody);
+        context.log('[CAPI] Sending event', {
+            event_name: eventPayload.event_name,
+            event_id: eventPayload.event_id,
+            test_event_code: body.test_event_code || null
+        });
+
+        const path = `/v18.0/${PIXEL_ID}/events?access_token=${encodeURIComponent(ACCESS_TOKEN)}`;
+        const result = await postJson('graph.facebook.com', path, requestBody);
 
         if (result.status >= 200 && result.status < 300) {
+            context.log('[CAPI] Success', result.body);
             reply(200, result.body);
         } else {
-            context.log.error('[CAPI] Meta error', result);
+            context.log.error('[CAPI] Meta error', { status: result.status, body: result.body });
             reply(result.status || 502, { error: 'Meta CAPI error', meta: result.body });
         }
     } catch (err) {
