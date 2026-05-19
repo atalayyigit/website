@@ -537,7 +537,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"
 
       <div class="cta-row" id="download">
         <!-- App Store -->
-        <a class="badge" href="https://apps.apple.com/app/id6740998772" aria-label="Download on the App Store" onclick="gtag('event','appstore_click',{location:'hero'});if(window.fbq){var eid='as_'+Date.now();fbq('track','Lead',{content_name:'AppStore',location:'hero'},{eventID:eid});}">
+        <a class="badge" href="https://apps.apple.com/app/id6740998772" aria-label="Download on the App Store" onclick="if(window.trackStoreClick)trackStoreClick('AppStore','hero');">
           <svg width="26" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 1.43c0 1.14-.42 2.21-1.27 3.05-.84.84-1.95 1.27-3.05 1.27-.06-1.04.39-2.13 1.21-2.97.83-.85 1.94-1.34 3.11-1.35zM20.5 17.36c-.69 1.61-1.03 2.32-1.92 3.74-1.24 1.97-2.99 4.43-5.16 4.45-1.93.02-2.43-1.26-5.05-1.25-2.62.01-3.17 1.27-5.1 1.25-2.17-.02-3.83-2.24-5.07-4.21C-3.65 17-3.93 12.4-1.21 9.97c1.55-1.39 3.55-2.2 5.43-2.2 1.91 0 3.11 1.05 4.69 1.05 1.53 0 2.46-1.05 4.67-1.05 1.67 0 3.44.91 4.7 2.49-4.13 2.27-3.46 8.18 2.22 7.1z"/></svg>
           <span>
             <span class="b-sub">Download on the</span>
@@ -545,7 +545,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"
           </span>
         </a>
         <!-- Google Play -->
-        <a class="badge" href="https://play.google.com/store/apps/details?id=com.luna.russianstories" aria-label="Get it on Google Play" onclick="gtag('event','googleplay_click',{location:'hero'});if(window.fbq){var eid='gp_'+Date.now();fbq('track','Lead',{content_name:'GooglePlay',location:'hero'},{eventID:eid});}">
+        <a class="badge" href="https://play.google.com/store/apps/details?id=com.luna.russianstories" aria-label="Get it on Google Play" onclick="if(window.trackStoreClick)trackStoreClick('GooglePlay','hero');">
           <svg width="26" height="30" viewBox="0 0 512 512" aria-hidden="true">
             <defs>
               <linearGradient id="gp1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00A0FF"/><stop offset="1" stop-color="#00E2FF"/></linearGradient>
@@ -899,11 +899,11 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"
     <h2>Start understanding <span class="accent">Russian today.</span></h2>
     <p>Join thousands of learners discovering Russian through the stories they already love.</p>
     <div class="cta-row">
-      <a class="badge" href="https://apps.apple.com/app/id6740998772" aria-label="Download on the App Store" onclick="gtag('event','appstore_click',{location:'cta'});if(window.fbq){var eid='as_'+Date.now();fbq('track','Lead',{content_name:'AppStore',location:'cta'},{eventID:eid});}">
+      <a class="badge" href="https://apps.apple.com/app/id6740998772" aria-label="Download on the App Store" onclick="if(window.trackStoreClick)trackStoreClick('AppStore','cta');">
         <svg width="26" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 1.43c0 1.14-.42 2.21-1.27 3.05-.84.84-1.95 1.27-3.05 1.27-.06-1.04.39-2.13 1.21-2.97.83-.85 1.94-1.34 3.11-1.35zM20.5 17.36c-.69 1.61-1.03 2.32-1.92 3.74-1.24 1.97-2.99 4.43-5.16 4.45-1.93.02-2.43-1.26-5.05-1.25-2.62.01-3.17 1.27-5.1 1.25-2.17-.02-3.83-2.24-5.07-4.21C-3.65 17-3.93 12.4-1.21 9.97c1.55-1.39 3.55-2.2 5.43-2.2 1.91 0 3.11 1.05 4.69 1.05 1.53 0 2.46-1.05 4.67-1.05 1.67 0 3.44.91 4.7 2.49-4.13 2.27-3.46 8.18 2.22 7.1z"/></svg>
         <span><span class="b-sub">Download on the</span><span class="b-main">App Store</span></span>
       </a>
-      <a class="badge" href="https://play.google.com/store/apps/details?id=com.luna.russianstories" aria-label="Get it on Google Play" onclick="gtag('event','googleplay_click',{location:'cta'});if(window.fbq){var eid='gp_'+Date.now();fbq('track','Lead',{content_name:'GooglePlay',location:'cta'},{eventID:eid});}">
+      <a class="badge" href="https://play.google.com/store/apps/details?id=com.luna.russianstories" aria-label="Get it on Google Play" onclick="if(window.trackStoreClick)trackStoreClick('GooglePlay','cta');">
         <svg width="26" height="30" viewBox="0 0 512 512" aria-hidden="true">
           <defs>
             <linearGradient id="gp1b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00A0FF"/><stop offset="1" stop-color="#00E2FF"/></linearGradient>
@@ -1009,40 +1009,72 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"
       scClose.addEventListener('click', hideBar);
 
       scBtn.addEventListener('click', function(){
-        var eid = (isIOS ? 'as_' : 'gp_') + Date.now();
-        var evName = isIOS ? 'AppStoreClick' : 'GooglePlayClick';
-        if (window.gtag) gtag('event', isIOS ? 'appstore_click' : 'googleplay_click', {location:'sticky'});
-        if (window.fbq) fbq('track', 'Lead', {content_name: isIOS ? 'AppStore' : 'GooglePlay', location:'sticky'}, {eventID: eid});
+        if (window.trackStoreClick) trackStoreClick(isIOS ? 'AppStore' : 'GooglePlay', 'sticky');
       });
     }
   })();
 </script>
 
-<!-- CAPI: Server-side PageView (iOS 14+ desteği) -->
+<!-- CAPI: Server-side PageView + Store click helper (Instagram in-app browser desteği) -->
 <script>
 (function() {
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
+    return m ? m[1] : undefined;
+  }
+
+  function sendCAPI(eventName, eventId, extra){
+    try {
+      fetch('/api/capi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          event_name: eventName,
+          event_id: eventId,
+          url: window.location.href,
+          fbc: getCookie('_fbc'),
+          fbp: getCookie('_fbp'),
+          custom_data: extra || {}
+        })
+      }).catch(function(){});
+    } catch(e) {}
+  }
+
+  // Public helper: Tüm App Store / Google Play tıklamaları için
+  // store: 'AppStore' | 'GooglePlay', location: 'hero' | 'cta' | 'sticky'
+  window.trackStoreClick = function(store, location){
+    try {
+      var prefix = (store === 'AppStore') ? 'as_' : 'gp_';
+      var customName = (store === 'AppStore') ? 'AppStoreClick' : 'GooglePlayClick';
+      var leadId = prefix + 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var customId = prefix + 'cc_'  + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var data = { content_name: store, location: location };
+
+      // Google Analytics
+      if (window.gtag) {
+        gtag('event', (store === 'AppStore' ? 'appstore_click' : 'googleplay_click'), { location: location });
+      }
+
+      // Meta Pixel (client) — Instagram in-app browser bunu bloklayabilir
+      if (window.fbq) {
+        fbq('track', 'Lead', data, { eventID: leadId });
+        fbq('trackCustom', customName, data, { eventID: customId });
+      }
+
+      // CAPI (server) — keepalive sayesinde App Store'a yönlenme olsa bile istek tamamlanır
+      sendCAPI('Lead', leadId, data);
+      sendCAPI(customName, customId, data);
+    } catch(e) {}
+  };
+
+  // ---- PageView (mevcut davranış) ----
   try {
     var eventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
-    var fbc = document.cookie.match(/_fbc=([^;]+)/);
-    var fbp = document.cookie.match(/_fbp=([^;]+)/);
-
-    // Pixel ile aynı event_id (deduplication)
     if (window.fbq) {
       fbq('track', 'PageView', {}, { eventID: eventId });
     }
-
-    // CAPI sunucu taraflı gönderim
-    fetch('/api/capi', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_name: 'PageView',
-        event_id: eventId,
-        url: window.location.href,
-        fbc: fbc ? fbc[1] : undefined,
-        fbp: fbp ? fbp[1] : undefined
-      })
-    }).catch(function(){});
+    sendCAPI('PageView', eventId, {});
   } catch(e) {}
 })();
 </script>
