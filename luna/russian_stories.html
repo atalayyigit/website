@@ -1023,6 +1023,37 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"
     return m ? m[1] : undefined;
   }
 
+  function setCookie(name, value, days){
+    try {
+      var d = new Date();
+      d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+      document.cookie = name + '=' + value + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
+    } catch(e) {}
+  }
+
+  // URL'de ?fbclid=... varsa _fbc cookie'si oluştur (Meta Event Match Quality için kritik)
+  // Format: fb.1.<creation_time>.<fbclid>
+  (function captureFbclid(){
+    try {
+      var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+      if (!m) return;
+      var fbclid = m[1];
+      var existing = getCookie('_fbc');
+      if (existing && existing.indexOf(fbclid) !== -1) return; // zaten kaydedilmiş
+      var fbcValue = 'fb.1.' + Date.now() + '.' + fbclid;
+      setCookie('_fbc', fbcValue, 90);
+    } catch(e) {}
+  })();
+
+  // _fbp yoksa oluştur (Meta Pixel zaten oluşturur ama yedek olarak)
+  (function ensureFbp(){
+    try {
+      if (getCookie('_fbp')) return;
+      var fbpValue = 'fb.1.' + Date.now() + '.' + Math.floor(Math.random() * 2147483647);
+      setCookie('_fbp', fbpValue, 90);
+    } catch(e) {}
+  })();
+
   // URL'den ?meta_test=TESTxxxxx oku — Meta Events Manager > Test Events için
   function getTestEventCode(){
     try {
