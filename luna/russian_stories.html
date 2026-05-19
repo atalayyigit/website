@@ -1023,20 +1023,33 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"
     return m ? m[1] : undefined;
   }
 
+  // URL'den ?meta_test=TESTxxxxx oku — Meta Events Manager > Test Events için
+  function getTestEventCode(){
+    try {
+      var m = window.location.search.match(/[?&]meta_test=([^&]+)/);
+      if (m) { try { sessionStorage.setItem('meta_test', m[1]); } catch(e){} return m[1]; }
+      try { return sessionStorage.getItem('meta_test') || undefined; } catch(e){ return undefined; }
+    } catch(e) { return undefined; }
+  }
+
   function sendCAPI(eventName, eventId, extra){
     try {
+      var testCode = getTestEventCode();
+      var payload = {
+        event_name: eventName,
+        event_id: eventId,
+        url: window.location.href,
+        fbc: getCookie('_fbc'),
+        fbp: getCookie('_fbp'),
+        custom_data: extra || {}
+      };
+      if (testCode) payload.test_event_code = testCode;
+
       fetch('/api/capi', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         keepalive: true,
-        body: JSON.stringify({
-          event_name: eventName,
-          event_id: eventId,
-          url: window.location.href,
-          fbc: getCookie('_fbc'),
-          fbp: getCookie('_fbp'),
-          custom_data: extra || {}
-        })
+        body: JSON.stringify(payload)
       }).catch(function(){});
     } catch(e) {}
   }
