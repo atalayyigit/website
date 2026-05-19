@@ -849,17 +849,13 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 (function(){
   function detect(){
     try {
-      // 1. URL override has top priority
+      // 1. URL parameter wins: ?lang=tr for Turkish ad URLs, ?lang=en for others.
       var m = window.location.search.match(/[?&]lang=(tr|en)/i);
       if (m) return m[1].toLowerCase();
-      // 2. User's saved preference (from previous visit)
+      // 2. Manual switch from a previous visit is remembered.
       var saved = localStorage.getItem('luna_lang');
       if (saved === 'tr' || saved === 'en') return saved;
-      // 3. Only the PRIMARY browser language counts.
-      //    Turkish → Turkish. Everyone else (Italian, German, French, …) → English.
-      var primary = String(navigator.language || 'en').toLowerCase();
-      if (primary.startsWith('tr')) return 'tr';
-      // 4. Default for the rest of the world
+      // 3. Default for everyone: English. Use ?lang=tr in Turkey-targeted ads.
       return 'en';
     } catch(e){ return 'en'; }
   }
