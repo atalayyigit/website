@@ -14,7 +14,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://connect.facebook.net">
+<link rel="preconnect" href="https://www.googletagmanager.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2VQJTF2X9K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2VQJTF2X9K', {
+    send_page_view: true,
+    anonymize_ip: true
+  });
+</script>
 
 <!-- Meta Pixel -->
 <script>
@@ -1015,6 +1028,14 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       }
       sendCAPI('Lead', leadId, data);
       sendCAPI(customName, customId, data);
+      // GA4 event
+      if (window.gtag) {
+        gtag('event', 'store_click', {
+          store: store,
+          location: location,
+          lang: (window.__lunaLang || 'en')
+        });
+      }
     } catch(e){}
   };
   try {
