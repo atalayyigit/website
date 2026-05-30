@@ -49,8 +49,24 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2013897989521001');
-fbq('init', '1662025118336284');
+(function(){
+  // external_id pixel init'ten önce hazır olsun (Advanced Matching için)
+  var eid = '';
+  try {
+    eid = localStorage.getItem('luna_eid');
+    if (!eid) {
+      eid = 'eid_' + Date.now().toString(36) + '_' +
+            Math.random().toString(36).slice(2, 10) +
+            Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('luna_eid', eid);
+    }
+  } catch(e){}
+  var advMatch = eid ? { external_id: eid } : {};
+  // KRITIK: Auto-Config'i kapat. Açık olursa Meta kendi 'pcm_plugin-set_xxx' ID'sini
+  // bizim event_id'mizin üzerine yazıyor ve dedup tamamen bozuluyor (browser %0 match).
+  fbq('set', 'autoConfig', false, '2013897989521001');
+  fbq('init', '2013897989521001', advMatch);
+})();
 // PageView aşağıda event_id ile fire ediliyor (sendCAPI ile birlikte) — burada tekrar etmiyoruz, deduplication için
 </script>
 <noscript><img height="1" width="1" style="display:none" alt=""
@@ -1022,13 +1038,30 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       try { return sessionStorage.getItem('meta_test') || undefined; } catch(e){ return undefined; }
     } catch(e){ return undefined; }
   }
+  // Kalıcı external_id — dedup match anahtarı (Meta için "Harici Kod")
+  function getExternalId(){
+    try {
+      var eid = localStorage.getItem('luna_eid');
+      if (!eid) {
+        eid = 'eid_' + Date.now().toString(36) + '_' +
+              Math.random().toString(36).slice(2, 10) +
+              Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('luna_eid', eid);
+      }
+      return eid;
+    } catch(e){ return ''; }
+  }
+  window.__lunaEid = getExternalId();
+
   function sendCAPI(eventName, eventId, extra){
     try {
       var testCode = getTestEventCode();
       var payload = {
         event_name: eventName, event_id: eventId,
+        event_time: Math.floor(Date.now() / 1000),  // browser zamanı — server-browser timing match için
         url: window.location.href,
         fbc: getCookie('_fbc'), fbp: getCookie('_fbp'),
+        external_id: window.__lunaEid || getExternalId(),
         custom_data: extra || {}
       };
       if (testCode) payload.test_event_code = testCode;
