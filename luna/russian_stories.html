@@ -270,9 +270,8 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   .phone{
     position:relative;width:320px;max-width:100%;
     filter:drop-shadow(0 30px 60px rgba(0,0,0,.5)) drop-shadow(0 30px 80px rgba(59,130,246,.25));
-    animation:float 8s ease-in-out infinite;
+    /* float animasyonu kaldırıldı — iPhone Safari'de pinch-zoom sırasında performance/memory sorununa yol açıyordu */
   }
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
   .phone-screen{display:block}
   .phone-screen img{
     width:100%;height:auto;display:block;
@@ -634,9 +633,10 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       <div class="phone-wrap" aria-hidden="true">
         <div class="phone">
           <div class="phone-screen">
-            <img id="phoneMockup" src="assets/enmock.png"
-                 data-src-en="assets/enmock.png"
-                 data-src-tr="assets/trmock.png"
+            <img id="phoneMockup" src="assets/enmock.webp"
+                 data-src-en="assets/enmock.webp"
+                 data-src-tr="assets/trmock.webp"
+                 width="853" height="1844" decoding="async"
                  alt="Luna app screen">
           </div>
         </div>
