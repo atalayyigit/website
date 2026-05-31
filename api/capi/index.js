@@ -91,9 +91,15 @@ module.exports = async function (context, req) {
             pickFirstIp(req.headers['cf-connecting-ip']) ||
             '';
 
+        // Browser event_time'ı tercih et — yoksa server time. Match kalitesi için kritik.
+        const browserTime = Number(body.event_time);
+        const eventTime = (browserTime && browserTime > 0)
+            ? Math.floor(browserTime)
+            : Math.floor(Date.now() / 1000);
+
         const eventPayload = {
             event_name: body.event_name || 'PageView',
-            event_time: Math.floor(Date.now() / 1000),
+            event_time: eventTime,
             event_source_url: body.url || '',
             action_source: 'website',
             event_id: body.event_id || ('srv_' + Date.now()),
@@ -109,6 +115,14 @@ module.exports = async function (context, req) {
         }
         if (body.fbc) eventPayload.user_data.fbc = body.fbc;
         if (body.fbp) eventPayload.user_data.fbp = body.fbp;
+
+        // external_id — Meta'nın güçlü dedup anahtarı (Harici Kod). SHA-256'lı.
+        if (body.external_id) {
+            const eidHash = crypto.createHash('sha256')
+                .update(String(body.external_id).trim())
+                .digest('hex');
+            eventPayload.user_data.external_id = [eidHash];
+        }
 
         if (body.custom_data && typeof body.custom_data === 'object' && Object.keys(body.custom_data).length > 0) {
             eventPayload.custom_data = body.custom_data;
