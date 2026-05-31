@@ -64,7 +64,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
   var advMatch = eid ? { external_id: eid } : {};
   // KRITIK: Auto-Config'i kapat. Açık olursa Meta kendi 'pcm_plugin-set_xxx' ID'sini
   // bizim event_id'mizin üzerine yazıyor ve dedup tamamen bozuluyor (browser %0 match).
-  fbq('set', 'autoConfig', false, '2013897989521001');
+  fbq('set', 'autoConfig', 'false', '2013897989521001');
   fbq('init', '2013897989521001', advMatch);
 })();
 // PageView aşağıda event_id ile fire ediliyor (sendCAPI ile birlikte) — burada tekrar etmiyoruz, deduplication için
