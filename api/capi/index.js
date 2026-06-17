@@ -157,7 +157,8 @@ module.exports = async function (context, req) {
             eventPayload.custom_data = body.custom_data;
         }
 
-        const requestBody = { data: [eventPayload] };
+        // access_token URL yerine POST body'sinde — URL'ler Azure/proxy loglarına düşer.
+        const requestBody = { data: [eventPayload], access_token: ACCESS_TOKEN };
         if (body.test_event_code) {
             requestBody.test_event_code = body.test_event_code;
         }
@@ -168,15 +169,28 @@ module.exports = async function (context, req) {
             test_event_code: body.test_event_code || null
         });
 
-        const path = `/v18.0/${PIXEL_ID}/events?access_token=${encodeURIComponent(ACCESS_TOKEN)}`;
+        // Graph API versiyonu env'den override edilebilir; v18.0 (2023) EOL — güncel sürüme taşındı.
+        // En güncel sürümü Meta changelog'dan teyit edip META_GRAPH_VERSION ile ayarla.
+        const GRAPH_VERSION = process.env.META_GRAPH_VERSION || 'v21.0';
+        const path = `/${GRAPH_VERSION}/${PIXEL_ID}/events`;
         const result = await postJson('graph.facebook.com', path, requestBody);
 
-        if (result.status >= 200 && result.status < 300) {
+        const metaErr = result.body && result.body.error;
+        if (result.status >= 200 && result.status < 300 && !metaErr) {
             context.log('[CAPI] Success', result.body);
             reply(200, result.body);
         } else {
-            context.log.error('[CAPI] Meta error', { status: result.status, body: result.body });
-            reply(result.status || 502, { error: 'Meta CAPI error', meta: result.body });
+            // Yapısal hata logu — Azure'da kod 190 (token geçersiz/öldü) veya 200 (izin) için
+            // alarm kur. Banlanan hesapla bağlı token ölürse browser pixel çalışmaya devam
+            // ettiği için tek görünür sinyal BU log olur.
+            context.log.error('[CAPI] Meta error', {
+                status: result.status,
+                code: metaErr && metaErr.code,
+                subcode: metaErr && metaErr.error_subcode,
+                fbtrace_id: metaErr && metaErr.fbtrace_id,
+                message: (metaErr && (metaErr.error_user_msg || metaErr.message)) || result.body
+            });
+            reply(result.status >= 400 ? result.status : 502, { error: 'Meta CAPI error', meta: result.body });
         }
     } catch (err) {
         context.log.error('[CAPI] Unhandled error', err && err.stack ? err.stack : err);
