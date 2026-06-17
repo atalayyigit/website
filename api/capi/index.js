@@ -80,7 +80,16 @@ module.exports = async function (context, req) {
 
         function pickFirstIp(h) {
             if (!h) return '';
-            return String(h).split(',')[0].trim();
+            var ip = String(h).split(',')[0].trim();
+            // KRITIK: Azure x-forwarded-for IPv4'ü "1.2.3.4:56789" (port'lu) verir.
+            // Meta port'lu string'i GEÇERSIZ IP sayıp sessizce düşürür → EMQ'da IP hiç
+            // görünmez. Port'u ayıkla.
+            var v6 = ip.match(/^\[(.+)\]:\d+$/);                 // [2001:db8::1]:443
+            if (v6) return v6[1];
+            if (ip.indexOf('.') !== -1 && (ip.match(/:/g) || []).length === 1) {
+                return ip.split(':')[0];                          // 1.2.3.4:5678 -> 1.2.3.4
+            }
+            return ip;                                            // düz IPv4 veya bare IPv6
         }
         const clientIp =
             pickFirstIp(req.headers['x-forwarded-for']) ||
@@ -92,34 +101,54 @@ module.exports = async function (context, req) {
             '';
 
         // Browser event_time'ı tercih et — yoksa server time. Match kalitesi için kritik.
-        const browserTime = Number(body.event_time);
-        const eventTime = (browserTime && browserTime > 0)
-            ? Math.floor(browserTime)
-            : Math.floor(Date.now() / 1000);
+        // Meta 7 günden eski / 1 dk'dan ileri event_time'ı TÜM isteği reddeder. Bozuk cihaz
+        // saati veya ms-ölçekli değer gelirse server zamanına düş (güvenli pencere: 6 gün).
+        const now = Math.floor(Date.now() / 1000);
+        let eventTime = Math.floor(Number(body.event_time) || 0);
+        if (!eventTime || eventTime > now + 60 || eventTime < now - 6 * 24 * 3600) {
+            eventTime = now;
+        }
+
+        // Sadece bilinen event'lere izin ver — anonim /api/capi endpoint'ine sahte 'Lead'
+        // basıp optimizasyon sinyalini zehirlemeyi engeller. Yeni event eklersen buraya da ekle.
+        const ALLOWED_EVENTS = ['PageView', 'Lead', 'AppStoreClick', 'GooglePlayClick', 'ViewContent'];
+        const eventName = ALLOWED_EVENTS.indexOf(body.event_name) !== -1 ? body.event_name : null;
+        if (!eventName) {
+            context.log.warn('[CAPI] Rejected unknown event_name', { event_name: body.event_name });
+            reply(400, { error: 'Unsupported event_name' });
+            return;
+        }
 
         const eventPayload = {
-            event_name: body.event_name || 'PageView',
+            event_name: eventName,
             event_time: eventTime,
             event_source_url: body.url || '',
             action_source: 'website',
             event_id: body.event_id || ('srv_' + Date.now()),
             user_data: {
-                client_ip_address: clientIp,
                 client_user_agent: req.headers['user-agent'] || ''
             }
         };
+
+        // Boş/eksik IP GÖNDERME — Meta boş string'i geçersiz sayar; varsa ekle.
+        if (clientIp) eventPayload.user_data.client_ip_address = clientIp;
 
         if (body.email) {
             const h = crypto.createHash('sha256').update(String(body.email).toLowerCase().trim()).digest('hex');
             eventPayload.user_data.em = [h];
         }
-        if (body.fbc) eventPayload.user_data.fbc = body.fbc;
-        if (body.fbp) eventPayload.user_data.fbp = body.fbp;
+        // fbc/fbp Meta'ya HAM gider (hash'lenmez) ama formatı fb.N.timestamp.value olmalı —
+        // bozuk cookie değerini Meta düşürür, göndermeyelim.
+        const fbc = body.fbc && String(body.fbc);
+        if (fbc && /^fb\.\d\.\d+\..+/.test(fbc)) eventPayload.user_data.fbc = fbc;
+        const fbp = body.fbp && String(body.fbp);
+        if (fbp && /^fb\.\d\.\d+\..+/.test(fbp)) eventPayload.user_data.fbp = fbp;
 
         // external_id — Meta'nın güçlü dedup anahtarı (Harici Kod). SHA-256'lı.
+        // toLowerCase: browser Advanced Matching küçük harfe çevirip hash'liyor; aynı normalize.
         if (body.external_id) {
             const eidHash = crypto.createHash('sha256')
-                .update(String(body.external_id).trim())
+                .update(String(body.external_id).toLowerCase().trim())
                 .digest('hex');
             eventPayload.user_data.external_id = [eidHash];
         }
