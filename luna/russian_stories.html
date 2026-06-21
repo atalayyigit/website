@@ -73,6 +73,70 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></noscript>
 
+<!-- Store redirect defined EARLY: the first tap is never a "dead click", it shows
+     instant feedback, and works even before the bottom script runs / inside the
+     Instagram & Facebook in-app browsers. -->
+<script>
+  // Instant visual feedback on tap so the click never feels "dead" (Clarity fix).
+  function showOpeningOverlay(){
+    try {
+      var o = document.getElementById('openingOverlay');
+      if (!o) {
+        o = document.createElement('div');
+        o.id = 'openingOverlay';
+        o.setAttribute('style','position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(6,9,31,.85);color:#fff;font:600 16px/1.4 -apple-system,system-ui,sans-serif;');
+        o.innerHTML = '<div style="width:38px;height:38px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:lopenspin .8s linear infinite"></div><div>Opening store…</div>';
+        (document.body || document.documentElement).appendChild(o);
+        var kf = document.createElement('style');
+        kf.textContent = '@keyframes lopenspin{to{transform:rotate(360deg)}}';
+        document.head.appendChild(kf);
+        var hide = function(){ try { o.style.display = 'none'; } catch(e){} };
+        document.addEventListener('visibilitychange', function(){ if (!document.hidden) hide(); });
+        window.addEventListener('pageshow', hide);
+        setTimeout(hide, 6000); // safety net if the redirect silently fails
+      }
+      o.style.display = 'flex';
+    } catch(e){}
+  }
+  // Opens the store reliably (native scheme first, https fallback). Defined here so a
+  // tap before the bottom script is ready still works. trackStoreClick is guarded — it
+  // just no-ops on an ultra-early tap; the full version below adds tracking.
+  window.openStore = function(store, location){
+    showOpeningOverlay();
+    try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+    var ua = navigator.userAgent || '';
+    var isIOS = /iphone|ipad|ipod/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var IOS_URL = 'https://apps.apple.com/app/id6740998772';
+    var IOS_NATIVE = 'itms-apps://itunes.apple.com/app/id6740998772';
+    var AND_PKG = 'com.luna.russianstories';
+    var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG;
+    var goAndroid = (store === 'GooglePlay');
+    var goIOS = (store === 'AppStore');
+    if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
+    if (goAndroid && isAndroid) {
+      var intentUrl = 'intent://details?id=' + AND_PKG +
+        '#Intent;scheme=market;package=com.android.vending;' +
+        'S.browser_fallback_url=' + encodeURIComponent(AND_HTTPS) + ';end';
+      var t = setTimeout(function(){ window.location.href = AND_HTTPS; }, 900);
+      var clear = function(){ try { clearTimeout(t); } catch(e){} };
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear(); }, { once:true });
+      window.addEventListener('pagehide', clear, { once:true });
+      try { window.location.href = intentUrl; } catch(e){ clear(); window.location.href = AND_HTTPS; }
+      return;
+    }
+    if (goIOS && isIOS) {
+      var t2 = setTimeout(function(){ window.location.href = IOS_URL; }, 900);
+      var clear2 = function(){ try { clearTimeout(t2); } catch(e){} };
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear2(); }, { once:true });
+      window.addEventListener('pagehide', clear2, { once:true });
+      try { window.location.href = IOS_NATIVE; } catch(e){ clear2(); window.location.href = IOS_URL; }
+      return;
+    }
+    window.open(goAndroid ? AND_HTTPS : IOS_URL, '_blank');
+  };
+</script>
+
 <style>
   :root{
     --bg:#06091F;
@@ -1221,48 +1285,9 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     } catch(e){}
   };
 
-  // Store'u in-app browser (Instagram/Facebook webview) içinde de güvenilir açar.
-  // Android'de https://play.google.com webview'de takılıp "ölü tıklama" oluyor →
-  // intent:// ile native Play Store app'i zorlanır, başarısızsa https'e düşülür.
-  window.openStore = function(store, location){
-    try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
-    var ua = navigator.userAgent || '';
-    var isIOS = /iphone|ipad|ipod/i.test(ua);
-    var isAndroid = /android/i.test(ua);
-    var IOS_URL = 'https://apps.apple.com/app/id6740998772';
-    var IOS_NATIVE = 'itms-apps://itunes.apple.com/app/id6740998772';
-    var AND_PKG = 'com.luna.russianstories';
-    var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG;
-
-    var goAndroid = (store === 'GooglePlay');
-    var goIOS = (store === 'AppStore');
-    if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
-
-    if (goAndroid && isAndroid) {
-      var intentUrl = 'intent://details?id=' + AND_PKG +
-        '#Intent;scheme=market;package=com.android.vending;' +
-        'S.browser_fallback_url=' + encodeURIComponent(AND_HTTPS) + ';end';
-      // intent çözülmezse 1.5sn sonra https fallback
-      var t = setTimeout(function(){ window.location.href = AND_HTTPS; }, 1500);
-      var clear = function(){ try { clearTimeout(t); } catch(e){} };
-      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear(); }, { once:true });
-      window.addEventListener('pagehide', clear, { once:true });
-      try { window.location.href = intentUrl; } catch(e){ clear(); window.location.href = AND_HTTPS; }
-      return;
-    }
-    if (goIOS && isIOS) {
-      // Instagram/Facebook in-app webview https://apps.apple.com linkini açamıyor.
-      // itms-apps:// native şeması App Store'u doğrudan tetikler; başarısızsa https'e düş.
-      var t2 = setTimeout(function(){ window.location.href = IOS_URL; }, 1500);
-      var clear2 = function(){ try { clearTimeout(t2); } catch(e){} };
-      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear2(); }, { once:true });
-      window.addEventListener('pagehide', clear2, { once:true });
-      try { window.location.href = IOS_NATIVE; } catch(e){ clear2(); window.location.href = IOS_URL; }
-      return;
-    }
-    // Desktop / diğer: store sayfasını yeni sekmede aç
-    window.open(goAndroid ? AND_HTTPS : IOS_URL, '_blank');
-  };
+  // openStore + showOpeningOverlay are defined EARLY in the <head> (instant "Opening
+  // store…" feedback so the first tap is never a dead click; works in IG/FB in-app
+  // browsers; 900ms native->https fallback). Kept there so a very early tap also works.
 
   try {
     var pvId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
