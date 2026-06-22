@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support – LunaVPN</title>
+  <meta name="description" content="Support and help for LunaVPN by LunaSoft." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #0078D4;
+      --blue-light: #00BCF2;
+      --bg: #0a0f1e;
+      --bg2: #0d1526;
+      --card: #111d35;
+      --card-border: #1e3056;
+      --text: #e8f0fe;
+      --text-muted: #7a9bc4;
+      --white: #ffffff;
+      --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container { max-width: 880px; margin: 0 auto; padding: 0 24px; width: 100%; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: rgba(10,15,30,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 24px;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .nav-inner { max-width: 880px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .logo { text-decoration: none; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; }
+    .logo-luna { color: var(--white); }
+    .logo-soft { color: var(--blue); }
+    .lang-toggle {
+      background: var(--card); border: 1px solid var(--card-border); color: var(--text-muted);
+      font-size: 0.8rem; font-weight: 600; padding: 6px 14px; border-radius: 8px;
+      cursor: pointer; font-family: inherit; transition: color 0.2s, border-color 0.2s;
+    }
+    .lang-toggle:hover { color: var(--white); border-color: var(--blue); }
+
+    /* ── HERO ── */
+    .hero { padding: 80px 0 40px; background: var(--bg); position: relative; overflow: hidden; }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,120,212,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; color: var(--white);
+      letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 12px;
+    }
+    .hero .subtitle { color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+    /* ── CONTENT ── */
+    .content { padding: 40px 0 80px; flex: 1; }
+    .wrapper { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 48px 44px; }
+    .wrapper h2 { font-size: 1.25rem; font-weight: 700; color: var(--white); margin-top: 36px; margin-bottom: 12px; }
+    .wrapper h2:first-child { margin-top: 0; }
+    .wrapper p { color: var(--text); margin-bottom: 14px; }
+    .wrapper ul { margin: 0 0 14px 22px; }
+    .wrapper li { margin-bottom: 8px; }
+
+    .faq-q { color: var(--white); font-weight: 600; margin-top: 22px; margin-bottom: 4px; }
+    .faq-a { color: var(--text-muted); margin-bottom: 4px; }
+
+    a { color: var(--blue-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .contact-block {
+      margin-top: 18px; padding: 22px 24px; background: var(--bg2);
+      border: 1px solid var(--card-border); border-radius: var(--radius);
+    }
+    .contact-block p { margin-bottom: 6px; }
+
+    .footer { border-top: 1px solid var(--card-border); padding: 24px; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+
+    @media (max-width: 560px) {
+      .wrapper { padding: 32px 22px; }
+      .hero { padding: 56px 0 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="https://lunasoft.com.tr" class="logo"><span class="logo-luna">Luna</span><span class="logo-soft">VPN</span></a>
+      <button id="langToggle" class="lang-toggle" onclick="toggleLang()">TR</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h1 data-en="Support" data-tr="Destek">Support</h1>
+      <span class="subtitle" data-en="LunaVPN · We're here to help" data-tr="LunaVPN · Yardıma hazırız">LunaVPN · We're here to help</span>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container">
+      <div class="wrapper">
+
+        <h2 data-en="Get in touch" data-tr="Bize Ulaşın">Get in touch</h2>
+        <p data-en="Have a question, found a bug, or need help with LunaVPN? Email us and we'll get back to you, usually within 1–2 business days." data-tr="Bir sorun mu var, hata mı buldunuz ya da LunaVPN ile ilgili yardıma mı ihtiyacınız var? Bize e-posta gönderin; genellikle 1–2 iş günü içinde dönüş yaparız.">Have a question, found a bug, or need help with LunaVPN? Email us and we'll get back to you, usually within 1–2 business days.</p>
+        <div class="contact-block">
+          <p><strong>LunaSoft</strong></p>
+          <p data-en="Email:" data-tr="E-posta:">Email:</p>
+          <p><a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a></p>
+          <p data-en="Website:" data-tr="Web Sitesi:">Website:</p>
+          <p><a href="https://lunasoft.com.tr">lunasoft.com.tr</a></p>
+        </div>
+
+        <h2 data-en="Frequently asked questions" data-tr="Sıkça Sorulan Sorular">Frequently asked questions</h2>
+
+        <p class="faq-q" data-en="How do I connect?" data-tr="Nasıl bağlanırım?">How do I connect?</p>
+        <p class="faq-a" data-en="Open LunaVPN and tap the power button. The first time, iOS will ask you to allow the VPN configuration — tap Allow. You'll be connected in a couple of seconds." data-tr="LunaVPN'i açın ve güç düğmesine dokunun. İlk seferde iOS, VPN yapılandırmasına izin vermenizi ister — İzin Ver'e dokunun. Birkaç saniye içinde bağlanırsınız.">Open LunaVPN and tap the power button. The first time, iOS will ask you to allow the VPN configuration — tap Allow. You'll be connected in a couple of seconds.</p>
+
+        <p class="faq-q" data-en="It won't connect — what should I do?" data-tr="Bağlanmıyor — ne yapmalıyım?">It won't connect — what should I do?</p>
+        <p class="faq-a" data-en="Make sure you have a working internet connection, then tap the power button again. If it still fails, fully close and reopen the app, or try again in a few minutes. Some heavily restricted networks may interfere with VPN connections." data-tr="Çalışan bir internet bağlantınız olduğundan emin olun, sonra güç düğmesine tekrar dokunun. Hâlâ bağlanmıyorsa uygulamayı tamamen kapatıp yeniden açın ya da birkaç dakika sonra tekrar deneyin. Bazı ağır kısıtlı ağlar VPN bağlantısını engelleyebilir.">Make sure you have a working internet connection, then tap the power button again. If it still fails, fully close and reopen the app, or try again in a few minutes. Some heavily restricted networks may interfere with VPN connections.</p>
+
+        <p class="faq-q" data-en="How much free time do I get?" data-tr="Ne kadar ücretsiz süre alırım?">How much free time do I get?</p>
+        <p class="faq-a" data-en="New users get 15 minutes of free connection time. Once it's used up, subscribe to LunaVPN Premium for unlimited access." data-tr="Yeni kullanıcılar 15 dakika ücretsiz bağlantı süresi alır. Süre dolunca, sınırsız erişim için LunaVPN Premium'a abone olun.">New users get 15 minutes of free connection time. Once it's used up, subscribe to LunaVPN Premium for unlimited access.</p>
+
+        <p class="faq-q" data-en="What does Premium cost?" data-tr="Premium ne kadar?">What does Premium cost?</p>
+        <p class="faq-a" data-en="LunaVPN Premium is available as a weekly or monthly subscription. You can see the current pricing on the Premium tab inside the app before you subscribe." data-tr="LunaVPN Premium haftalık veya aylık abonelik olarak sunulur. Abone olmadan önce güncel fiyatları uygulama içindeki Premium sekmesinde görebilirsiniz.">LunaVPN Premium is available as a weekly or monthly subscription. You can see the current pricing on the Premium tab inside the app before you subscribe.</p>
+
+        <p class="faq-q" data-en="How do I restore my subscription?" data-tr="Aboneliğimi nasıl geri yüklerim?">How do I restore my subscription?</p>
+        <p class="faq-a" data-en="Open the app, go to the Premium tab, and tap Restore. Make sure you're signed in with the same Apple Account you used to subscribe." data-tr="Uygulamayı açın, Premium sekmesine gidin ve Restore'a dokunun. Abone olurken kullandığınız Apple hesabıyla giriş yaptığınızdan emin olun.">Open the app, go to the Premium tab, and tap Restore. Make sure you're signed in with the same Apple Account you used to subscribe.</p>
+
+        <p class="faq-q" data-en="How do I cancel my subscription?" data-tr="Aboneliğimi nasıl iptal ederim?">How do I cancel my subscription?</p>
+        <p class="faq-a" data-en="Subscriptions are managed by Apple. Open Settings → tap your name → Subscriptions → LunaVPN → Cancel." data-tr="Abonelikler Apple tarafından yönetilir. Ayarlar → adınıza dokunun → Abonelikler → LunaVPN → İptal Et.">Subscriptions are managed by Apple. Open Settings → tap your name → Subscriptions → LunaVPN → Cancel.</p>
+
+        <p class="faq-q" data-en="Do you keep logs of my activity?" data-tr="Etkinliğimin kaydını tutuyor musunuz?">Do you keep logs of my activity?</p>
+        <p class="faq-a" data-en="No. LunaVPN runs a strict no-logs policy — we do not record the websites you visit, your DNS queries, or the content of your traffic. See our Privacy Policy for full details." data-tr="Hayır. LunaVPN katı bir kayıt tutmama (no-logs) politikası uygular — ziyaret ettiğiniz web sitelerini, DNS sorgularınızı veya trafiğinizin içeriğini kaydetmeyiz. Ayrıntılar için Gizlilik Politikamıza bakın.">No. LunaVPN runs a strict no-logs policy — we do not record the websites you visit, your DNS queries, or the content of your traffic. See our Privacy Policy for full details.</p>
+
+        <h2 data-en="Responsible use" data-tr="Sorumlu Kullanım">Responsible use</h2>
+        <p data-en="Please use LunaVPN in compliance with the laws and regulations that apply to you. You are responsible for your own use of the connection, and the service must not be used for any illegal activity." data-tr="Lütfen LunaVPN'i size uygulanan yasalara ve düzenlemelere uygun şekilde kullanın. Bağlantının kullanımından siz sorumlusunuz ve hizmet hiçbir yasa dışı faaliyet için kullanılmamalıdır.">Please use LunaVPN in compliance with the laws and regulations that apply to you. You are responsible for your own use of the connection, and the service must not be used for any illegal activity.</p>
+
+        <h2 data-en="Privacy" data-tr="Gizlilik">Privacy</h2>
+        <p data-en="LunaVPN is built with privacy in mind — no account required and a strict no-logs policy. Read our full Privacy Policy:" data-tr="LunaVPN gizlilik odaklı tasarlanmıştır — hesap gerekmez ve katı bir kayıt tutmama politikası vardır. Tam Gizlilik Politikamızı okuyun:">LunaVPN is built with privacy in mind — no account required and a strict no-logs policy. Read our full Privacy Policy:</p>
+        <p><a href="lunavpn-privacy.html" data-en="View Privacy Policy →" data-tr="Gizlilik Politikasını Görüntüle →">View Privacy Policy →</a></p>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span data-en="© 2026 LunaSoft. All rights reserved." data-tr="© 2026 LunaSoft. Tüm hakları saklıdır.">© 2026 LunaSoft. All rights reserved.</span>
+  </footer>
+
+  <script>
+    let currentLang = 'en';
+    function toggleLang() {
+      currentLang = currentLang === 'en' ? 'tr' : 'en';
+      document.getElementById('langToggle').textContent = currentLang === 'tr' ? 'EN' : 'TR';
+      document.documentElement.lang = currentLang;
+      applyLang();
+    }
+    function applyLang() {
+      const attr = `data-${currentLang}`;
+      document.querySelectorAll(`[${attr}]`).forEach(el => {
+        el.textContent = el.getAttribute(attr);
+      });
+    }
+  </script>
+
+</body>
+</html>
