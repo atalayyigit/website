@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Luna — Read Russian, right now.</title>
 <meta name="description" content="A powerful companion for Russian learners. Native stories, audio, smart vocabulary, AI-generated texts.">
-<meta name="theme-color" content="#06091F">
+<meta name="theme-color" content="#000000">
 
 <meta property="og:title" content="Luna — Read Russian, right now.">
 <meta property="og:description" content="A powerful companion for Russian learners.">
@@ -139,24 +139,28 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 
 <style>
   :root{
-    --bg:#06091F;
-    --bg-2:#0B1030;
-    --surface:#0F1638;
-    --surface-2:#141C45;
-    --border:rgba(255,255,255,.08);
-    --border-2:rgba(255,255,255,.12);
+    --bg:#000000;
+    --bg-2:#050507;
+    --surface:#0C0C0E;
+    --surface-2:#161618;
+    --border:rgba(255,255,255,.09);
+    --border-2:rgba(255,255,255,.16);
     --text:#FFFFFF;
-    --text-2:#C7CEE3;
-    --text-3:#8590B5;
-    --text-4:#5B6489;
-    --blue:#3B82F6;
-    --blue-bright:#60A5FA;
-    --cyan:#06B6D4;
-    --emerald:#10B981;
-    --amber:#F59E0B;
-    --sky:#0EA5E9;
-    --indigo:#4F6BFF;
-    --rose:#F43F5E;
+    --text-2:#C9CDD6;
+    --text-3:#8A8F9A;
+    --text-4:#585C66;
+    /* Russian flag identity */
+    --blue:#0A60E8;
+    --blue-bright:#2B7BFF;
+    --red:#E01225;
+    --red-bright:#FF2740;
+    /* kept on-brand so any legacy reference stays in the flag family */
+    --cyan:#2B7BFF;
+    --indigo:#0A60E8;
+    --sky:#2B7BFF;
+    --rose:#E01225;
+    --emerald:#34D399;
+    --amber:#F5B301;
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
@@ -169,25 +173,15 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     -moz-osx-font-smoothing:grayscale;
     overflow-x:hidden;
   }
-  /* Ambient background — subtle stars + glow */
+  /* Ambient background — pure black with a faint blue rim-glow (App Store look) */
   body::before{
     content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
     background:
-      radial-gradient(900px 600px at 15% -10%,rgba(59,130,246,.22),transparent 60%),
-      radial-gradient(700px 500px at 95% 25%,rgba(79,107,255,.18),transparent 65%),
-      radial-gradient(600px 400px at 50% 110%,rgba(14,165,233,.12),transparent 70%);
+      radial-gradient(820px 560px at 12% -8%,rgba(10,96,232,.14),transparent 62%),
+      radial-gradient(640px 460px at 96% 14%,rgba(43,123,255,.10),transparent 66%),
+      radial-gradient(560px 380px at 50% 112%,rgba(224,18,37,.06),transparent 72%);
   }
-  body::after{
-    content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
-    background-image:
-      radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.7),transparent),
-      radial-gradient(1px 1px at 87% 32%,rgba(255,255,255,.5),transparent),
-      radial-gradient(1px 1px at 28% 67%,rgba(255,255,255,.6),transparent),
-      radial-gradient(1px 1px at 73% 82%,rgba(255,255,255,.45),transparent),
-      radial-gradient(1px 1px at 50% 45%,rgba(255,255,255,.4),transparent),
-      radial-gradient(1px 1px at 92% 8%,rgba(255,255,255,.55),transparent);
-  }
-  ::selection{background:rgba(96,165,250,.3);color:#fff}
+  ::selection{background:rgba(43,123,255,.32);color:#fff}
   img,svg{display:block;max-width:100%}
   button,a{font:inherit;color:inherit;text-decoration:none}
   button{background:none;border:0;cursor:pointer;padding:0}
@@ -228,7 +222,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   .nav-cta{
     display:none;
     padding:8px 14px;border-radius:8px;
-    background:#fff;color:#06091F;font-weight:600;font-size:13px;
+    background:#fff;color:#000;font-weight:600;font-size:13px;
     transition:transform .15s ease;
   }
   .nav-cta:hover{transform:translateY(-1px)}
@@ -239,15 +233,29 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   @media(min-width:960px){.hero{padding:64px 0 96px}}
 
   .hero-grid{
-    display:grid;gap:48px;align-items:center;
+    display:grid;gap:40px;align-items:center;
     max-width:720px;margin:0 auto;text-align:left;
+  }
+  .hero-art{display:none}
+  @media(min-width:960px){
+    .hero-grid{
+      grid-template-columns:1.05fr .95fr;
+      max-width:1100px;gap:40px;
+    }
+    .hero-art{
+      display:flex;justify-content:center;align-items:center;position:relative;
+    }
+    .hero-art img{
+      width:100%;max-width:430px;height:auto;
+      filter:drop-shadow(0 24px 64px rgba(10,96,232,.45));
+    }
   }
 
   .eyebrow{
     display:inline-flex;align-items:center;gap:8px;
     padding:6px 12px;border-radius:999px;
-    background:rgba(96,165,250,.12);color:var(--blue-bright);
-    border:1px solid rgba(96,165,250,.25);
+    background:rgba(43,123,255,.12);color:var(--blue-bright);
+    border:1px solid rgba(43,123,255,.28);
     font-size:12px;font-weight:600;letter-spacing:.02em;
     margin-bottom:24px;
   }
@@ -258,31 +266,26 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   }
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
-  .hero-subline{
-    font-size:clamp(36px,5.8vw,60px);
-    font-weight:800;line-height:1.04;letter-spacing:-.03em;
-    color:var(--text);margin:16px 0 0;
-  }
-  .hero-subline .rs{
-    background:linear-gradient(135deg,#60A5FA 0%,#06B6D4 50%,#4F6BFF 100%);
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-  }
-
   h1.display{
-    font-size:clamp(36px,5.8vw,60px);
-    font-weight:800;line-height:1.04;letter-spacing:-.03em;
-    color:var(--text);margin-bottom:20px;
+    font-size:clamp(40px,7vw,68px);
+    font-weight:800;line-height:1.0;letter-spacing:-.035em;
+    color:var(--text);margin-bottom:0;
   }
-  h1.display .grad{
-    background:linear-gradient(135deg,#60A5FA 0%,#06B6D4 50%,#4F6BFF 100%);
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-  }
+  h1.display .l-blue{color:var(--blue)}
+  h1.display .l-red{color:var(--red)}
+
+  /* Russian-flag divider (white / blue / red bars) */
+  .flag-rule{display:flex;gap:8px;margin:22px 0 22px}
+  .flag-rule i{display:block;width:30px;height:4px;border-radius:2px}
+  .flag-rule i:nth-child(1){background:#fff}
+  .flag-rule i:nth-child(2){background:var(--blue)}
+  .flag-rule i:nth-child(3){background:var(--red)}
+
   .lede{
     font-size:17px;color:var(--text-2);max-width:520px;line-height:1.55;
     margin-bottom:28px;
   }
+  .lede .accent{color:var(--red);font-weight:600}
   @media(min-width:768px){.lede{font-size:19px}}
 
   /* App identity row */
@@ -313,7 +316,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   .badge{
     display:inline-flex;align-items:center;gap:10px;
     padding:13px 18px;border-radius:12px;
-    background:#fff;color:#06091F;
+    background:#fff;color:#000;
     font-weight:600;
     transition:transform .15s ease,box-shadow .15s ease;
     box-shadow:0 4px 16px rgba(0,0,0,.3);
@@ -414,17 +417,17 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     display:grid;place-items:center;margin-bottom:18px;
     color:#fff;
   }
-  .feat-icon.b1{background:linear-gradient(135deg,#3B82F6,#60A5FA);box-shadow:0 8px 24px -8px rgba(59,130,246,.5)}
-  .feat-icon.b2{background:linear-gradient(135deg,#0EA5E9,#06B6D4);box-shadow:0 8px 24px -8px rgba(14,165,233,.5)}
-  .feat-icon.b3{background:linear-gradient(135deg,#4F6BFF,#3B82F6);box-shadow:0 8px 24px -8px rgba(79,107,255,.5)}
-  .feat-icon.b4{background:linear-gradient(135deg,#10B981,#059669);box-shadow:0 8px 24px -8px rgba(16,185,129,.5)}
-  .feat-icon.b5{background:linear-gradient(135deg,#F59E0B,#FBBF24);box-shadow:0 8px 24px -8px rgba(245,158,11,.5)}
-  .feat-icon.b6{background:linear-gradient(135deg,#7C3AED,#A78BFA);box-shadow:0 8px 24px -8px rgba(124,58,237,.5)}
+  .feat-icon.b1{background:linear-gradient(135deg,#0A60E8,#2B7BFF);box-shadow:0 8px 24px -8px rgba(10,96,232,.55)}
+  .feat-icon.b2{background:linear-gradient(135deg,#2B7BFF,#5B9BFF);box-shadow:0 8px 24px -8px rgba(43,123,255,.55)}
+  .feat-icon.b3{background:linear-gradient(135deg,#E01225,#FF2740);box-shadow:0 8px 24px -8px rgba(224,18,37,.5)}
+  .feat-icon.b4{background:linear-gradient(135deg,#0747B0,#0A60E8);box-shadow:0 8px 24px -8px rgba(7,71,176,.55)}
+  .feat-icon.b5{background:linear-gradient(135deg,#C20E1E,#E01225);box-shadow:0 8px 24px -8px rgba(194,14,30,.5)}
+  .feat-icon.b6{background:linear-gradient(135deg,#0A60E8,#E01225);box-shadow:0 8px 24px -8px rgba(10,96,232,.5)}
   .feat.ai{
-    border-color:rgba(167,139,250,.3);
-    background:linear-gradient(180deg,rgba(124,58,237,.12) 0%,rgba(124,58,237,.02) 100%);
+    border-color:rgba(43,123,255,.3);
+    background:linear-gradient(180deg,rgba(10,96,232,.12) 0%,rgba(10,96,232,.02) 100%);
   }
-  .feat.ai:hover{border-color:rgba(167,139,250,.5);background:linear-gradient(180deg,rgba(124,58,237,.18) 0%,rgba(124,58,237,.04) 100%)}
+  .feat.ai:hover{border-color:rgba(43,123,255,.5);background:linear-gradient(180deg,rgba(10,96,232,.18) 0%,rgba(10,96,232,.04) 100%)}
   .feat h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;color:var(--text)}
   .feat p{font-size:14px;color:var(--text-2);line-height:1.55}
 
@@ -498,12 +501,12 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     border:1px solid rgba(255,255,255,.1);
     box-shadow:0 6px 18px -6px rgba(0,0,0,.4);
   }
-  .level-pill.a1{background:linear-gradient(135deg,#10B981,#34D399)}
-  .level-pill.a2{background:linear-gradient(135deg,#3B82F6,#60A5FA)}
-  .level-pill.b1{background:linear-gradient(135deg,#4F6BFF,#3B82F6)}
-  .level-pill.b2{background:linear-gradient(135deg,#7C3AED,#A78BFA)}
-  .level-pill.c1{background:linear-gradient(135deg,#F59E0B,#FBBF24)}
-  .level-pill.c2{background:linear-gradient(135deg,#DC2626,#F43F5E)}
+  .level-pill.a1{background:linear-gradient(135deg,#26262B,#3A3A40)}
+  .level-pill.a2{background:linear-gradient(135deg,#2E2E34,#45454C)}
+  .level-pill.b1{background:linear-gradient(135deg,#0A60E8,#2B7BFF)}
+  .level-pill.b2{background:linear-gradient(135deg,#0747B0,#0A60E8)}
+  .level-pill.c1{background:linear-gradient(135deg,#E01225,#FF2740)}
+  .level-pill.c2{background:linear-gradient(135deg,#A60D18,#E01225)}
 
   /* TRUST STRIP */
   .trust{padding:48px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
@@ -511,7 +514,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   @media(min-width:768px){.trust-grid{grid-template-columns:repeat(4,1fr)}}
   .trust-num{
     font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1;
-    background:linear-gradient(135deg,#60A5FA,#06B6D4);
+    background:linear-gradient(115deg,#4F9BFF 0%,#FFFFFF 52%,#FF3A4D 100%);
     -webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;
   }
@@ -522,7 +525,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   @media(min-width:768px){.final{padding:120px 0}}
   .final-card{
     text-align:center;
-    background:linear-gradient(135deg,rgba(59,130,246,.15) 0%,rgba(6,182,212,.1) 100%);
+    background:linear-gradient(135deg,rgba(10,96,232,.16) 0%,rgba(224,18,37,.08) 100%);
     border:1px solid var(--border-2);
     border-radius:24px;padding:48px 24px;
     position:relative;overflow:hidden;
@@ -530,7 +533,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   @media(min-width:768px){.final-card{padding:72px 48px}}
   .final-card::before{
     content:'';position:absolute;inset:0;
-    background:radial-gradient(600px 300px at 50% 0%,rgba(59,130,246,.25),transparent 60%);
+    background:radial-gradient(600px 300px at 50% 0%,rgba(10,96,232,.28),transparent 60%);
     pointer-events:none;
   }
   .final-card h2{font-size:clamp(28px,4vw,40px);margin-bottom:14px}
@@ -559,7 +562,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     .m-cta a{
       flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
       padding:14px;border-radius:12px;
-      background:#fff;color:#06091F;
+      background:#fff;color:#000;
       font-size:14px;font-weight:700;
     }
     body{padding-bottom:80px}
@@ -610,17 +613,17 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
         </div>
 
         <h1 class="display"
-            data-en-html='A powerful companion for <span class="grad">Russian learners.</span>'
-            data-tr-html='Rusça öğrenenler için <span class="grad">güçlü bir yardımcı.</span>'>
-          A powerful companion for <span class="grad">Russian learners.</span>
+            data-en-html='Learn Russian<br><span class="l-blue">Through</span><br><span class="l-red">Real Stories.</span>'
+            data-tr-html='Rusçayı<br><span class="l-blue">gerçek</span><br><span class="l-red">hikâyelerle öğren.</span>'>
+          Learn Russian<br><span class="l-blue">Through</span><br><span class="l-red">Real Stories.</span>
         </h1>
 
-        <p class="hero-subline">Luna <span class="rs">Russian Stories</span></p>
+        <div class="flag-rule" aria-hidden="true"><i></i><i></i><i></i></div>
 
         <p class="lede"
-           data-en="Native stories, real audio, smart vocabulary that remembers what you tapped, and AI-generated texts on any topic — every level, A1 to C2."
-           data-tr="Yerel hikayeler, gerçek ses, dokunduğun kelimeleri hatırlayan akıllı kelime defteri ve istediğin konuda AI ile oluşturulan metinler — her seviye, A1'den C2'ye.">
-          Native stories, real audio, smart vocabulary that remembers what you tapped, and AI-generated texts on any topic — every level, A1 to C2.
+           data-en-html='Native stories, real audio and a tap-to-translate dictionary — read, listen and understand Russian <span class="accent">naturally.</span>'
+           data-tr-html='Yerel hikâyeler, gerçek ses ve dokun-çevir sözlüğü — Rusçayı <span class="accent">doğal yoldan</span> oku, dinle ve anla.'>
+          Native stories, real audio and a tap-to-translate dictionary — read, listen and understand Russian <span class="accent">naturally.</span>
         </p>
 
         <!-- App row -->
@@ -694,6 +697,13 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
         </div>
       </div>
 
+      <div class="hero-art" aria-hidden="true">
+        <picture>
+          <source srcset="assets/wizard.webp" type="image/webp">
+          <img src="assets/wizard.png" alt="" width="640" height="778" loading="eager" decoding="async">
+        </picture>
+      </div>
+
     </div>
   </div>
 </section>
@@ -704,35 +714,35 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   @media(min-width:960px){.showcase{padding:80px 0 40px}}
   .showcase .section-head{margin-bottom:24px}
   .showcase-rail{
-    display:flex;flex-direction:column;gap:56px;
-    align-items:center;
-    padding:8px 0 0;
+    display:grid;gap:20px;
+    grid-template-columns:1fr;
+    max-width:340px;margin:0 auto;padding:8px 0 0;
   }
-  @media(min-width:768px){.showcase-rail{gap:80px}}
-  .showcase-card{
-    width:100%;max-width:440px;
-    display:flex;flex-direction:column;align-items:center;
+  @media(min-width:640px){
+    .showcase-rail{grid-template-columns:repeat(2,1fr);max-width:680px;gap:24px}
   }
-  @media(min-width:768px){.showcase-card{max-width:400px}}
+  @media(min-width:960px){
+    .showcase-rail{grid-template-columns:repeat(3,1fr);max-width:1040px;gap:28px}
+  }
+  .showcase-card{width:100%;display:block}
   .showcase-card picture{
     display:block;width:100%;
-    border-radius:22px;overflow:hidden;
-    background:#E8EEFA;
-    box-shadow:0 30px 80px -24px rgba(0,0,0,.6),
-               0 0 0 1px rgba(255,255,255,.04);
-    aspect-ratio:1122/1402;
+    border-radius:20px;overflow:hidden;
+    background:#000;
+    border:1px solid var(--border);
+    box-shadow:0 24px 60px -22px rgba(0,0,0,.8),
+               0 0 0 1px rgba(255,255,255,.03);
+    aspect-ratio:1260/2736;
+    transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+  }
+  .showcase-card picture:hover{
+    transform:translateY(-4px);
+    border-color:rgba(43,123,255,.35);
+    box-shadow:0 30px 70px -22px rgba(10,96,232,.45),
+               0 0 0 1px rgba(43,123,255,.25);
   }
   .showcase-card img{
     display:block;width:100%;height:100%;object-fit:cover;
-  }
-  .showcase-caption{
-    margin-top:20px;text-align:center;
-    font-size:17px;line-height:1.5;color:var(--text-2);
-    max-width:360px;
-    padding:0 8px;
-  }
-  @media(min-width:768px){
-    .showcase-caption{font-size:17px;margin-top:22px}
   }
 </style>
 <section class="showcase">
@@ -750,80 +760,58 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     <div class="showcase-rail" role="list" aria-label="App screenshots">
       <div class="showcase-card" role="listitem">
         <picture>
-          <source srcset="assets/1inst.webp" type="image/webp">
-          <img src="assets/1inst.png" alt="Read Russian with instant translation — home screen"
-               width="1122" height="1402" loading="lazy" decoding="async">
+          <source srcset="assets/app-home.webp" type="image/webp">
+          <img src="assets/app-home.jpg" alt="Read Russian with instant translation"
+               width="740" height="1606" loading="lazy" decoding="async">
         </picture>
-        <p class="showcase-caption"
-           data-en="Stories, audio and translations — all in one place."
-           data-tr="Hikayeler, ses ve çeviriler — hepsi tek yerde.">
-          Stories, audio and translations — all in one place.
-        </p>
       </div>
 
       <div class="showcase-card" role="listitem">
         <picture>
-          <source srcset="assets/2inst.webp" type="image/webp">
-          <img src="assets/2inst.png" alt="Tap any word to translate"
-               width="1024" height="1536" loading="lazy" decoding="async">
+          <source srcset="assets/app-translate.webp" type="image/webp">
+          <img src="assets/app-translate.jpg" alt="Tap any word, translate instantly"
+               width="740" height="1606" loading="lazy" decoding="async">
         </picture>
-        <p class="showcase-caption"
-           data-en="Tap any word for instant meaning — without leaving the story."
-           data-tr="Bilmediğin kelimeye dokun, anlamı anında görünsün — hikayeden çıkmadan.">
-          Tap any word for instant meaning — without leaving the story.
-        </p>
       </div>
 
       <div class="showcase-card" role="listitem">
         <picture>
-          <source srcset="assets/3inst.webp" type="image/webp">
-          <img src="assets/3inst.png" alt="LunAI creates your perfect study session"
-               width="1122" height="1402" loading="lazy" decoding="async">
+          <source srcset="assets/app-listen.webp" type="image/webp">
+          <img src="assets/app-listen.jpg" alt="Listen and read together with synchronized audio"
+               width="740" height="1606" loading="lazy" decoding="async">
         </picture>
-        <p class="showcase-caption"
-           data-en="Pick a level and topic — LunAI writes a story made for you."
-           data-tr="Seviyeni ve konunu seç — LunAI sana özel bir hikaye yazsın.">
-          Pick a level and topic — LunAI writes a story made for you.
-        </p>
       </div>
 
       <div class="showcase-card" role="listitem">
         <picture>
-          <source srcset="assets/4ins.webp" type="image/webp">
-          <img src="assets/4ins.png" alt="Practice Russian with quizzes"
-               width="1092" height="1440" loading="lazy" decoding="async">
+          <source srcset="assets/app-practice.webp" type="image/webp">
+          <img src="assets/app-practice.jpg" alt="Practice what you read with quizzes"
+               width="740" height="1606" loading="lazy" decoding="async">
         </picture>
-        <p class="showcase-caption"
-           data-en="Quick quizzes after every story — what you read really sticks."
-           data-tr="Her hikayeden sonra kısa quizler — okuduğun aklında kalsın.">
-          Quick quizzes after every story — what you read really sticks.
-        </p>
       </div>
 
       <div class="showcase-card" role="listitem">
         <picture>
-          <source srcset="assets/5ins.webp" type="image/webp">
-          <img src="assets/5ins.png" alt="Read works by your favorite authors"
-               width="1122" height="1402" loading="lazy" decoding="async">
+          <source srcset="assets/app-authors.webp" type="image/webp">
+          <img src="assets/app-authors.jpg" alt="Read works by classic Russian authors"
+               width="740" height="1606" loading="lazy" decoding="async">
         </picture>
-        <p class="showcase-caption"
-           data-en="Read Pushkin, Chekhov, Tolstoy — with every word a tap away."
-           data-tr="Puşkin, Çehov, Tolstoy oku — her kelime bir dokunuşluk mesafede.">
-          Read Pushkin, Chekhov, Tolstoy — with every word a tap away.
-        </p>
       </div>
 
       <div class="showcase-card" role="listitem">
         <picture>
-          <source srcset="assets/6inst.webp" type="image/webp">
-          <img src="assets/6inst.png" alt="More features inside Luna"
-               width="1122" height="1402" loading="lazy" decoding="async">
+          <source srcset="assets/app-songs.webp" type="image/webp">
+          <img src="assets/app-songs.jpg" alt="Learn Russian through songs"
+               width="740" height="1606" loading="lazy" decoding="async">
         </picture>
-        <p class="showcase-caption"
-           data-en="Words you tap are saved automatically — review them anytime."
-           data-tr="Dokunduğun kelimeler otomatik kaydedilir — istediğin zaman tekrar et.">
-          Words you tap are saved automatically — review them anytime.
-        </p>
+      </div>
+
+      <div class="showcase-card" role="listitem">
+        <picture>
+          <source srcset="assets/app-lunai.webp" type="image/webp">
+          <img src="assets/app-lunai.jpg" alt="LunAI creates your perfect study session"
+               width="740" height="1606" loading="lazy" decoding="async">
+        </picture>
       </div>
     </div>
   </div>
