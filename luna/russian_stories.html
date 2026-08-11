@@ -96,11 +96,77 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
         var hide = function(){ try { o.style.display = 'none'; } catch(e){} };
         document.addEventListener('visibilitychange', function(){ if (!document.hidden) hide(); });
         window.addEventListener('pageshow', hide);
-        setTimeout(hide, 6000); // safety net if the redirect silently fails
       }
       o.style.display = 'flex';
+      // Safety net: never leave a full-screen spinner sitting over a page that didn't move.
+      setTimeout(hideOpeningOverlay, 2500);
     } catch(e){}
   }
+  function hideOpeningOverlay(){
+    try {
+      var o = document.getElementById('openingOverlay');
+      if (o) o.style.display = 'none';
+    } catch(e){}
+  }
+  // Shows a "tap ••• → Open in browser" hint, but ONLY if the App Store handoff didn't
+  // happen. If the store opens, the page is backgrounded and the hint is never painted.
+  function armInAppHint(){
+    var cancelled = false;
+    var cancel = function(){ cancelled = true; hideOpeningOverlay(); };
+    document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
+    window.addEventListener('pagehide', cancel, { once:true });
+    setTimeout(function(){
+      if (cancelled || document.hidden) return;
+      hideOpeningOverlay();
+      var h = document.getElementById('inAppHint');
+      if (h) { h.style.display = 'flex'; return; }
+      h = document.createElement('div');
+      h.id = 'inAppHint';
+      h.setAttribute('style','position:fixed;left:0;right:0;bottom:0;z-index:99999;display:flex;flex-direction:column;gap:10px;padding:20px 20px calc(20px + env(safe-area-inset-bottom));background:#0C0C0E;border-top:1px solid rgba(255,255,255,.14);color:#fff;font:500 15px/1.45 -apple-system,system-ui,sans-serif;');
+      h.innerHTML =
+        '<div style="font-weight:700;font-size:16px">Open in Safari to install</div>' +
+        '<div style="color:#9AA0AA">Instagram’s browser can’t open the App Store. Tap <b style="color:#fff">•••</b> at the top right, then <b style="color:#fff">“Open in external browser”</b>.</div>' +
+        '<button type="button" style="margin-top:4px;height:48px;border:0;border-radius:14px;background:#fff;color:#000;font:700 15px -apple-system,system-ui,sans-serif">Copy App Store link</button>' +
+        '<button type="button" style="height:44px;border:1px solid rgba(255,255,255,.18);border-radius:14px;background:transparent;color:#fff;font:600 15px -apple-system,system-ui,sans-serif">Close</button>';
+      var btns = h.getElementsByTagName('button');
+      btns[0].onclick = function(){
+        var url = 'https://apps.apple.com/app/id6740998772';
+        var done = function(){ btns[0].textContent = 'Link copied ✓'; };
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(done, function(){ legacyCopy(url); done(); });
+          } else { legacyCopy(url); done(); }
+        } catch(e){ try { legacyCopy(url); done(); } catch(e2){} }
+      };
+      btns[1].onclick = function(){ h.style.display = 'none'; };
+      (document.body || document.documentElement).appendChild(h);
+    }, 1200);
+  }
+  function legacyCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('style','position:fixed;top:0;left:0;opacity:0');
+    (document.body || document.documentElement).appendChild(ta);
+    ta.focus(); ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    try { ta.parentNode.removeChild(ta); } catch(e){}
+  }
+  // Click handler for the store <a> tags. Returning TRUE lets the browser perform the
+  // native anchor navigation — essential on iOS in-app browsers, where only a real link
+  // activation (not a scripted location change) triggers the App Store handoff.
+  window.openStoreFromLink = function(store, location){
+    var ua = navigator.userAgent || '';
+    var isIOSInApp = /iphone|ipad|ipod/i.test(ua) &&
+                     /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    if (isIOSInApp && store === 'AppStore') {
+      try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+      showOpeningOverlay();
+      armInAppHint();
+      return true; // let the <a href> navigate natively — do NOT preventDefault
+    }
+    openStore(store, location);
+    return false;
+  };
   // Opens the store reliably (native scheme first, https fallback). Defined here so a
   // tap before the bottom script is ready still works. trackStoreClick is guarded — it
   // just no-ops on an ultra-early tap; the full version below adds tracking.
@@ -122,6 +188,12 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     var goIOS = (store === 'AppStore');
     if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
     if (isInApp) {
+      // iOS Instagram/FB WKWebView: a SCRIPTED navigation to apps.apple.com does not get
+      // the universal-link handoff, so the App Store app never opens — the tap looks dead.
+      // A real anchor activation does. So we don't redirect here at all: openStoreFromLink
+      // lets the browser follow the <a href> natively (it returns true), and we only show
+      // the manual "open in Safari" hint if we're still on the page a moment later.
+      if (isIOS && goIOS) { armInAppHint(); return; }
       window.location.href = goAndroid ? AND_HTTPS : IOS_URL;
       return;
     }
@@ -316,7 +388,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 
     <div class="badges">
       <a class="badge" href="https://apps.apple.com/app/id6740998772"
-         onclick="openStore('AppStore','main');return false;"
+         onclick="return openStoreFromLink('AppStore','main');"
          aria-label="Download on the App Store">
         <span class="icon" aria-hidden="true">
           <svg width="22" height="28" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
