@@ -80,34 +80,6 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
      instant feedback, and works even before the bottom script runs / inside the
      Instagram & Facebook in-app browsers. -->
 <script>
-  // Instant visual feedback on tap so the click never feels "dead" (Clarity fix).
-  function showOpeningOverlay(){
-    try {
-      var o = document.getElementById('openingOverlay');
-      if (!o) {
-        o = document.createElement('div');
-        o.id = 'openingOverlay';
-        o.setAttribute('style','position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(0,0,0,.88);color:#fff;font:600 16px/1.4 -apple-system,system-ui,sans-serif;');
-        o.innerHTML = '<div style="width:38px;height:38px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:lopenspin .8s linear infinite"></div><div>Opening store…</div>';
-        (document.body || document.documentElement).appendChild(o);
-        var kf = document.createElement('style');
-        kf.textContent = '@keyframes lopenspin{to{transform:rotate(360deg)}}';
-        document.head.appendChild(kf);
-        var hide = function(){ try { o.style.display = 'none'; } catch(e){} };
-        document.addEventListener('visibilitychange', function(){ if (!document.hidden) hide(); });
-        window.addEventListener('pageshow', hide);
-      }
-      o.style.display = 'flex';
-      // Safety net: never leave a full-screen spinner sitting over a page that didn't move.
-      setTimeout(hideOpeningOverlay, 2500);
-    } catch(e){}
-  }
-  function hideOpeningOverlay(){
-    try {
-      var o = document.getElementById('openingOverlay');
-      if (o) o.style.display = 'none';
-    } catch(e){}
-  }
   // Click handler for the store <a> tags. On iOS in-app browsers it drives the
   // navigation itself: itms-apps:// first (claimed directly by the App Store app, so
   // the webview's universal-link block doesn't apply), plain https 1s later if that
@@ -118,22 +90,23 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
                      /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
     if (isIOSInApp && store === 'AppStore') {
       try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
-      showOpeningOverlay();
-      // Proven approach from the older working page: fire the itms-apps:// scheme, which
-      // the App Store app claims directly (no universal-link handoff needed, so the
-      // in-app webview's handoff block doesn't apply). If nothing claims it the page
-      // stays put, so we fall back to https and only then show the manual hint.
+      // Both URLs below are custom schemes, so iOS hands them to the App Store APP —
+      // neither can render as a web page inside the Instagram webview. No spinner: the
+      // store app comes to the foreground itself, and any overlay would just be a
+      // flash of black (or get stuck if the handoff is slow).
       var IOS_NATIVE = 'itms-apps://apps.apple.com/app/id6740998772';
-      var IOS_WEB    = 'https://apps.apple.com/app/id6740998772';
+      var IOS_ALT    = 'itms-apps://itunes.apple.com/app/id6740998772';
       var done = false;
-      var cancel = function(){ done = true; hideOpeningOverlay(); };
+      var cancel = function(){ done = true; };
       document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
       window.addEventListener('pagehide', cancel, { once:true });
-      // itms-apps didn't take → fall back to the plain https App Store URL.
+      // If the first scheme host goes unanswered, retry the legacy one — still the app,
+      // never the web page. We deliberately do NOT fall back to https://apps.apple.com,
+      // because inside the in-app browser that renders the store as a web page.
       setTimeout(function(){
         if (done || document.hidden) return;
-        window.location.href = IOS_WEB;
-      }, 1000);
+        try { window.location.href = IOS_ALT; } catch(e){}
+      }, 1200);
       try { window.location.href = IOS_NATIVE; } catch(e){}
       return false; // we drive the navigation ourselves
     }
@@ -144,7 +117,6 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   // tap before the bottom script is ready still works. trackStoreClick is guarded — it
   // just no-ops on an ultra-early tap; the full version below adds tracking.
   window.openStore = function(store, location){
-    showOpeningOverlay();
     try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
     var ua = navigator.userAgent || '';
     var isIOS = /iphone|ipad|ipod/i.test(ua);
@@ -507,9 +479,9 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     } catch(e){}
   };
 
-  // openStore + showOpeningOverlay are defined EARLY in the <head> (instant "Opening
-  // store…" feedback so the first tap is never a dead click; works in IG/FB in-app
-  // browsers; 900ms native->https fallback). Kept there so a very early tap also works.
+  // openStoreFromLink + openStore are defined EARLY in the <head> so a tap that lands
+  // before this script runs still opens the store. On iOS they fire itms-apps://, which
+  // iOS routes to the App Store app itself — never a web page inside the in-app browser.
 
   try {
     var pvId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
