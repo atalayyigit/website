@@ -90,23 +90,22 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
                      /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
     if (isIOSInApp && store === 'AppStore') {
       try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
-      // Both URLs below are custom schemes, so iOS hands them to the App Store APP —
-      // neither can render as a web page inside the Instagram webview. No spinner: the
-      // store app comes to the foreground itself, and any overlay would just be a
-      // flash of black (or get stuck if the handoff is slow).
+      // Meta's iOS webview swallows itms-apps:// silently — the tap looks dead (long-press
+      // still shows the link menu, which is the tell). So fire the scheme in case this
+      // build honours it, but fall back FAST to https://apps.apple.com. That URL is a
+      // universal link: on the rare builds that pass it to the system it opens the App
+      // Store app, and otherwise it renders the store page in-sheet with a working "View
+      // in App Store" button. A visible store page beats a button that does nothing.
       var IOS_NATIVE = 'itms-apps://apps.apple.com/app/id6740998772';
-      var IOS_ALT    = 'itms-apps://itunes.apple.com/app/id6740998772';
+      var IOS_WEB    = 'https://apps.apple.com/app/id6740998772';
       var done = false;
       var cancel = function(){ done = true; };
       document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
       window.addEventListener('pagehide', cancel, { once:true });
-      // If the first scheme host goes unanswered, retry the legacy one — still the app,
-      // never the web page. We deliberately do NOT fall back to https://apps.apple.com,
-      // because inside the in-app browser that renders the store as a web page.
       setTimeout(function(){
         if (done || document.hidden) return;
-        try { window.location.href = IOS_ALT; } catch(e){}
-      }, 1200);
+        window.location.href = IOS_WEB;
+      }, 350);
       try { window.location.href = IOS_NATIVE; } catch(e){}
       return false; // we drive the navigation ourselves
     }
@@ -284,6 +283,30 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
+  }
+
+  /* Short viewports — Instagram/Facebook open ad links in a half-height sheet, so the
+     page gets far less height than a normal browser tab. Centering the content there
+     pushes it off BOTH edges and the store buttons end up below the fold. Pin to the
+     top and scale the artwork down so everything fits without scrolling.
+     Placed last so these win over the base .logo/.name rules above. */
+  @media (max-height:700px){
+    body{
+      align-items:flex-start;
+      padding-top:20px;
+      padding-bottom:calc(20px + env(safe-area-inset-bottom));
+    }
+    .stage{ gap:16px; }
+    .logo{ width:84px;height:84px;border-radius:20px; }
+    .name{ font-size:clamp(20px,5.4vw,32px); }
+  }
+  @media (max-height:560px){
+    body{ padding-top:14px; }
+    .stage{ gap:11px; }
+    .logo{ width:64px;height:64px;border-radius:16px; }
+    .name{ font-size:clamp(19px,5vw,26px); }
+    .tagline{ font-size:14px;margin-top:-6px; }
+    .badge{ padding:11px 20px; }
   }
 </style>
 </head>
@@ -487,6 +510,49 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     var pvId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
     if (window.fbq) fbq('track', 'PageView', {}, { eventID: pvId });
     sendCAPI('PageView', pvId, { lang: (window.__lunaLang || 'en') });
+  } catch(e){}
+})();
+</script>
+
+<!-- Auto-redirect to the store (mobile only) — restored from the older page, where this
+     is what actually got users into the App Store from Instagram. A top-level navigation
+     to the https universal link that is NOT tied to a tap is the one route Meta's webview
+     still honours; tapping the button alone is unreliable there. Any tap/scroll cancels
+     it, so a user who reaches for the button themselves keeps the normal flow. -->
+<script>
+(function(){
+  try {
+    // ?noredirect=1 disables it (handy for checking the page itself).
+    if (/[?&]noredirect=1/.test(window.location.search)) return;
+
+    var ua = navigator.userAgent || '';
+    var isIOS = /iphone|ipad|ipod/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    if (!isIOS && !isAndroid) return; // desktop just reads the page
+
+    var isInApp = /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    var delay = isInApp ? 1800 : 1200; // let the in-app sheet settle first
+
+    var url = isIOS
+      ? 'https://apps.apple.com/app/id6740998772'
+      : 'https://play.google.com/store/apps/details?id=com.luna.russianstories';
+
+    // Any deliberate interaction cancels the auto-redirect.
+    var aborted = false;
+    function abort(){ aborted = true; }
+    document.addEventListener('click', abort, true);
+    document.addEventListener('touchstart', abort, { capture:true, passive:true });
+    document.addEventListener('touchmove',  abort, { capture:true, passive:true });
+
+    setTimeout(function(){
+      if (aborted) return;
+      try {
+        if (window.trackStoreClick) {
+          window.trackStoreClick(isIOS ? 'AppStore' : 'GooglePlay', 'auto_redirect');
+        }
+      } catch(e){}
+      window.location.href = url;
+    }, delay);
   } catch(e){}
 })();
 </script>
