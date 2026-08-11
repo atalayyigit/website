@@ -136,7 +136,13 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       try { window.location.href = IOS_NATIVE; } catch(e){ clear2(); window.location.href = IOS_URL; }
       return;
     }
-    window.open(goAndroid ? AND_HTTPS : IOS_URL, '_blank');
+    // Cross-platform fallback (e.g. App Store button tapped on Android, or desktop).
+    // In-app browsers (Instagram/Facebook) silently block window.open, so try it but
+    // fall back to a top-level navigation which always works.
+    var fallbackUrl = goAndroid ? AND_HTTPS : IOS_URL;
+    var popup = null;
+    try { popup = window.open(fallbackUrl, '_blank'); } catch(e){}
+    if (!popup) { window.location.href = fallbackUrl; }
   };
 </script>
 
