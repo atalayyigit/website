@@ -108,52 +108,10 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       if (o) o.style.display = 'none';
     } catch(e){}
   }
-  // Shows a "tap ••• → Open in browser" hint, but ONLY if the App Store handoff didn't
-  // happen. If the store opens, the page is backgrounded and the hint is never painted.
-  function armInAppHint(delayMs){
-    var cancelled = false;
-    var cancel = function(){ cancelled = true; hideOpeningOverlay(); };
-    document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
-    window.addEventListener('pagehide', cancel, { once:true });
-    setTimeout(function(){
-      if (cancelled || document.hidden) return;
-      hideOpeningOverlay();
-      var h = document.getElementById('inAppHint');
-      if (h) { h.style.display = 'flex'; return; }
-      h = document.createElement('div');
-      h.id = 'inAppHint';
-      h.setAttribute('style','position:fixed;left:0;right:0;bottom:0;z-index:99999;display:flex;flex-direction:column;gap:10px;padding:20px 20px calc(20px + env(safe-area-inset-bottom));background:#0C0C0E;border-top:1px solid rgba(255,255,255,.14);color:#fff;font:500 15px/1.45 -apple-system,system-ui,sans-serif;');
-      h.innerHTML =
-        '<div style="font-weight:700;font-size:16px">Open in Safari to install</div>' +
-        '<div style="color:#9AA0AA">Instagram’s browser can’t open the App Store. Tap <b style="color:#fff">•••</b> at the top right, then <b style="color:#fff">“Open in external browser”</b>.</div>' +
-        '<button type="button" style="margin-top:4px;height:48px;border:0;border-radius:14px;background:#fff;color:#000;font:700 15px -apple-system,system-ui,sans-serif">Copy App Store link</button>' +
-        '<button type="button" style="height:44px;border:1px solid rgba(255,255,255,.18);border-radius:14px;background:transparent;color:#fff;font:600 15px -apple-system,system-ui,sans-serif">Close</button>';
-      var btns = h.getElementsByTagName('button');
-      btns[0].onclick = function(){
-        var url = 'https://apps.apple.com/app/id6740998772';
-        var done = function(){ btns[0].textContent = 'Link copied ✓'; };
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(url).then(done, function(){ legacyCopy(url); done(); });
-          } else { legacyCopy(url); done(); }
-        } catch(e){ try { legacyCopy(url); done(); } catch(e2){} }
-      };
-      btns[1].onclick = function(){ h.style.display = 'none'; };
-      (document.body || document.documentElement).appendChild(h);
-    }, typeof delayMs === 'number' ? delayMs : 1200);
-  }
-  function legacyCopy(text){
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.setAttribute('style','position:fixed;top:0;left:0;opacity:0');
-    (document.body || document.documentElement).appendChild(ta);
-    ta.focus(); ta.select();
-    try { document.execCommand('copy'); } catch(e){}
-    try { ta.parentNode.removeChild(ta); } catch(e){}
-  }
-  // Click handler for the store <a> tags. Returning TRUE lets the browser perform the
-  // native anchor navigation — essential on iOS in-app browsers, where only a real link
-  // activation (not a scripted location change) triggers the App Store handoff.
+  // Click handler for the store <a> tags. On iOS in-app browsers it drives the
+  // navigation itself: itms-apps:// first (claimed directly by the App Store app, so
+  // the webview's universal-link block doesn't apply), plain https 1s later if that
+  // scheme goes unanswered.
   window.openStoreFromLink = function(store, location){
     var ua = navigator.userAgent || '';
     var isIOSInApp = /iphone|ipad|ipod/i.test(ua) &&
@@ -171,10 +129,9 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       var cancel = function(){ done = true; hideOpeningOverlay(); };
       document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
       window.addEventListener('pagehide', cancel, { once:true });
+      // itms-apps didn't take → fall back to the plain https App Store URL.
       setTimeout(function(){
         if (done || document.hidden) return;
-        // itms-apps didn't take: let the real https link try, then hint if we're still here.
-        armInAppHint(600);
         window.location.href = IOS_WEB;
       }, 1000);
       try { window.location.href = IOS_NATIVE; } catch(e){}
@@ -204,12 +161,8 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     var goIOS = (store === 'AppStore');
     if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
     if (isInApp) {
-      // iOS Instagram/FB WKWebView: a SCRIPTED navigation to apps.apple.com does not get
-      // the universal-link handoff, so the App Store app never opens — the tap looks dead.
-      // A real anchor activation does. So we don't redirect here at all: openStoreFromLink
-      // lets the browser follow the <a href> natively (it returns true), and we only show
-      // the manual "open in Safari" hint if we're still on the page a moment later.
-      if (isIOS && goIOS) { armInAppHint(); return; }
+      // iOS in-app + App Store is handled entirely by openStoreFromLink (itms-apps://
+      // first, https fallback). Everything else here goes straight to plain https.
       window.location.href = goAndroid ? AND_HTTPS : IOS_URL;
       return;
     }
