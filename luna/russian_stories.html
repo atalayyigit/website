@@ -110,7 +110,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   }
   // Shows a "tap ••• → Open in browser" hint, but ONLY if the App Store handoff didn't
   // happen. If the store opens, the page is backgrounded and the hint is never painted.
-  function armInAppHint(){
+  function armInAppHint(delayMs){
     var cancelled = false;
     var cancel = function(){ cancelled = true; hideOpeningOverlay(); };
     document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
@@ -140,7 +140,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       };
       btns[1].onclick = function(){ h.style.display = 'none'; };
       (document.body || document.documentElement).appendChild(h);
-    }, 1200);
+    }, typeof delayMs === 'number' ? delayMs : 1200);
   }
   function legacyCopy(text){
     var ta = document.createElement('textarea');
@@ -161,8 +161,24 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     if (isIOSInApp && store === 'AppStore') {
       try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
       showOpeningOverlay();
-      armInAppHint();
-      return true; // let the <a href> navigate natively — do NOT preventDefault
+      // Proven approach from the older working page: fire the itms-apps:// scheme, which
+      // the App Store app claims directly (no universal-link handoff needed, so the
+      // in-app webview's handoff block doesn't apply). If nothing claims it the page
+      // stays put, so we fall back to https and only then show the manual hint.
+      var IOS_NATIVE = 'itms-apps://apps.apple.com/app/id6740998772';
+      var IOS_WEB    = 'https://apps.apple.com/app/id6740998772';
+      var done = false;
+      var cancel = function(){ done = true; hideOpeningOverlay(); };
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
+      window.addEventListener('pagehide', cancel, { once:true });
+      setTimeout(function(){
+        if (done || document.hidden) return;
+        // itms-apps didn't take: let the real https link try, then hint if we're still here.
+        armInAppHint(600);
+        window.location.href = IOS_WEB;
+      }, 1000);
+      try { window.location.href = IOS_NATIVE; } catch(e){}
+      return false; // we drive the navigation ourselves
     }
     openStore(store, location);
     return false;
@@ -177,7 +193,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     var isIOS = /iphone|ipad|ipod/i.test(ua);
     var isAndroid = /android/i.test(ua);
     var IOS_URL = 'https://apps.apple.com/app/id6740998772';
-    var IOS_NATIVE = 'itms-apps://itunes.apple.com/app/id6740998772';
+    var IOS_NATIVE = 'itms-apps://apps.apple.com/app/id6740998772';
     var AND_PKG = 'com.luna.russianstories';
     var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG;
     // Instagram/Facebook/Messenger in-app browsers silently drop custom-scheme
