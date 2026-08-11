@@ -114,9 +114,17 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     var IOS_NATIVE = 'itms-apps://itunes.apple.com/app/id6740998772';
     var AND_PKG = 'com.luna.russianstories';
     var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG;
+    // Instagram/Facebook/Messenger in-app browsers silently drop custom-scheme
+    // navigations (itms-apps://, intent://) AND window.open — only plain https
+    // top-level navigation is reliable there.
+    var isInApp = /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
     var goAndroid = (store === 'GooglePlay');
     var goIOS = (store === 'AppStore');
     if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
+    if (isInApp) {
+      window.location.href = goAndroid ? AND_HTTPS : IOS_URL;
+      return;
+    }
     if (goAndroid && isAndroid) {
       var intentUrl = 'intent://details?id=' + AND_PKG +
         '#Intent;scheme=market;package=com.android.vending;' +
