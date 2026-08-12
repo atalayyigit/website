@@ -90,22 +90,22 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
                      /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
     if (isIOSInApp && store === 'AppStore') {
       try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
-      // Meta's iOS webview swallows itms-apps:// silently — the tap looks dead (long-press
-      // still shows the link menu, which is the tell). So fire the scheme in case this
-      // build honours it, but fall back FAST to https://apps.apple.com. That URL is a
-      // universal link: on the rare builds that pass it to the system it opens the App
-      // Store app, and otherwise it renders the store page in-sheet with a working "View
-      // in App Store" button. A visible store page beats a button that does nothing.
+      // PROVEN flow from the old page (russian_stories1.html, in production May–Aug):
+      // fire itms-apps:// inside the tap gesture — Meta's webview hands it to the App
+      // Store app — and only fall back to https after a FULL 1.5s. The hand-off takes
+      // ~0.5–1s; the 350ms fallback this replaces fired while it was still in flight
+      // and hijacked the pending navigation, so the tap looked dead (Clarity showed
+      // users tapping repeatedly with nothing happening). If the App Store does open,
+      // the page is backgrounded → pagehide/visibilitychange cancels the fallback.
       var IOS_NATIVE = 'itms-apps://apps.apple.com/app/id6740998772';
       var IOS_WEB    = 'https://apps.apple.com/app/id6740998772';
-      var done = false;
-      var cancel = function(){ done = true; };
-      document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
-      window.addEventListener('pagehide', cancel, { once:true });
-      setTimeout(function(){
-        if (done || document.hidden) return;
+      var t = setTimeout(function(){
+        if (document.hidden) return;
         window.location.href = IOS_WEB;
-      }, 350);
+      }, 1500);
+      var cancel = function(){ try { clearTimeout(t); } catch(e){} };
+      window.addEventListener('pagehide', cancel, { once:true });
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
       try { window.location.href = IOS_NATIVE; } catch(e){}
       return false; // we drive the navigation ourselves
     }
