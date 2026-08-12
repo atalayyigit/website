@@ -92,20 +92,37 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
       // PROVEN flow from the old page (russian_stories1.html, in production May–Aug):
       // fire itms-apps:// inside the tap gesture — Meta's webview hands it to the App
-      // Store app — and only fall back to https after a FULL 1.5s. The hand-off takes
-      // ~0.5–1s; the 350ms fallback this replaces fired while it was still in flight
-      // and hijacked the pending navigation, so the tap looked dead (Clarity showed
-      // users tapping repeatedly with nothing happening). If the App Store does open,
-      // the page is backgrounded → pagehide/visibilitychange cancels the fallback.
+      // Store app — and only fall back after a FULL 1.5s. The hand-off takes ~0.5–1s;
+      // the 350ms fallback this replaces fired while it was still in flight and
+      // hijacked the pending navigation, so the tap looked dead (Clarity showed users
+      // tapping repeatedly with nothing happening). If the App Store does open, the
+      // page is backgrounded → pagehide/visibilitychange cancels every fallback.
       var IOS_NATIVE = 'itms-apps://apps.apple.com/app/id6740998772';
       var IOS_WEB    = 'https://apps.apple.com/app/id6740998772';
-      var t = setTimeout(function(){
-        if (document.hidden) return;
-        window.location.href = IOS_WEB;
-      }, 1500);
-      var cancel = function(){ try { clearTimeout(t); } catch(e){} };
+      var isIG = /instagram/i.test(ua);
+      var timers = [];
+      var cancel = function(){ while (timers.length) { try { clearTimeout(timers.pop()); } catch(e){} } };
       window.addEventListener('pagehide', cancel, { once:true });
       document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
+      if (isIG) {
+        // Instagram's own escape scheme opens the URL in the EXTERNAL browser (Safari),
+        // and since Nov 2025 apps.apple.com 301s iOS straight into the native App Store
+        // from there. Try it if itms-apps:// went unanswered; plain https is the last
+        // resort (inside the IG webview that 301 can dead-end, so it goes last).
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          try { window.location.href = 'instagram://extbrowser/?url=' + encodeURIComponent(IOS_WEB); } catch(e){}
+        }, 1500));
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 3000));
+      } else {
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 1500));
+      }
       try { window.location.href = IOS_NATIVE; } catch(e){}
       return false; // we drive the navigation ourselves
     }
@@ -543,6 +560,13 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     document.addEventListener('click', abort, true);
     document.addEventListener('touchstart', abort, { capture:true, passive:true });
     document.addEventListener('touchmove',  abort, { capture:true, passive:true });
+    // If the page is EVER backgrounded, kill the auto-redirect for good. An early tap
+    // (before this script ran) can open the App Store without setting `aborted`; this
+    // timer then suspends while Instagram is in the background and would fire the
+    // moment the user comes BACK from the store — yanking them there again and firing
+    // a duplicate Lead/CAPI 'auto_redirect' event on an already-tracked journey.
+    window.addEventListener('pagehide', abort, { once:true });
+    document.addEventListener('visibilitychange', function(){ if (document.hidden) abort(); });
 
     setTimeout(function(){
       if (aborted) return;
