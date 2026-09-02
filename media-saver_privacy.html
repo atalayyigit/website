@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy – Video Downloader &amp; Saver: Luna (Media Saver)</title>
+  <meta name="description" content="Privacy Policy for Video Downloader &amp; Saver: Luna (Media Saver), a LunaSoft mobile application for Android and iOS." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #0078D4;
+      --blue-light: #00BCF2;
+      --bg: #0a0f1e;
+      --bg2: #0d1526;
+      --card: #111d35;
+      --card-border: #1e3056;
+      --text: #e8f0fe;
+      --text-muted: #7a9bc4;
+      --white: #ffffff;
+      --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* ── MINIMAL NAVBAR ── */
+    .navbar {
+      background: rgba(10,15,30,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-inner {
+      max-width: 880px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .logo-luna { color: var(--white); }
+    .logo-soft { color: var(--blue); }
+
+    .lang-toggle {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .lang-toggle:hover { color: var(--white); border-color: var(--blue); }
+
+    /* ── HERO ── */
+    .privacy-hero {
+      padding: 80px 0 40px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .privacy-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,120,212,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .privacy-hero .container { position: relative; z-index: 1; }
+    .privacy-hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .privacy-hero .last-updated {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* ── CONTENT ── */
+    .privacy-content {
+      padding: 40px 0 80px;
+      flex: 1;
+    }
+    .privacy-wrapper {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 48px 44px;
+    }
+    .privacy-wrapper h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-top: 36px;
+      margin-bottom: 14px;
+      letter-spacing: -0.3px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .privacy-wrapper h2:first-child { margin-top: 0; }
+    .privacy-wrapper h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--blue-light);
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+    .privacy-wrapper p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .privacy-wrapper ul {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 16px;
+    }
+    .privacy-wrapper ul li {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      padding-left: 22px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .privacy-wrapper ul li::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 12px;
+      width: 6px;
+      height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+    }
+    .privacy-wrapper strong { color: var(--text); font-weight: 600; }
+    .privacy-wrapper a {
+      color: var(--blue-light);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .privacy-wrapper a:hover { border-color: var(--blue-light); }
+
+    .info-box {
+      background: rgba(0,120,212,0.08);
+      border: 1px solid rgba(0,120,212,0.25);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 18px 0;
+    }
+    .info-box p { margin-bottom: 0; color: var(--text); font-size: 0.9rem; }
+
+    .contact-block {
+      margin-top: 24px;
+      padding: 24px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      border-left: 3px solid var(--blue);
+    }
+    .contact-block p { margin-bottom: 6px; }
+
+    /* ── MINIMAL FOOTER ── */
+    .footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--card-border);
+      padding: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .privacy-wrapper { padding: 28px 22px; }
+      .privacy-hero { padding: 50px 0 30px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MINIMAL NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-luna">Luna</span><span class="logo-soft">Soft</span>
+      </a>
+      <button class="lang-toggle" id="langToggle" onclick="toggleLang()">TR</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="privacy-hero">
+    <div class="container">
+      <h1 data-en="Privacy Policy" data-tr="Gizlilik Politikası">Privacy Policy</h1>
+      <p class="last-updated">
+        <span data-en="Video Downloader &amp; Saver: Luna (Media Saver) · Last updated: September 2, 2026" data-tr="Video Downloader &amp; Saver: Luna (Media Saver) · Son güncelleme: 2 Eylül 2026">Video Downloader &amp; Saver: Luna (Media Saver) · Last updated: September 2, 2026</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <section class="privacy-content">
+    <div class="container">
+      <div class="privacy-wrapper">
+
+        <h2 data-en="1. Introduction" data-tr="1. Giriş">1. Introduction</h2>
+        <p data-en="LunaSoft (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) develops and publishes Video Downloader &amp; Saver: Luna, also distributed as Media Saver (the &quot;App&quot;). This Privacy Policy explains what information the App processes, how it is used, and your choices regarding your data when you use the App." data-tr="LunaSoft (&quot;biz&quot;, &quot;bize&quot;), Video Downloader &amp; Saver: Luna (Media Saver olarak da dağıtılan, &quot;Uygulama&quot;) uygulamasını geliştirir ve yayınlar. Bu Gizlilik Politikası, Uygulamayı kullandığınızda hangi bilgilerin işlendiğini, bunların nasıl kullanıldığını ve verilerinize ilişkin haklarınızı açıklar.">LunaSoft ("we", "us", or "our") develops and publishes Video Downloader &amp; Saver: Luna, also distributed as Media Saver (the "App"). This Privacy Policy explains what information the App processes, how it is used, and your choices regarding your data when you use the App.</p>
+
+        <div class="info-box">
+          <p data-en="Media Saver is designed with privacy in mind. We do not require you to create an account, and we do not collect personally identifiable information." data-tr="Media Saver gizlilik odaklı tasarlanmıştır. Hesap oluşturmanızı gerektirmez ve sizi kişisel olarak tanımlayabilecek bilgileri toplamayız.">Media Saver is designed with privacy in mind. We do not require you to create an account, and we do not collect personally identifiable information.</p>
+        </div>
+
+        <h2 data-en="2. Information We Collect" data-tr="2. Topladığımız Bilgiler">2. Information We Collect</h2>
+
+        <h3 data-en="2.1 No Account, No Personal Information" data-tr="2.1 Hesap Yok, Kişisel Bilgi Yok">2.1 No Account, No Personal Information</h3>
+        <p data-en="The App does not require registration. We do not collect your name, email address, phone number, location, contacts, or any other personally identifiable information." data-tr="Uygulama kayıt gerektirmez. Adınızı, e-posta adresinizi, telefon numaranızı, konumunuzu, kişilerinizi veya sizi kişisel olarak tanımlayabilecek başka bilgileri toplamayız.">The App does not require registration. We do not collect your name, email address, phone number, location, contacts, or any other personally identifiable information.</p>
+
+        <h3 data-en="2.2 Links You Submit" data-tr="2.2 Gönderdiğiniz Bağlantılar">2.2 Links You Submit</h3>
+        <p data-en="When you paste or enter a link to save a video, that link may be sent to our backend service (hosted on Microsoft Azure) solely to retrieve the corresponding media file. The link is used only to fulfill your request and is not associated with your identity. We do not keep a history of the links you submit on our servers. Some links are processed entirely on your device and are never sent to our servers." data-tr="Bir videoyu kaydetmek için bir bağlantı yapıştırdığınızda veya girdiğinizde, bu bağlantı yalnızca ilgili medya dosyasını almak amacıyla sunucu altyapımıza (Microsoft Azure üzerinde barındırılır) gönderilebilir. Bağlantı yalnızca talebinizi yerine getirmek için kullanılır ve kimliğinizle ilişkilendirilmez. Gönderdiğiniz bağlantıların geçmişini sunucularımızda tutmayız. Bazı bağlantılar tamamen cihazınızda işlenir ve sunucularımıza hiç gönderilmez.">When you paste or enter a link to save a video, that link may be sent to our backend service (hosted on Microsoft Azure) solely to retrieve the corresponding media file. The link is used only to fulfill your request and is not associated with your identity. We do not keep a history of the links you submit on our servers. Some links are processed entirely on your device and are never sent to our servers.</p>
+
+        <h3 data-en="2.3 Photos and Storage Access" data-tr="2.3 Fotoğraf ve Depolama Erişimi">2.3 Photos and Storage Access</h3>
+        <p data-en="With your permission, the App adds the videos you save to your device's photo library (on Android, to your device's Downloads or Movies folder). This is &quot;add-only&quot; access — the App does not read, scan, or access the existing photos or videos in your library. You can grant or revoke this permission at any time in your device Settings." data-tr="İzninizle, Uygulama kaydettiğiniz videoları cihazınızın fotoğraf kitaplığına (Android&#x27;de İndirilenler veya Filmler klasörüne) ekler. Bu &quot;yalnızca ekleme&quot; erişimidir — Uygulama kitaplığınızdaki mevcut fotoğraf veya videoları okumaz, taramaz veya bunlara erişmez. Bu izni cihaz Ayarlarınızdan istediğiniz zaman verebilir veya geri alabilirsiniz.">With your permission, the App adds the videos you save to your device's photo library (on Android, to your device's Downloads or Movies folder). This is "add-only" access — the App does not read, scan, or access the existing photos or videos in your library. You can grant or revoke this permission at any time in your device Settings.</p>
+
+        <h3 data-en="2.4 Locally Stored Data" data-tr="2.4 Cihazınızda Saklanan Veriler">2.4 Locally Stored Data</h3>
+        <p data-en="The videos you save, your in-app library, and your preferences are stored locally on your device. This data does not leave your device and is not accessible to us. If you uninstall the App, this data is deleted." data-tr="Kaydettiğiniz videolar, uygulama içi kitaplığınız ve tercihleriniz cihazınızda yerel olarak saklanır. Bu veriler cihazınızdan ayrılmaz ve bize erişilebilir değildir. Uygulamayı kaldırdığınızda bu veriler silinir.">The videos you save, your in-app library, and your preferences are stored locally on your device. This data does not leave your device and is not accessible to us. If you uninstall the App, this data is deleted.</p>
+
+        <h3 data-en="2.5 Purchases and Subscriptions" data-tr="2.5 Satın Alımlar ve Abonelikler">2.5 Purchases and Subscriptions</h3>
+        <p data-en="In-app purchases and subscriptions are processed entirely by Google Play (on Android) or the Apple App Store (on iOS). We do not receive or store your payment information, card numbers, or billing address. We only receive a confirmation that a purchase was made." data-tr="Uygulama içi satın alımlar ve abonelikler tamamen Google Play (Android) veya Apple App Store (iOS) tarafından işlenir. Ödeme bilgilerinizi, kart numaranızı veya fatura adresinizi almayız ve saklamayız. Yalnızca satın alımın gerçekleştiğine dair bir onay alırız.">In-app purchases and subscriptions are processed entirely by Google Play (on Android) or the Apple App Store (on iOS). We do not receive or store your payment information, card numbers, or billing address. We only receive a confirmation that a purchase was made.</p>
+
+        <h2 data-en="3. How We Use Information" data-tr="3. Bilgileri Nasıl Kullanırız">3. How We Use Information</h2>
+        <p data-en="The limited information processed by the App is used only to:" data-tr="Uygulama tarafından işlenen sınırlı bilgi yalnızca şu amaçlarla kullanılır:">The limited information processed by the App is used only to:</p>
+        <ul>
+          <li data-en="Retrieve and save the media you request." data-tr="Talep ettiğiniz medyayı almak ve kaydetmek.">Retrieve and save the media you request.</li>
+          <li data-en="Operate, maintain, and improve the App." data-tr="Uygulamayı çalıştırmak, sürdürmek ve geliştirmek.">Operate, maintain, and improve the App.</li>
+          <li data-en="Comply with applicable legal obligations." data-tr="Geçerli yasal yükümlülüklere uymak.">Comply with applicable legal obligations.</li>
+        </ul>
+        <p data-en="We do not sell, rent, or trade any user information. We do not use your data for advertising or build user profiles." data-tr="Kullanıcı bilgilerini satmaz, kiralamaz veya takas etmeyiz. Verilerinizi reklam amacıyla kullanmaz, kullanıcı profili oluşturmayız.">We do not sell, rent, or trade any user information. We do not use your data for advertising or build user profiles.</p>
+
+        <h2 data-en="4. Third-Party Services" data-tr="4. Üçüncü Taraf Hizmetleri">4. Third-Party Services</h2>
+        <p data-en="To operate the App, we rely on the following third-party providers:" data-tr="Uygulamayı çalıştırmak için aşağıdaki üçüncü taraf sağlayıcılardan yararlanırız:">To operate the App, we rely on the following third-party providers:</p>
+        <ul>
+          <li><strong>Microsoft Azure</strong> <span data-en="(backend hosting)" data-tr="(sunucu altyapısı)">(backend hosting)</span> — <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener">privacy.microsoft.com/privacystatement</a></li>
+          <li><strong>Google Play (Android)</strong> — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a></li>
+          <li><strong>Apple App Store (iOS)</strong> — <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">apple.com/legal/privacy</a></li>
+        </ul>
+        <p data-en="These providers process data under their own privacy policies. We encourage you to review them." data-tr="Bu sağlayıcılar verileri kendi gizlilik politikalarına göre işler. Bu politikaları incelemenizi öneririz.">These providers process data under their own privacy policies. We encourage you to review them.</p>
+
+        <h2 data-en="5. Data Security" data-tr="5. Veri Güvenliği">5. Data Security</h2>
+        <p data-en="All communication between the App and our backend servers is encrypted using HTTPS/TLS. We follow industry-standard practices to protect data in transit. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security." data-tr="Uygulama ile sunucu altyapımız arasındaki tüm iletişim HTTPS/TLS ile şifrelenir. Aktarım sırasında verileri korumak için sektör standardı uygulamaları takip ederiz. Ancak internet üzerinden hiçbir aktarım yöntemi %100 güvenli değildir; mutlak güvenliği garanti edemeyiz.">All communication between the App and our backend servers is encrypted using HTTPS/TLS. We follow industry-standard practices to protect data in transit. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+
+        <h2 data-en="6. Your Responsibility for Content" data-tr="6. İçerikle İlgili Sorumluluğunuz">6. Your Responsibility for Content</h2>
+        <p data-en="You are responsible for ensuring you have the right to save and use any content you download with the App. Only save content you own or have permission to use, and respect the terms of service of the websites you use and all applicable copyright laws. Media Saver is a general-purpose tool and is not affiliated with, sponsored by, or endorsed by any third-party platform." data-tr="Uygulama ile indirdiğiniz içeriği kaydetme ve kullanma hakkına sahip olduğunuzdan emin olmak sizin sorumluluğunuzdadır. Yalnızca size ait olan veya kullanma izniniz bulunan içeriği kaydedin; kullandığınız web sitelerinin hizmet şartlarına ve geçerli tüm telif hakkı yasalarına uyun. Media Saver genel amaçlı bir araçtır ve herhangi bir üçüncü taraf platformla bağlantılı, onun tarafından desteklenen veya onaylanan bir uygulama değildir.">You are responsible for ensuring you have the right to save and use any content you download with the App. Only save content you own or have permission to use, and respect the terms of service of the websites you use and all applicable copyright laws. Media Saver is a general-purpose tool and is not affiliated with, sponsored by, or endorsed by any third-party platform.</p>
+
+        <h2 data-en="7. Children's Privacy" data-tr="7. Çocukların Gizliliği">7. Children's Privacy</h2>
+        <p data-en="The App is intended for users aged 13 and above. We do not knowingly collect any information from children under 13. If you believe a child under 13 has provided information to us, please contact us and we will take steps to remove it." data-tr="Uygulama 13 yaş ve üzeri kullanıcılar için tasarlanmıştır. 13 yaşın altındaki çocuklardan bilerek bilgi toplamayız. 13 yaşın altındaki bir çocuğun bize bilgi verdiğini düşünüyorsanız lütfen bizimle iletişime geçin; bu bilgiyi kaldırmak için gerekli adımları atarız.">The App is intended for users aged 13 and above. We do not knowingly collect any information from children under 13. If you believe a child under 13 has provided information to us, please contact us and we will take steps to remove it.</p>
+
+        <h2 data-en="8. Your Rights" data-tr="8. Haklarınız">8. Your Rights</h2>
+        <p data-en="Because we do not store personally identifiable user data on our servers, there is generally no personal data for us to access, correct, or delete. However, depending on your jurisdiction (such as the EU under GDPR or California under CCPA), you may have the following rights:" data-tr="Sunucularımızda kişisel olarak tanımlanabilir kullanıcı verisi saklamadığımız için genellikle erişebileceğimiz, düzelteceğimiz veya sileceğimiz kişisel veri bulunmaz. Ancak yargı bölgenize göre (örneğin AB'de GDPR veya Kaliforniya'da CCPA), aşağıdaki haklara sahip olabilirsiniz:">Because we do not store personally identifiable user data on our servers, there is generally no personal data for us to access, correct, or delete. However, depending on your jurisdiction (such as the EU under GDPR or California under CCPA), you may have the following rights:</p>
+        <ul>
+          <li data-en="The right to access any data we may hold about you." data-tr="Hakkınızda tutabileceğimiz verilere erişme hakkı.">The right to access any data we may hold about you.</li>
+          <li data-en="The right to request deletion of any data." data-tr="Verilerin silinmesini talep etme hakkı.">The right to request deletion of any data.</li>
+          <li data-en="The right to object to processing." data-tr="İşlemeye itiraz etme hakkı.">The right to object to processing.</li>
+          <li data-en="The right to lodge a complaint with a data protection authority." data-tr="Bir veri koruma kurumuna şikâyette bulunma hakkı.">The right to lodge a complaint with a data protection authority.</li>
+        </ul>
+        <h3 data-en="Data Retention and Deletion" data-tr="Veri Saklama ve Silme">Data Retention and Deletion</h3>
+        <p data-en="We do not maintain user accounts or user profiles, so there is no stored account for us to delete. Videos you save, your in-app library, and your preferences live only on your device: you can delete them at any time from within the App, or remove all of them at once by uninstalling the App. Links you submit are processed in memory to fulfil your request and are not retained on our servers. Diagnostic error logs generated when a download fails contain no personal identifiers and are automatically discarded within 30 days. If you would like to request deletion of any data you believe we hold about you, email us at info@lunasoft.com.tr and we will respond within 30 days." data-tr="Kullanıcı hesabı veya kullanıcı profili tutmadığımız için silebileceğimiz kayıtlı bir hesap bulunmaz. Kaydettiğiniz videolar, uygulama içi kitaplığınız ve tercihleriniz yalnızca cihazınızda bulunur: bunları istediğiniz zaman Uygulama içinden silebilir veya Uygulamayı kaldırarak tamamını tek seferde kaldırabilirsiniz. Gönderdiğiniz bağlantılar talebinizi yerine getirmek için bellekte işlenir ve sunucularımızda saklanmaz. İndirme başarısız olduğunda oluşan tanılama hata kayıtları kişisel tanımlayıcı içermez ve 30 gün içinde otomatik olarak silinir. Hakkınızda tuttuğumuzu düşündüğünüz herhangi bir verinin silinmesini talep etmek isterseniz info@lunasoft.com.tr adresine e-posta gönderin; 30 gün içinde yanıt veririz.">We do not maintain user accounts or user profiles, so there is no stored account for us to delete. Videos you save, your in-app library, and your preferences live only on your device: you can delete them at any time from within the App, or remove all of them at once by uninstalling the App. Links you submit are processed in memory to fulfil your request and are not retained on our servers. Diagnostic error logs generated when a download fails contain no personal identifiers and are automatically discarded within 30 days. If you would like to request deletion of any data you believe we hold about you, email us at info@lunasoft.com.tr and we will respond within 30 days.</p>
+
+        <p data-en="To exercise any of these rights, contact us at the email address below." data-tr="Bu haklardan herhangi birini kullanmak için aşağıdaki e-posta adresinden bizimle iletişime geçebilirsiniz.">To exercise any of these rights, contact us at the email address below.</p>
+
+        <h2 data-en="9. Changes to This Policy" data-tr="9. Bu Politikadaki Değişiklikler">9. Changes to This Policy</h2>
+        <p data-en="We may update this Privacy Policy from time to time. The &quot;Last updated&quot; date at the top of this page indicates when the most recent changes were made. We encourage you to review this policy periodically." data-tr="Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Sayfanın üst kısmındaki &quot;Son güncelleme&quot; tarihi en son değişikliğin ne zaman yapıldığını gösterir. Bu politikayı periyodik olarak gözden geçirmenizi öneririz.">We may update this Privacy Policy from time to time. The "Last updated" date at the top of this page indicates when the most recent changes were made. We encourage you to review this policy periodically.</p>
+
+        <h2 data-en="10. Contact Us" data-tr="10. Bize Ulaşın">10. Contact Us</h2>
+        <p data-en="If you have any questions about this Privacy Policy or our practices, please contact us:" data-tr="Bu Gizlilik Politikası veya uygulamalarımız hakkında sorularınız varsa lütfen bizimle iletişime geçin:">If you have any questions about this Privacy Policy or our practices, please contact us:</p>
+        <div class="contact-block">
+          <p><strong>LunaSoft</strong></p>
+          <p data-en="Email:" data-tr="E-posta:">Email:</p>
+          <p><a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a></p>
+          <p data-en="Website:" data-tr="Web Sitesi:">Website:</p>
+          <p><a href="https://lunasoft.com.tr">lunasoft.com.tr</a></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MINIMAL FOOTER -->
+  <footer class="footer">
+    <span data-en="© 2026 LunaSoft. All rights reserved." data-tr="© 2026 LunaSoft. Tüm hakları saklıdır.">© 2026 LunaSoft. All rights reserved.</span>
+  </footer>
+
+  <script>
+    // Language toggle - default English
+    let currentLang = 'en';
+    function toggleLang() {
+      currentLang = currentLang === 'en' ? 'tr' : 'en';
+      document.getElementById('langToggle').textContent = currentLang === 'tr' ? 'EN' : 'TR';
+      document.documentElement.lang = currentLang;
+      applyLang();
+    }
+    function applyLang() {
+      const attr = `data-${currentLang}`;
+      document.querySelectorAll(`[${attr}]`).forEach(el => {
+        el.textContent = el.getAttribute(attr);
+      });
+    }
+  </script>
+
+</body>
+</html>
