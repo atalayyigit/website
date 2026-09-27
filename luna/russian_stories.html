@@ -61,6 +61,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
       localStorage.setItem('luna_eid', eid);
     }
   } catch(e){}
+  window.__lunaEid = eid || '';
   var advMatch = eid ? { external_id: eid } : {};
   // Auto-Config kapalı: Meta'nın otomatik algıladığı event'ler (buton tıklaması, sayfa
   // metadata'sı) gönderilmesin — sadece bizim eventID'li event'lerimiz gitsin.
@@ -579,13 +580,47 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
     return m ? m[1] : undefined;
   }
-  function setCookie(name, value, days){
+  // Meta cookie domain, found the way fbevents.js finds it: try the shortest domain first
+  // ('tr', 'com.tr', 'lunasoft.com.tr'), keep the first one the browser accepts, and use its
+  // position as the index in the 'fb.<index>.' prefix (here: fb.2 on .lunasoft.com.tr).
+  // This page used to write host-only 'fb.1.' cookies. The pixel then derived '.com.tr' (a
+  // public suffix the browser rejects) whenever it tried to update them, so a refreshed fbc
+  // (IG's brid/aem suffix, a newer ad click) never persisted and CAPI kept the stale value.
+  var FB_CK = (function(){
+    try {
+      var parts = window.location.hostname.split('.');
+      for (var i = 0; i < parts.length; i++) {
+        var dom = parts.slice(parts.length - 1 - i).join('.');
+        document.cookie = '__luna_ck=1;path=/;domain=.' + dom;
+        if (/(?:^|; )__luna_ck=1/.test(document.cookie)) {
+          document.cookie = '__luna_ck=;max-age=0;path=/;domain=.' + dom;
+          return { idx: i, domain: dom };
+        }
+      }
+    } catch(e){}
+    return { idx: 1, domain: '' }; // localhost / bare IP: host-only, as before
+  })();
+  function setFbCookie(name, payload, days){
     try {
       var d = new Date();
       d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-      document.cookie = name + '=' + value + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
+      // Drop a host-only copy first so reads can't return a stale duplicate.
+      if (FB_CK.domain) document.cookie = name + '=;max-age=0;path=/';
+      document.cookie = name + '=fb.' + FB_CK.idx + '.' + payload + ';expires=' + d.toUTCString() +
+        ';path=/;SameSite=Lax' + (FB_CK.domain ? ';domain=.' + FB_CK.domain : '');
     } catch(e) {}
   }
+  // One-time migration for returning visitors: re-home cookies written the old way (host-only
+  // 'fb.1.') with the right index + domain, keeping their timestamp and value — same _fbp id.
+  (function(){
+    try {
+      if (!FB_CK.domain || FB_CK.idx === 1) return;
+      ['_fbc', '_fbp'].forEach(function(n){
+        var v = getCookie(n);
+        if (v && v.indexOf('fb.1.') === 0) setFbCookie(n, v.slice(5), 90);
+      });
+    } catch(e){}
+  })();
   (function(){
     try {
       var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
@@ -596,13 +631,13 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       if (!/^[A-Za-z0-9_\-]{1,500}$/.test(fbclid)) return;
       var existing = getCookie('_fbc');
       if (existing && existing.indexOf(fbclid) !== -1) return;
-      setCookie('_fbc', 'fb.1.' + Date.now() + '.' + fbclid, 90);
+      setFbCookie('_fbc', Date.now() + '.' + fbclid, 90);
     } catch(e){}
   })();
   (function(){
     try {
       if (getCookie('_fbp')) return;
-      setCookie('_fbp', 'fb.1.' + Date.now() + '.' + Math.floor(Math.random()*2147483647), 90);
+      setFbCookie('_fbp', Date.now() + '.' + Math.floor(Math.random()*2147483647), 90);
     } catch(e){}
   })();
   // Kalıcı external_id — dedup match anahtarı (Meta için "Harici Kod")
@@ -618,7 +653,9 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       return eid;
     } catch(e){ return ''; }
   }
-  window.__lunaEid = getExternalId();
+  // Reuse the id the <head> already handed to fbq('init') so pixel and CAPI always carry the
+  // SAME external_id — even when localStorage.setItem throws and nothing was persisted.
+  window.__lunaEid = window.__lunaEid || getExternalId();
 
   function sendCAPI(eventName, eventId, extra){
     try {
