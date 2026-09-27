@@ -3,23 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Luna Language Reader</title>
-<meta name="description" content="Read, listen and understand real texts. Luna Language Reader — available on the App Store and Google Play.">
+<title>Luna Reader – Read Russian, Turkish &amp; English</title>
+<meta name="description" content="Read Russian, Turkish and English stories with audio and tap any word for instant translation. Luna Reader — free on the App Store and Google Play.">
 <meta name="theme-color" content="#000000">
 
-<meta property="og:title" content="Luna Language Reader">
-<meta property="og:description" content="Read, listen and understand real texts.">
+<meta property="og:title" content="Luna Reader – Read Russian, Turkish &amp; English">
+<meta property="og:description" content="Stories with audio. Tap any word for instant translation.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="assets/Luna_logo_512_black.png">
-<link rel="icon" type="image/png" href="assets/Luna_logo_512_black.png">
-<link rel="apple-touch-icon" href="assets/Luna_logo_512_black.png">
+<meta property="og:image" content="assets/Luna_logo_1024.png">
+<link rel="icon" type="image/png" href="assets/Luna_logo_180.png">
+<link rel="apple-touch-icon" href="assets/Luna_logo_180.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://connect.facebook.net">
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="preconnect" href="https://www.clarity.ms">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2VQJTF2X9K"></script>
@@ -65,9 +62,11 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
     }
   } catch(e){}
   var advMatch = eid ? { external_id: eid } : {};
-  // KRITIK: Auto-Config'i kapat. Açık olursa Meta kendi 'pcm_plugin-set_xxx' ID'sini
-  // bizim event_id'mizin üzerine yazıyor ve dedup tamamen bozuluyor (browser %0 match).
-  // NOT: BOOLEAN false olmalı — string 'false' tip kontrolünden geçmez, autoConfig AÇIK kalır.
+  // Auto-Config kapalı: Meta'nın otomatik algıladığı event'ler (buton tıklaması, sayfa
+  // metadata'sı) gönderilmesin — sadece bizim eventID'li event'lerimiz gitsin.
+  // Not: fbevents.js 'pcm_plugin-set_' ID'sini yalnızca eventID'si OLMAYAN event'lere atar;
+  // bizimkilerin hepsi eventID taşıdığı için dedup bundan etkilenmez. (true/"true" dışındaki
+  // her değer, string 'false' dahil, opt-out sayılır; boolean false en açık hâli.)
   fbq('set', 'autoConfig', false, '2013897989521001');
   fbq('init', '2013897989521001', advMatch);
 })();
@@ -80,11 +79,63 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
      instant feedback, and works even before the bottom script runs / inside the
      Instagram & Facebook in-app browsers. -->
 <script>
+  // Platform class on <html> before first paint: a phone gets ONE big button for its own
+  // store plus a small "Also on …" link to the other (CSS below). ~83% of Leads are Android,
+  // yet the App Store badge came first, and a wrong-store tap is a dead end (no install).
+  // Unknown UAs (desktop, iPadOS 'Macintosh') get two equal buttons side by side.
+  (function(){
+    var ua = navigator.userAgent || '';
+    var p = /iphone|ipad|ipod/i.test(ua) ? 'plat-ios' : (/android/i.test(ua) ? 'plat-android' : '');
+    if (p) document.documentElement.className += ' ' + p;
+  })();
+  // Per-tab "already sent to the store" marker. The auto-redirect checks it, so a Back /
+  // reload (Android WebView has no bfcache and re-runs the page) doesn't bounce the user
+  // to the store again or log another event.
+  window.markHandoff = function(kind){
+    try { sessionStorage.setItem('luna_handoff', kind); } catch(e){}
+  };
+  function clearOpening(){
+    var els = document.querySelectorAll('.badge.is-opening');
+    for (var i = 0; i < els.length; i++) els[i].classList.remove('is-opening');
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = '';
+  }
+  // Screen readers: the badges' static aria-labels hide the visual "Opening…" swap, so
+  // announce it through a polite live region instead.
+  function announceOpening(store){
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = 'Opening ' + (store === 'AppStore' ? 'the App Store' : 'Google Play') + '…';
+  }
+
   // Click handler for the store <a> tags. On iOS in-app browsers it drives the
   // navigation itself: itms-apps:// first (claimed directly by the App Store app, so
   // the webview's universal-link block doesn't apply), plain https 1s later if that
   // scheme goes unanswered.
-  window.openStoreFromLink = function(store, location){
+  window.openStoreFromLink = function(store, location, el){
+    // Repeat-tap lock: users who think the first tap was dead tap again. Each extra tap
+    // used to fire another Lead + custom event (pixel AND CAPI) and start a second set of
+    // fallback timers that raced the first hand-off. Swallow taps for 3.5s — long enough
+    // to cover the slowest chain (itms-apps → extbrowser @1.5s → https @3s) — and unlock
+    // as soon as the page comes back to the foreground so a returning user can retry.
+    // The lock is PER STORE: a mis-tap on the small "Also on …" link must not swallow the
+    // user's immediate tap on the big button for their own store.
+    var now = Date.now();
+    var locks = window.__storeLocks || (window.__storeLocks = {});
+    if (locks[store] && now - locks[store] < 3500) return false;
+    locks[store] = now;
+    // A tap on the other store supersedes any hand-off still in flight: drop its fallback
+    // timers so they can't hijack this navigation.
+    if (window.__handoffCancel) { try { window.__handoffCancel(); } catch(e){} window.__handoffCancel = null; }
+    window.markHandoff('tap');
+    // Visible "Opening…" state, so the user sees the tap registered instead of tapping again.
+    // One shared timer, so an earlier tap's timeout can't clear a later tap's state early.
+    clearTimeout(window.__openingT);
+    clearOpening();
+    announceOpening(store);
+    if (el && el.classList) {
+      el.classList.add('is-opening');
+      window.__openingT = setTimeout(clearOpening, 3500);
+    }
     var ua = navigator.userAgent || '';
     var isIOSInApp = /iphone|ipad|ipod/i.test(ua) &&
                      /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
@@ -97,11 +148,13 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       // hijacked the pending navigation, so the tap looked dead (Clarity showed users
       // tapping repeatedly with nothing happening). If the App Store does open, the
       // page is backgrounded → pagehide/visibilitychange cancels every fallback.
-      var IOS_NATIVE = 'itms-apps://apps.apple.com/app/id6740998772';
-      var IOS_WEB    = 'https://apps.apple.com/app/id6740998772';
+      var IOS_ROUTE  = (location === 'alt') ? 'alt' : 'tap';
+      var IOS_NATIVE = window.appStoreUrl(IOS_ROUTE, true);
+      var IOS_WEB    = window.appStoreUrl(IOS_ROUTE, false);
       var isIG = /instagram/i.test(ua);
       var timers = [];
       var cancel = function(){ while (timers.length) { try { clearTimeout(timers.pop()); } catch(e){} } };
+      window.__handoffCancel = cancel;
       window.addEventListener('pagehide', cancel, { once:true });
       document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
       if (isIG) {
@@ -129,6 +182,50 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     openStore(store, location);
     return false;
   };
+  // Back from the store (bfcache restore or the webview re-shown) → allow a fresh tap.
+  // pageshow ALSO fires on the initial load, after 'load' — only a bfcache restore
+  // (e.persisted) is a real return; otherwise it would unlock a tap made before 'load'.
+  window.addEventListener('pageshow', function(e){
+    if (e && e.persisted) { window.__storeLocks = {}; clearOpening(); }
+  });
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) { window.__storeLocks = {}; clearOpening(); }
+  });
+  // App Store install attribution: App Store Connect campaign link (provider token pt,
+  // campaign token ct ≤ 40 chars). App Analytics → Campaigns then shows product-page views
+  // and downloads per ct. ct = <source>_<route>: source 'meta' for Instagram/Facebook
+  // traffic, 'web' otherwise; route tap | alt | auto. Kept coarse on purpose — Apple hides
+  // small counts, so per-campaign ct values would mostly show up as hidden.
+  window.appStoreUrl = function(route, nativeScheme){
+    var src = 'web';
+    try {
+      if (/[?&](fbclid=|utm_source=(ig|fb|facebook|instagram|an|msg|meta)(&|$))/i.test(window.location.search) ||
+          /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(navigator.userAgent || '')) src = 'meta';
+    } catch(e){}
+    return (nativeScheme ? 'itms-apps' : 'https') +
+      '://apps.apple.com/app/id6740998772?pt=10625926&ct=' + src + '_' + route + '&mt=8';
+  };
+
+  // Google Play install attribution: '&referrer=…' on every Play URL. Play Console's
+  // acquisition reports (and the Install Referrer API) then split installs by ad source /
+  // campaign / ad (copied from the landing URL's utm_*) and by HOW the user got to the
+  // store (utm_medium = tap | tap_alt | auto_redirect). Values are sanitised to
+  // [A-Za-z0-9_.-] and capped, since they come straight from the query string.
+  window.playReferrer = function(route){
+    try {
+      var q = new URLSearchParams(window.location.search);
+      var clean = function(v, d){
+        v = (v == null || v === '') ? d : String(v);
+        return v.replace(/[^A-Za-z0-9_.\-]/g, '_').slice(0, 100);
+      };
+      var ref = 'utm_source=' + clean(q.get('utm_source'), 'landing') +
+                '&utm_medium=' + clean(route, 'tap') +
+                '&utm_campaign=' + clean(q.get('utm_campaign') || q.get('utm_id'), 'none');
+      if (q.get('utm_content')) ref += '&utm_content=' + clean(q.get('utm_content'), '');
+      return '&referrer=' + encodeURIComponent(ref);
+    } catch(e){ return ''; }
+  };
+
   // Opens the store reliably (native scheme first, https fallback). Defined here so a
   // tap before the bottom script is ready still works. trackStoreClick is guarded — it
   // just no-ops on an ultra-early tap; the full version below adds tracking.
@@ -137,10 +234,11 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     var ua = navigator.userAgent || '';
     var isIOS = /iphone|ipad|ipod/i.test(ua);
     var isAndroid = /android/i.test(ua);
-    var IOS_URL = 'https://apps.apple.com/app/id6740998772';
-    var IOS_NATIVE = 'itms-apps://apps.apple.com/app/id6740998772';
+    var IOS_URL = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', false);
+    var IOS_NATIVE = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', true);
     var AND_PKG = 'com.luna.russianstories';
-    var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG;
+    var AND_REF = window.playReferrer(location === 'alt' ? 'tap_alt' : 'tap');
+    var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG + AND_REF;
     // Instagram/Facebook/Messenger in-app browsers silently drop custom-scheme
     // navigations (itms-apps://, intent://) AND window.open — only plain https
     // top-level navigation is reliable there.
@@ -155,11 +253,12 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       return;
     }
     if (goAndroid && isAndroid) {
-      var intentUrl = 'intent://details?id=' + AND_PKG +
+      var intentUrl = 'intent://details?id=' + AND_PKG + AND_REF +
         '#Intent;scheme=market;package=com.android.vending;' +
         'S.browser_fallback_url=' + encodeURIComponent(AND_HTTPS) + ';end';
       var t = setTimeout(function(){ window.location.href = AND_HTTPS; }, 900);
       var clear = function(){ try { clearTimeout(t); } catch(e){} };
+      window.__handoffCancel = clear;
       document.addEventListener('visibilitychange', function(){ if (document.hidden) clear(); }, { once:true });
       window.addEventListener('pagehide', clear, { once:true });
       try { window.location.href = intentUrl; } catch(e){ clear(); window.location.href = AND_HTTPS; }
@@ -168,6 +267,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     if (goIOS && isIOS) {
       var t2 = setTimeout(function(){ window.location.href = IOS_URL; }, 900);
       var clear2 = function(){ try { clearTimeout(t2); } catch(e){} };
+      window.__handoffCancel = clear2;
       document.addEventListener('visibilitychange', function(){ if (document.hidden) clear2(); }, { once:true });
       window.addEventListener('pagehide', clear2, { once:true });
       try { window.location.href = IOS_NATIVE; } catch(e){ clear2(); window.location.href = IOS_URL; }
@@ -195,7 +295,9 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
   body{
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    /* System fonts only (SF Pro on iOS, Roboto on Android): no render-blocking Google Fonts
+       stylesheet in <head> delaying the in-app browser, and no visitor IP sent to Google. */
+    font-family:-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
     background:var(--bg);
     color:var(--text);
     -webkit-font-smoothing:antialiased;
@@ -247,6 +349,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     color:var(--text-2);
     letter-spacing:.01em;
     margin-top:-8px;
+    text-wrap:balance;
   }
 
   /* Language chips */
@@ -255,13 +358,14 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     justify-content:center;
     flex-wrap:wrap;
     gap:8px;
+    list-style:none;
   }
   .lang{
     display:inline-flex;align-items:center;gap:8px;
-    padding:7px 14px;border-radius:999px;
+    padding:6px 12px;border-radius:999px;
     background:var(--surface);
     border:1px solid var(--border);
-    font-size:13px;font-weight:600;color:var(--text);
+    font-size:12.5px;font-weight:600;color:var(--text);
     letter-spacing:.01em;
   }
   .lang svg{
@@ -269,34 +373,69 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     box-shadow:0 0 0 1px rgba(255,255,255,.12);
   }
 
-  /* Store banners */
+  /* Store banners — two equal buttons side by side when the platform is unknown. */
   .badges{
     display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
+    flex-direction:row;
+    justify-content:center;
+    gap:10px;
     width:100%;
+    max-width:420px;
     margin-top:6px;
   }
-  @media(min-width:520px){
-    .badges{flex-direction:row;justify-content:center;flex-wrap:wrap}
-  }
   .badge{
-    display:inline-flex;align-items:center;gap:12px;
-    width:100%;max-width:280px;
-    padding:14px 22px;border-radius:14px;
+    flex:1 1 0;min-width:0;max-width:200px;
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    padding:12px 10px;border-radius:14px;
     background:var(--surface);
     border:1px solid var(--border);
     color:#fff;
     transition:transform .16s ease,border-color .16s ease,background .16s ease;
   }
-  @media(min-width:520px){.badge{width:auto;min-width:200px}}
   .badge:hover{transform:translateY(-2px);border-color:var(--border-2);background:#141416}
   .badge:active{transform:translateY(0)}
   .badge .icon{flex-shrink:0;display:grid;place-items:center}
-  .badge .txt{display:flex;flex-direction:column;line-height:1.15;text-align:left}
-  .badge .small{font-size:11px;color:var(--text-2);font-weight:500;letter-spacing:.02em}
-  .badge .big{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-top:1px;color:#fff}
+  .badge .icon svg{width:auto;height:24px}
+  .badge .txt{display:flex;flex-direction:column;line-height:1.15;text-align:left;white-space:nowrap}
+  .badge .small{font-size:10px;color:var(--text-2);font-weight:500;letter-spacing:.02em}
+  .badge .big{font-size:15.5px;font-weight:700;letter-spacing:-.01em;margin-top:1px;color:#fff}
+
+  /* Detected phone: ONE big white button for its own store; the other store drops to a
+     small "Also on …" text link underneath (.alt) so both platforms stay visible. */
+  .plat-ios .badge-gp,.plat-android .badge-as{display:none}
+  .plat-ios .badge-as,.plat-android .badge-gp{
+    max-width:320px;padding:15px 22px;gap:12px;
+    background:#fff;border-color:#fff;color:#000;
+  }
+  .plat-ios .badge-as .icon svg,.plat-android .badge-gp .icon svg{height:28px}
+  .plat-ios .badge-as .small,.plat-android .badge-gp .small{font-size:11px;color:#3C3C43}
+  .plat-ios .badge-as .big,.plat-android .badge-gp .big{font-size:17px;color:#000}
+  .plat-ios .badge-as:hover,.plat-android .badge-gp:hover{background:#fff}
+
+  /* Keep a clear gap under the big button so a thumb aimed at it can't hit the other store. */
+  .alt{display:none;margin-top:0}
+  .plat-ios .alt,.plat-android .alt{display:block}
+  .alt a{
+    display:none;padding:8px 12px;
+    font-size:13px;font-weight:500;color:var(--text-2);
+    text-decoration:underline;text-decoration-color:rgba(154,160,170,.4);text-underline-offset:3px;
+  }
+  .plat-ios .alt-gp,.plat-android .alt-as{display:inline-block}
+  /* Tap acknowledged — the store is opening. */
+  .badge .opening{display:none}
+  .badge.is-opening{opacity:.6;pointer-events:none}
+  .badge.is-opening .default{display:none}
+  .badge.is-opening .opening{display:inline}
+
+  .appname{
+    font-size:13px;font-weight:600;color:var(--text-2);
+    letter-spacing:.06em;text-transform:uppercase;margin-top:-6px;
+  }
+  .foot{
+    font-size:11.5px;line-height:1.5;color:#858A94;max-width:320px;
+  }
+  .foot a{color:var(--text-2);text-decoration:underline;text-underline-offset:2px}
+  .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
@@ -323,23 +462,44 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     .logo{ width:64px;height:64px;border-radius:16px; }
     .name{ font-size:clamp(19px,5vw,26px); }
     .tagline{ font-size:14px;margin-top:-6px; }
-    .badge{ padding:11px 20px; }
+    .badge{ padding:10px 10px; }
+    .plat-ios .badge-as,.plat-android .badge-gp{ padding:12px 20px; }
+    .appname{ display:none; }
   }
 </style>
 </head>
 <body>
 
   <main class="stage">
-    <div class="logo" aria-hidden="true">
-      <img src="assets/Luna_logo_512_black.png" alt="Luna Language Reader" width="104" height="104" loading="eager">
+    <p id="sr-status" class="sr-only" aria-live="polite"></p>
+    <div class="logo">
+      <img src="assets/Luna_logo_320.png" alt="Luna Reader app icon" width="104" height="104" loading="eager">
     </div>
 
-    <h1 class="name">Luna Language Reader</h1>
-    <p class="tagline">Read. Listen. Understand.</p>
+    <p class="appname">Luna Reader</p>
+    <h1 class="name">Read in Russian, Turkish &amp; English</h1>
+    <p class="tagline">Tap any word for instant translation. Stories with audio.</p>
 
-    <div class="langs" aria-label="Available languages">
-      <span class="lang">
-        <svg viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true">
+    <ul class="langs" aria-label="Languages">
+      <li class="lang">
+        <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="60" height="13.33" fill="#fff"/>
+          <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+          <rect y="26.66" width="60" height="13.34" fill="#D52B1E"/>
+        </svg>
+        Russian
+      </li>
+      <li class="lang">
+        <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="60" height="40" fill="#E30A17"/>
+          <circle cx="22" cy="20" r="10" fill="#fff"/>
+          <circle cx="24.5" cy="20" r="8" fill="#E30A17"/>
+          <path fill="#fff" d="M39.5,20 L36.05,21.12 L36.05,24.76 L33.91,21.82 L30.45,22.94 L32.59,20 L30.45,17.06 L33.91,18.18 L36.05,15.24 L36.05,18.88 Z"/>
+        </svg>
+        Turkish
+      </li>
+      <li class="lang">
+        <svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <rect width="60" height="30" fill="#012169"/>
           <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
           <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="3.6"/>
@@ -347,41 +507,24 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
           <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/>
         </svg>
         English
-      </span>
-      <span class="lang">
-        <svg viewBox="0 0 60 40" preserveAspectRatio="none" aria-hidden="true">
-          <rect width="60" height="40" fill="#E30A17"/>
-          <circle cx="22" cy="20" r="10" fill="#fff"/>
-          <circle cx="24.5" cy="20" r="8" fill="#E30A17"/>
-          <path fill="#fff" d="M39.5,20 L36.05,21.12 L36.05,24.76 L33.91,21.82 L30.45,22.94 L32.59,20 L30.45,17.06 L33.91,18.18 L36.05,15.24 L36.05,18.88 Z"/>
-        </svg>
-        Turkish
-      </span>
-      <span class="lang">
-        <svg viewBox="0 0 60 40" preserveAspectRatio="none" aria-hidden="true">
-          <rect width="60" height="13.33" fill="#fff"/>
-          <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
-          <rect y="26.66" width="60" height="13.34" fill="#D52B1E"/>
-        </svg>
-        Russian
-      </span>
-    </div>
+      </li>
+    </ul>
 
     <div class="badges">
-      <a class="badge" href="https://apps.apple.com/app/id6740998772"
-         onclick="return openStoreFromLink('AppStore','main');"
+      <a class="badge badge-as" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8"
+         onclick="return openStoreFromLink('AppStore','main',this);"
          aria-label="Download on the App Store">
         <span class="icon" aria-hidden="true">
           <svg width="22" height="28" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
         </span>
         <span class="txt">
-          <span class="small">Download on the</span>
+          <span class="small"><span class="default">Download on the</span><span class="opening">Opening the</span></span>
           <span class="big">App Store</span>
         </span>
       </a>
 
-      <a class="badge" href="https://play.google.com/store/apps/details?id=com.luna.russianstories"
-         onclick="openStore('GooglePlay','main');return false;"
+      <a class="badge badge-gp" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"
+         onclick="return openStoreFromLink('GooglePlay','main',this);"
          aria-label="Get it on Google Play">
         <span class="icon" aria-hidden="true">
           <svg width="24" height="28" viewBox="0 0 512 512">
@@ -398,11 +541,21 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
           </svg>
         </span>
         <span class="txt">
-          <span class="small">GET IT ON</span>
+          <span class="small"><span class="default">GET IT ON</span><span class="opening">OPENING</span></span>
           <span class="big">Google Play</span>
         </span>
       </a>
     </div>
+
+    <p class="alt">
+      <a class="alt-as" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8"
+         onclick="return openStoreFromLink('AppStore','alt');">Also on the App Store</a>
+      <a class="alt-gp" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"
+         onclick="return openStoreFromLink('GooglePlay','alt');">Also on Google Play</a>
+    </p>
+
+    <p class="foot">Free to download. This page uses cookies for analytics and ad measurement.
+      <a href="https://atalayyigit.github.io/privacy/lunaprivacy.html" rel="noopener">Privacy Policy</a></p>
   </main>
 
 <!-- Minimal language tag (no UI) — keeps ?lang=tr ad-segment tracking in analytics/CAPI -->
@@ -438,6 +591,9 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
       if (!m) return;
       var fbclid = m[1];
+      // Raw query value goes into document.cookie: accept only real fbclid characters, so a
+      // crafted link can't inject cookie attributes (';domain=…', ';expires=…').
+      if (!/^[A-Za-z0-9_\-]{1,500}$/.test(fbclid)) return;
       var existing = getCookie('_fbc');
       if (existing && existing.indexOf(fbclid) !== -1) return;
       setCookie('_fbc', 'fb.1.' + Date.now() + '.' + fbclid, 90);
@@ -449,13 +605,6 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       setCookie('_fbp', 'fb.1.' + Date.now() + '.' + Math.floor(Math.random()*2147483647), 90);
     } catch(e){}
   })();
-  function getTestEventCode(){
-    try {
-      var m = window.location.search.match(/[?&]meta_test=([^&]+)/);
-      if (m) { try { sessionStorage.setItem('meta_test', m[1]); } catch(e){} return m[1]; }
-      try { return sessionStorage.getItem('meta_test') || undefined; } catch(e){ return undefined; }
-    } catch(e){ return undefined; }
-  }
   // Kalıcı external_id — dedup match anahtarı (Meta için "Harici Kod")
   function getExternalId(){
     try {
@@ -473,7 +622,6 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 
   function sendCAPI(eventName, eventId, extra){
     try {
-      var testCode = getTestEventCode();
       var payload = {
         event_name: eventName, event_id: eventId,
         event_time: Math.floor(Date.now() / 1000),  // browser zamanı — server-browser timing match için
@@ -482,7 +630,6 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
         external_id: window.__lunaEid || getExternalId(),
         custom_data: extra || {}
       };
-      if (testCode) payload.test_event_code = testCode;
       fetch('/api/capi', {
         method:'POST', headers:{'Content-Type':'application/json'},
         keepalive:true, body:JSON.stringify(payload)
@@ -496,17 +643,24 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       var leadId = prefix + 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
       var customId = prefix + 'cc_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
       var data = { content_name: store, location: location, lang: (window.__lunaLang || 'en') };
+      // Both badges show on every phone, so an Android user can tap App Store (or an iPhone
+      // user Google Play). They can't install from there — record the click, but not a Lead.
+      var ua = navigator.userAgent || '';
+      var wrongStore = (store === 'AppStore' && /android/i.test(ua)) ||
+                       (store === 'GooglePlay' && /iphone|ipad|ipod/i.test(ua));
+      if (wrongStore) data.wrong_store = true;
       if (window.fbq) {
-        fbq('track', 'Lead', data, { eventID: leadId });
+        if (!wrongStore) fbq('track', 'Lead', data, { eventID: leadId });
         fbq('trackCustom', customName, data, { eventID: customId });
       }
-      sendCAPI('Lead', leadId, data);
+      if (!wrongStore) sendCAPI('Lead', leadId, data);
       sendCAPI(customName, customId, data);
       // GA4 event
       if (window.gtag) {
         gtag('event', 'store_click', {
           store: store,
           location: location,
+          wrong_store: wrongStore,
           lang: (window.__lunaLang || 'en')
         });
       }
@@ -515,6 +669,23 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
         clarity('event', 'store_click');
         clarity('set', 'store', store);
         clarity('set', 'click_location', location);
+      }
+    } catch(e){}
+  };
+  // The timed auto-redirect is NOT a Lead: nobody tapped anything. It used to go through
+  // trackStoreClick and made up ~55% of all Leads (CSV export, May 2026), so Lead-optimised
+  // delivery and per-campaign CPL were mostly measuring the redirect, not intent. It gets its
+  // own custom event so it stays measurable (pixel + CAPI + GA4 + Clarity) without feeding Lead.
+  window.trackAutoRedirect = function(store){
+    try {
+      var arId = 'ar_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var data = { content_name: store, location: 'auto_redirect', lang: (window.__lunaLang || 'en') };
+      if (window.fbq) fbq('trackCustom', 'AutoRedirect', data, { eventID: arId });
+      sendCAPI('AutoRedirect', arId, data);
+      if (window.gtag) gtag('event', 'auto_redirect', { store: store, lang: (window.__lunaLang || 'en') });
+      if (window.clarity) {
+        clarity('event', 'auto_redirect');
+        clarity('set', 'store', store);
       }
     } catch(e){}
   };
@@ -535,12 +706,16 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
      is what actually got users into the App Store from Instagram. A top-level navigation
      to the https universal link that is NOT tied to a tap is the one route Meta's webview
      still honours; tapping the button alone is unreliable there. Any tap/scroll cancels
-     it, so a user who reaches for the button themselves keeps the normal flow. -->
+     it, so a user who reaches for the button themselves keeps the normal flow.
+     It fires AutoRedirect (not Lead) and runs at most once per tab session. -->
 <script>
 (function(){
   try {
     // ?noredirect=1 disables it (handy for checking the page itself).
     if (/[?&]noredirect=1/.test(window.location.search)) return;
+    // Already sent to the store in this tab (auto-redirect or a tap) → this is a Back /
+    // reload, not a new visitor. Let them read the page instead of bouncing them again.
+    try { if (sessionStorage.getItem('luna_handoff') || sessionStorage.getItem('luna_noauto')) return; } catch(e){}
 
     var ua = navigator.userAgent || '';
     var isIOS = /iphone|ipad|ipod/i.test(ua);
@@ -551,12 +726,18 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     var delay = isInApp ? 1800 : 1200; // let the in-app sheet settle first
 
     var url = isIOS
-      ? 'https://apps.apple.com/app/id6740998772'
-      : 'https://play.google.com/store/apps/details?id=com.luna.russianstories';
+      ? (window.appStoreUrl ? window.appStoreUrl('auto', false) : 'https://apps.apple.com/app/id6740998772')
+      : 'https://play.google.com/store/apps/details?id=com.luna.russianstories' +
+        (window.playReferrer ? window.playReferrer('auto_redirect') : '');
 
     // Any deliberate interaction cancels the auto-redirect.
     var aborted = false;
-    function abort(){ aborted = true; }
+    // Any interaction also sticks for the tab session: someone who tapped the Privacy
+    // Policy (or scrolled) and comes Back gets a fresh page load, which must not re-arm it.
+    function abort(){
+      aborted = true;
+      try { sessionStorage.setItem('luna_noauto', '1'); } catch(e){}
+    }
     document.addEventListener('click', abort, true);
     document.addEventListener('touchstart', abort, { capture:true, passive:true });
     document.addEventListener('touchmove',  abort, { capture:true, passive:true });
@@ -564,16 +745,15 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
     // (before this script ran) can open the App Store without setting `aborted`; this
     // timer then suspends while Instagram is in the background and would fire the
     // moment the user comes BACK from the store — yanking them there again and firing
-    // a duplicate Lead/CAPI 'auto_redirect' event on an already-tracked journey.
+    // a duplicate AutoRedirect event on an already-tracked journey.
     window.addEventListener('pagehide', abort, { once:true });
     document.addEventListener('visibilitychange', function(){ if (document.hidden) abort(); });
 
     setTimeout(function(){
       if (aborted) return;
+      if (window.markHandoff) window.markHandoff('auto');
       try {
-        if (window.trackStoreClick) {
-          window.trackStoreClick(isIOS ? 'AppStore' : 'GooglePlay', 'auto_redirect');
-        }
+        if (window.trackAutoRedirect) window.trackAutoRedirect(isIOS ? 'AppStore' : 'GooglePlay');
       } catch(e){}
       window.location.href = url;
     }, delay);
