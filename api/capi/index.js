@@ -107,6 +107,23 @@ module.exports = async function (context, req) {
             pickFirstIp(req.headers['cf-connecting-ip']) ||
             '';
 
+        // TEŞHİS (geçici): hangi IP başlığı platform tarafından yazılıyor? IP'nin kendisi
+        // loglanmaz — sadece yapı. Birkaç gün sonra Azure loglarına bakıp doğru başlığa geçilecek:
+        // x-azure-clientip her zaman XFF'nin SON elemanına eşitse platform sona ekliyor demektir
+        // (en soldaki eleman istemci tarafından taklit edilebilir). Karar verilince kaldır.
+        try {
+            const xffParts = String(req.headers['x-forwarded-for'] || '').split(',').map(s => s.trim()).filter(Boolean);
+            const az = pickFirstIp(req.headers['x-azure-clientip']);
+            context.log('[CAPI] ip-headers', {
+                xffCount: xffParts.length,
+                hasAzureClientIp: !!az,
+                azureEqualsXffFirst: !!az && xffParts.length > 0 && az === pickFirstIp(xffParts[0]),
+                azureEqualsXffLast: !!az && xffParts.length > 0 && az === pickFirstIp(xffParts[xffParts.length - 1]),
+                hasAzureSocketIp: !!req.headers['x-azure-socketip'],
+                chosenIsIpv6: clientIp.indexOf(':') !== -1
+            });
+        } catch (e) { /* teşhis asla isteği bozmasın */ }
+
         // Browser event_time'ı tercih et — yoksa server time. Match kalitesi için kritik.
         // Meta 7 günden eski / 1 dk'dan ileri event_time'ı TÜM isteği reddeder. Bozuk cihaz
         // saati veya ms-ölçekli değer gelirse server zamanına düş (güvenli pencere: 6 gün).
@@ -148,6 +165,13 @@ module.exports = async function (context, req) {
         // bozuk cookie değerini Meta düşürür, göndermeyelim.
         const fbc = body.fbc && String(body.fbc);
         if (fbc && /^fb\.\d\.\d+\..+/.test(fbc)) eventPayload.user_data.fbc = fbc;
+        // Cookie gelmediyse (engellenmiş/silinmiş) ama sayfa URL'inde fbclid varsa fbc'yi burada
+        // kur — Meta, cookie olmadan fb.1.<ms>.<fbclid> biçimini kabul ediyor. Reklam tıklaması
+        // eşleşmesi (EMQ'nun en güçlü anonim anahtarı) böylece kaybolmaz.
+        if (!eventPayload.user_data.fbc) {
+            const m = String(body.url || '').match(/[?&]fbclid=([A-Za-z0-9_\-]{1,500})(?:[&#]|$)/);
+            if (m) eventPayload.user_data.fbc = 'fb.1.' + (eventTime * 1000) + '.' + m[1];
+        }
         const fbp = body.fbp && String(body.fbp);
         if (fbp && /^fb\.\d\.\d+\..+/.test(fbp)) eventPayload.user_data.fbp = fbp;
 
