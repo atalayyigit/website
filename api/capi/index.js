@@ -19,22 +19,29 @@ function postJson(host, path, payload) {
             timeout: 8000
         };
 
+        // Settle exactly once, whichever of end / error / timeout comes first.
+        let settled = false;
+        const done = (result) => { if (!settled) { settled = true; resolve(result); } };
+        const fail = (err) => done({ status: 0, body: { error: (err && err.message) || 'Request failed' } });
+
         const req = https.request(options, (res) => {
             let chunks = '';
             res.on('data', (c) => { chunks += c; });
             res.on('end', () => {
                 let parsed;
                 try { parsed = JSON.parse(chunks); } catch (e) { parsed = { raw: chunks }; }
-                resolve({ status: res.statusCode, body: parsed });
+                done({ status: res.statusCode, body: parsed });
             });
+            // A reset or the 8s timeout AFTER the response started is emitted on `res`, not
+            // `req`. Without this listener that 'error' is uncaught and crashes the worker
+            // (and 'end' never fires, so the promise would hang).
+            res.on('error', fail);
         });
 
         req.on('timeout', () => {
             req.destroy(new Error('Request timeout'));
         });
-        req.on('error', (err) => {
-            resolve({ status: 0, body: { error: err.message } });
-        });
+        req.on('error', fail);
 
         req.write(data);
         req.end();
@@ -68,7 +75,7 @@ module.exports = async function (context, req) {
 
         if (!PIXEL_ID || !ACCESS_TOKEN) {
             context.log.error('[CAPI] Missing env vars', { hasPixelId: !!PIXEL_ID, hasToken: !!ACCESS_TOKEN });
-            reply(500, { error: 'Server configuration missing', detail: 'META_PIXEL_ID or META_ACCESS_TOKEN not set' });
+            reply(500, { error: 'Server error' });
             return;
         }
 
@@ -111,7 +118,7 @@ module.exports = async function (context, req) {
 
         // Sadece bilinen event'lere izin ver — anonim /api/capi endpoint'ine sahte 'Lead'
         // basıp optimizasyon sinyalini zehirlemeyi engeller. Yeni event eklersen buraya da ekle.
-        const ALLOWED_EVENTS = ['PageView', 'Lead', 'AppStoreClick', 'GooglePlayClick', 'ViewContent'];
+        const ALLOWED_EVENTS = ['PageView', 'Lead', 'AppStoreClick', 'GooglePlayClick', 'AutoRedirect', 'ViewContent'];
         const eventName = ALLOWED_EVENTS.indexOf(body.event_name) !== -1 ? body.event_name : null;
         if (!eventName) {
             context.log.warn('[CAPI] Rejected unknown event_name', { event_name: body.event_name });
@@ -158,15 +165,14 @@ module.exports = async function (context, req) {
         }
 
         // access_token URL yerine POST body'sinde — URL'ler Azure/proxy loglarına düşer.
+        // body.test_event_code is deliberately ignored. Meta does NOT drop test-coded events —
+        // they still count for targeting/measurement — so ?meta_test QA sessions on the live
+        // page were polluting production data. Older cached pages may still send it.
         const requestBody = { data: [eventPayload], access_token: ACCESS_TOKEN };
-        if (body.test_event_code) {
-            requestBody.test_event_code = body.test_event_code;
-        }
 
         context.log('[CAPI] Sending event', {
             event_name: eventPayload.event_name,
-            event_id: eventPayload.event_id,
-            test_event_code: body.test_event_code || null
+            event_id: eventPayload.event_id
         });
 
         // Graph API versiyonu env'den override edilebilir; v18.0 (2023) EOL — güncel sürüme taşındı.
@@ -190,10 +196,12 @@ module.exports = async function (context, req) {
                 fbtrace_id: metaErr && metaErr.fbtrace_id,
                 message: (metaErr && (metaErr.error_user_msg || metaErr.message)) || result.body
             });
-            reply(result.status >= 400 ? result.status : 502, { error: 'Meta CAPI error', meta: result.body });
+            // Details stay in the log above; this endpoint is anonymous, so callers only get a
+            // generic error (the page ignores the response body anyway).
+            reply(result.status >= 400 ? result.status : 502, { error: 'Upstream error' });
         }
     } catch (err) {
         context.log.error('[CAPI] Unhandled error', err && err.stack ? err.stack : err);
-        reply(500, { error: 'Unhandled exception', message: (err && err.message) || String(err) });
+        reply(500, { error: 'Server error' });
     }
 };
