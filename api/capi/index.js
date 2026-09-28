@@ -114,12 +114,19 @@ module.exports = async function (context, req) {
         try {
             const xffParts = String(req.headers['x-forwarded-for'] || '').split(',').map(s => s.trim()).filter(Boolean);
             const az = pickFirstIp(req.headers['x-azure-clientip']);
+            const sock = pickFirstIp(req.headers['x-azure-socketip']);
+            const first = xffParts.length ? pickFirstIp(xffParts[0]) : '';
+            const last = xffParts.length ? pickFirstIp(xffParts[xffParts.length - 1]) : '';
+            // Sadece xffCount >= 2 olan satırlar karar verdirir (tek elemanda first === last).
             context.log('[CAPI] ip-headers', {
                 xffCount: xffParts.length,
                 hasAzureClientIp: !!az,
-                azureEqualsXffFirst: !!az && xffParts.length > 0 && az === pickFirstIp(xffParts[0]),
-                azureEqualsXffLast: !!az && xffParts.length > 0 && az === pickFirstIp(xffParts[xffParts.length - 1]),
-                hasAzureSocketIp: !!req.headers['x-azure-socketip'],
+                azureEqualsXffFirst: !!az && az === first,
+                azureEqualsXffLast: !!az && az === last,
+                hasAzureSocketIp: !!sock,
+                socketEqualsXffFirst: !!sock && sock === first,
+                socketEqualsXffLast: !!sock && sock === last,
+                socketEqualsAzureClientIp: !!sock && sock === az,
                 chosenIsIpv6: clientIp.indexOf(':') !== -1
             });
         } catch (e) { /* teşhis asla isteği bozmasın */ }
@@ -170,7 +177,9 @@ module.exports = async function (context, req) {
         // eşleşmesi (EMQ'nun en güçlü anonim anahtarı) böylece kaybolmaz.
         if (!eventPayload.user_data.fbc) {
             const m = String(body.url || '').match(/[?&]fbclid=([A-Za-z0-9_\-]{1,500})(?:[&#]|$)/);
-            if (m) eventPayload.user_data.fbc = 'fb.1.' + (eventTime * 1000) + '.' + m[1];
+            // creationTime = sunucunun isteği aldığı an (ms): her zaman tıklamadan SONRA, asla
+            // gelecekte değil — cihaz saati kaymış olsa bile. Meta'nın Param Builder'ı da böyle yapar.
+            if (m) eventPayload.user_data.fbc = 'fb.1.' + Date.now() + '.' + m[1];
         }
         const fbp = body.fbp && String(body.fbp);
         if (fbp && /^fb\.\d\.\d+\..+/.test(fbp)) eventPayload.user_data.fbp = fbp;
