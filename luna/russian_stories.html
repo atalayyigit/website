@@ -598,7 +598,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
         }
       }
     } catch(e){}
-    return { idx: 1, domain: '' }; // localhost / bare IP: host-only, as before
+    return { idx: 1, domain: '' }; // every test write failed (cookies blocked / sandboxed): host-only, as before
   })();
   function setFbCookie(name, payload, days){
     try {
@@ -614,7 +614,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   // 'fb.1.') with the right index + domain, keeping their timestamp and value — same _fbp id.
   (function(){
     try {
-      if (!FB_CK.domain || FB_CK.idx === 1) return;
+      if (!FB_CK.domain) return;
       ['_fbc', '_fbp'].forEach(function(n){
         var v = getCookie(n);
         if (v && v.indexOf('fb.1.') === 0) setFbCookie(n, v.slice(5), 90);
@@ -631,7 +631,12 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       if (!/^[A-Za-z0-9_\-]{1,500}$/.test(fbclid)) return;
       var existing = getCookie('_fbc');
       if (existing && existing.indexOf(fbclid) !== -1) return;
-      setFbCookie('_fbc', Date.now() + '.' + fbclid, 90);
+      // Same payload the pixel builds (its cookie config maps IG's 'brid' to an '_aem_' suffix):
+      // otherwise the landing PageView's CAPI copy is sent before the pixel refreshes the cookie
+      // and lacks the suffix its browser copy carries.
+      var bm = window.location.search.match(/[?&]brid=([^&]+)/);
+      var brid = (bm && /^[A-Za-z0-9_\-]{1,500}$/.test(bm[1])) ? bm[1] : '';
+      setFbCookie('_fbc', Date.now() + '.' + fbclid + (brid ? '_aem_' + brid : ''), 90);
     } catch(e){}
   })();
   (function(){
