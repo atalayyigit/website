@@ -210,7 +210,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   // Google Play install attribution: '&referrer=…' on every Play URL. Play Console's
   // acquisition reports (and the Install Referrer API) then split installs by ad source /
   // campaign / ad (copied from the landing URL's utm_*) and by HOW the user got to the
-  // store (utm_medium = tap | tap_alt | auto_redirect). Values are sanitised to
+  // store (utm_medium = tap | tap_alt). Values are sanitised to
   // [A-Za-z0-9_.-] and capped, since they come straight from the query string.
   window.playReferrer = function(route){
     try {
@@ -691,11 +691,22 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       var wrongStore = (store === 'AppStore' && /android/i.test(ua)) ||
                        (store === 'GooglePlay' && /iphone|ipad|ipod/i.test(ua));
       if (wrongStore) data.wrong_store = true;
+      // One Lead per browser per 24 h: a visitor who taps again later (or taps both badges)
+      // is still one lead, so Lead-optimised delivery doesn't overweight repeat tappers.
+      // AppStoreClick / GooglePlayClick still fire on every tap (the exclusion audience uses them).
+      var sendLead = !wrongStore;
+      if (sendLead) {
+        try {
+          var lastLead = parseInt(localStorage.getItem('luna_lead_at') || '0', 10);
+          if (Date.now() - lastLead < 24 * 60 * 60 * 1000) sendLead = false;
+          else localStorage.setItem('luna_lead_at', String(Date.now()));
+        } catch(e){}
+      }
       if (window.fbq) {
-        if (!wrongStore) fbq('track', 'Lead', data, { eventID: leadId });
+        if (sendLead) fbq('track', 'Lead', data, { eventID: leadId });
         fbq('trackCustom', customName, data, { eventID: customId });
       }
-      if (!wrongStore) sendCAPI('Lead', leadId, data);
+      if (sendLead) sendCAPI('Lead', leadId, data);
       sendCAPI(customName, customId, data);
       // GA4 event
       if (window.gtag) {
@@ -714,24 +725,6 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
       }
     } catch(e){}
   };
-  // The timed auto-redirect is NOT a Lead: nobody tapped anything. It used to go through
-  // trackStoreClick and made up ~55% of all Leads (CSV export, May 2026), so Lead-optimised
-  // delivery and per-campaign CPL were mostly measuring the redirect, not intent. It gets its
-  // own custom event so it stays measurable (pixel + CAPI + GA4 + Clarity) without feeding Lead.
-  window.trackAutoRedirect = function(store){
-    try {
-      var arId = 'ar_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-      var data = { content_name: store, location: 'auto_redirect', lang: (window.__lunaLang || 'en') };
-      if (window.fbq) fbq('trackCustom', 'AutoRedirect', data, { eventID: arId });
-      sendCAPI('AutoRedirect', arId, data);
-      if (window.gtag) gtag('event', 'auto_redirect', { store: store, lang: (window.__lunaLang || 'en') });
-      if (window.clarity) {
-        clarity('event', 'auto_redirect');
-        clarity('set', 'store', store);
-      }
-    } catch(e){}
-  };
-
   // openStoreFromLink + openStore are defined EARLY in the <head> so a tap that lands
   // before this script runs still opens the store. On iOS they fire itms-apps://, which
   // iOS routes to the App Store app itself — never a web page inside the in-app browser.
