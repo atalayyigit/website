@@ -1,344 +1,268 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy – LunaSoft</title>
-  <meta name="description" content="Privacy Policy for LunaSoft mobile applications including Luna Russian Reading and Stories." />
-  <meta name="robots" content="index, follow" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --blue: #0078D4;
-      --blue-light: #00BCF2;
-      --bg: #0a0f1e;
-      --bg2: #0d1526;
-      --card: #111d35;
-      --card-border: #1e3056;
-      --text: #e8f0fe;
-      --text-muted: #7a9bc4;
-      --white: #ffffff;
-      --radius: 14px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .container {
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 0 24px;
-      width: 100%;
-    }
-
-    /* ── MINIMAL NAVBAR ── */
-    .navbar {
-      background: rgba(10,15,30,0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--card-border);
-      padding: 16px 24px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .nav-inner {
-      max-width: 880px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .logo {
-      text-decoration: none;
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-    .logo-luna { color: var(--white); }
-    .logo-soft { color: var(--blue); }
-
-    .lang-toggle {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .lang-toggle:hover { color: var(--white); border-color: var(--blue); }
-
-    /* ── HERO ── */
-    .privacy-hero {
-      padding: 80px 0 40px;
-      background: var(--bg);
-      position: relative;
-      overflow: hidden;
-    }
-    .privacy-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,120,212,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .privacy-hero .container { position: relative; z-index: 1; }
-    .privacy-hero h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: -1.5px;
-      line-height: 1.1;
-      margin-bottom: 12px;
-    }
-    .privacy-hero .last-updated {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    /* ── CONTENT ── */
-    .privacy-content {
-      padding: 40px 0 80px;
-      flex: 1;
-    }
-    .privacy-wrapper {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 48px 44px;
-    }
-    .privacy-wrapper h2 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--white);
-      margin-top: 36px;
-      margin-bottom: 14px;
-      letter-spacing: -0.3px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--card-border);
-    }
-    .privacy-wrapper h2:first-child { margin-top: 0; }
-    .privacy-wrapper h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--blue-light);
-      margin-top: 22px;
-      margin-bottom: 10px;
-    }
-    .privacy-wrapper p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.75;
-      margin-bottom: 14px;
-    }
-    .privacy-wrapper ul {
-      list-style: none;
-      padding-left: 0;
-      margin-bottom: 16px;
-    }
-    .privacy-wrapper ul li {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      padding-left: 22px;
-      position: relative;
-      margin-bottom: 8px;
-    }
-    .privacy-wrapper ul li::before {
-      content: '';
-      position: absolute;
-      left: 4px;
-      top: 12px;
-      width: 6px;
-      height: 6px;
-      background: var(--blue);
-      border-radius: 50%;
-    }
-    .privacy-wrapper strong { color: var(--text); font-weight: 600; }
-    .privacy-wrapper a {
-      color: var(--blue-light);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s;
-    }
-    .privacy-wrapper a:hover { border-color: var(--blue-light); }
-
-    .info-box {
-      background: rgba(0,120,212,0.08);
-      border: 1px solid rgba(0,120,212,0.25);
-      border-radius: 10px;
-      padding: 16px 20px;
-      margin: 18px 0;
-    }
-    .info-box p { margin-bottom: 0; color: var(--text); font-size: 0.9rem; }
-
-    .contact-block {
-      margin-top: 24px;
-      padding: 24px;
-      background: rgba(255,255,255,0.03);
-      border-radius: 10px;
-      border-left: 3px solid var(--blue);
-    }
-    .contact-block p { margin-bottom: 6px; }
-
-    /* ── MINIMAL FOOTER ── */
-    .footer {
-      background: var(--bg2);
-      border-top: 1px solid var(--card-border);
-      padding: 24px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
-    @media (max-width: 640px) {
-      .privacy-wrapper { padding: 28px 22px; }
-      .privacy-hero { padding: 50px 0 30px; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b10">
+<title>Luna Reader Privacy Policy — Lunasoft</title>
+<meta name="description" content="What data Luna Reader collects, why, who processes it and how to delete it.">
+<meta name="robots" content="index, follow">
+<style>
+:root{color-scheme:dark;--bg:#090b10;--white:#f1efe9;--muted:#a2a3a6;--dim:#777b85;--gold:#c9a77d;--line:#ffffff14;--card:#0f1218}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;line-height:1.65;min-width:280px}
+a{color:var(--white)}
+a:focus-visible,button:focus-visible{outline:1px solid var(--gold);outline-offset:4px;border-radius:2px}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:32px 0}
+.brand{display:flex;align-items:center;gap:12px;font-size:23px;font-weight:550;letter-spacing:-1px;color:var(--white);text-decoration:none}
+.brand svg{width:24px;height:24px}
+.lang{display:flex;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang button{font:inherit;font-size:12px;letter-spacing:.08em;border:0;background:transparent;color:var(--dim);padding:6px 12px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:#ffffff12;color:var(--white)}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.22em;font-weight:500;color:var(--gold);margin:40px 0 20px;text-transform:uppercase}
+.eyebrow::before{content:"";width:25px;height:1px;background:var(--gold)}
+h1{font-size:clamp(36px,6vw,52px);font-weight:430;letter-spacing:-.05em;line-height:1.05;margin:0 0 14px}
+.updated{color:var(--dim);font-size:13px;margin:0 0 28px}
+.summary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin:0 0 44px}
+.summary h2{margin-top:0}
+.summary ul{margin:0;padding-left:18px;color:var(--muted);font-size:15px}
+.summary li{margin:6px 0}
+h2{font-size:20px;font-weight:500;letter-spacing:-.02em;margin:40px 0 12px}
+h3{font-size:15px;font-weight:550;margin:22px 0 6px;color:var(--white)}
+p,li{color:var(--muted);font-size:15px}
+p{margin:0 0 12px}
+ul{padding-left:18px;margin:0 0 12px}
+strong{color:var(--white);font-weight:500}
+.table{width:100%;border-collapse:collapse;margin:8px 0 16px;font-size:14px}
+.table th,.table td{text-align:left;vertical-align:top;padding:10px 12px 10px 0;border-top:1px solid var(--line);color:var(--muted)}
+.table th{color:var(--white);font-weight:500;font-size:13px}
+.table{table-layout:fixed}.table th:nth-child(1){width:36%}.table th:nth-child(2){width:40%}.table td:first-child{color:var(--white)}
+footer{border-top:1px solid var(--line);margin-top:56px;padding:24px 0 40px;display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;font-size:12px;color:var(--dim)}
+footer nav{display:flex;flex-wrap:wrap;gap:12px 24px}
+footer a{color:#969aa2;text-decoration:none}
+footer a:hover{color:#eee}
+[hidden]{display:none!important}
+@media(max-width:560px){.table,.table tbody,.table tr,.table td{display:block;width:auto}.table tr:first-child{display:none}.table tr{border-top:1px solid var(--line);padding:12px 0}.table td{border:0;padding:2px 0}.table td:nth-child(3){color:var(--dim);font-size:13px}}
+@media(max-width:480px){header{padding:24px 0}.brand{font-size:21px}.summary{padding:20px}}
+</style>
 </head>
 <body>
+<div class="wrap">
+<header>
+  <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M22.8 2.7A14 14 0 1 0 28.7 25 13.5 13.5 0 0 1 22.8 2.7Z" fill="#eee8da"/></svg>Lunasoft</a>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-set="en" aria-pressed="true">EN</button>
+    <button type="button" data-set="tr" aria-pressed="false">TR</button>
+  </div>
+</header>
 
-  <!-- MINIMAL NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="index.html" class="logo">
-        <span class="logo-luna">Luna</span><span class="logo-soft">Soft</span>
-      </a>
-      <button class="lang-toggle" id="langToggle" onclick="toggleLang()">TR</button>
-    </div>
+<main>
+<!-- ───────── English ───────── -->
+<article data-lang="en">
+  <p class="eyebrow">Luna Reader</p>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: 27 October 2026</p>
+
+  <div class="summary">
+    <h2>In short</h2>
+    <ul>
+      <li>There are no accounts. We never ask for your name, email or phone number to use the app.</li>
+      <li>Your saved words and progress stay on your device and in your own iCloud (iPhone, iPad) or Google backup (Android). We cannot see them.</li>
+      <li>We use AppsFlyer, and on iPhone and iPad also Meta, to measure which ads bring people to Luna Reader and to count subscriptions. Your device’s advertising identifier is used only if you allow tracking.</li>
+      <li>We do not sell your data and Luna Reader shows no ads.</li>
+    </ul>
+  </div>
+
+  <h2>1. Who we are</h2>
+  <p>Luna Reader is developed by Lunasoft (“we”, “us”). This policy covers the Luna Reader apps for iPhone, iPad and Android. Contact: <a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a>.</p>
+
+  <h2>2. What we collect and why</h2>
+  <table class="table">
+    <tr><th>Data</th><th>Why</th><th>Where it goes</th></tr>
+    <tr><td>Advertising identifier (IDFA on iPhone/iPad, Advertising ID on Android)</td><td>Ad attribution: measuring which ad campaign led to an install or subscription. On iPhone and iPad only if you allow tracking in the system prompt.</td><td>AppsFlyer; Meta (iPhone/iPad only)</td></tr>
+    <tr><td>App events: app opened, subscription started, renewed or cancelled, with plan, price, currency and the store’s order number</td><td>Counting subscriptions and measuring ad performance. If you don’t allow tracking, these are sent without identifiers.</td><td>AppsFlyer; Meta (iPhone/iPad only)</td></tr>
+    <tr><td>Device and network information collected by those SDKs (device model, OS version, language, IP address)</td><td>Needed by the SDKs to attribute installs and prevent fraud.</td><td>AppsFlyer; Meta (iPhone/iPad only)</td></tr>
+    <tr><td>Crash reports: the error, a technical stack trace, app version, device model and OS version</td><td>Finding and fixing crashes.</td><td>Our server (Microsoft Azure)</td></tr>
+    <tr><td>Feedback you send from the app: your message, app language, app version, device model, OS version, and your email only if you type it</td><td>Reading and replying to your request.</td><td>Our server (Microsoft Azure)</td></tr>
+    <tr><td>Text you send to AI and language features: words you tap, sentences, story paragraphs, song lyrics, LunAI topics and levels</td><td>Creating translations, word explanations, audio and LunAI texts.</td><td>Our server, then Microsoft Azure OpenAI, Azure Translator and Azure Speech</td></tr>
+    <tr><td>Push notification token, app language and learning language (iPhone/iPad, only if you allow notifications)</td><td>Registering the device for notifications. News notifications are currently off; daily reminders are scheduled on your device.</td><td>Our server (Microsoft Azure) and Apple Push Notification service</td></tr>
+  </table>
+  <p>We do not collect your name, email address (unless you add it to feedback), phone number, contacts, photos, precise location or health data.</p>
+
+  <h3>Data that stays with you</h3>
+  <p>Saved words, phrases, flashcard schedule, reading progress, LunAI texts, bookmarks and statistics are stored on your device. On iPhone and iPad they sync through your private iCloud database (Apple CloudKit), which only your Apple ID can access. On Android they may be included in your device’s Google backup. We do not receive this data.</p>
+
+  <h2>3. Tracking and your choice</h2>
+  <p>On iPhone and iPad, Luna Reader asks for permission through Apple’s App Tracking Transparency prompt. If you choose <strong>Ask App Not to Track</strong>, AppsFlyer runs in anonymous mode, the advertising identifier is not collected and Meta’s identifier collection stays off. You can change this any time in Settings → Privacy &amp; Security → Tracking.</p>
+  <p>On Android you can reset or delete your Advertising ID in Settings → Google → Ads (wording varies by device).</p>
+  <p>We use this data for ad measurement only. Luna Reader contains no ads, and we do not sell or rent personal data.</p>
+
+  <h2>4. Subscriptions and payments</h2>
+  <p>Payments are handled entirely by Apple (App Store) or Google (Google Play). We never see your card or billing details. The app checks your subscription status with the store on your device.</p>
+
+  <h2>5. Content from other services</h2>
+  <p>Some features load content directly from third parties, who receive your IP address and standard request data when they do:</p>
+  <ul>
+    <li>Music videos play through YouTube’s embedded player (Google’s <a href="https://policies.google.com/privacy">privacy policy</a> applies).</li>
+    <li>Song lyrics are looked up on lrclib.net.</li>
+    <li>News articles and images are loaded from the publishers’ public news feeds.</li>
+    <li>Apple Music features use your Apple Music account through Apple’s MusicKit, only if you give permission.</li>
+  </ul>
+
+  <h2>6. Service providers</h2>
+  <ul>
+    <li><strong>AppsFlyer</strong> — ad attribution (<a href="https://www.appsflyer.com/legal/privacy-policy/">privacy policy</a>)</li>
+    <li><strong>Meta Platforms</strong> — ad measurement, iPhone and iPad only (<a href="https://www.facebook.com/privacy/policy/">privacy policy</a>)</li>
+    <li><strong>Microsoft Azure</strong> — our server, storage, Azure OpenAI, Translator and Speech (<a href="https://privacy.microsoft.com/privacystatement">privacy statement</a>)</li>
+    <li><strong>Apple</strong> — App Store, iCloud, push notifications (<a href="https://www.apple.com/legal/privacy/">privacy policy</a>)</li>
+    <li><strong>Google</strong> — Google Play, YouTube (<a href="https://policies.google.com/privacy">privacy policy</a>)</li>
+  </ul>
+  <p>Some of these providers process data outside your country, including in the United States and the European Union.</p>
+
+  <h2>7. How long we keep data</h2>
+  <ul>
+    <li>Crash reports and feedback: only as long as needed to fix the problem or answer you. You can ask us to delete your feedback at any time.</li>
+    <li>Push tokens: until the token stops working or is replaced.</li>
+    <li>AI and translation requests: not stored with any identifier. To save cost, we may keep a shared table of word translations (for example “книга → book”), which contains no user information.</li>
+    <li>Our server uses your IP address only briefly in memory to limit abuse; it is not saved.</li>
+    <li>AppsFlyer and Meta keep data according to their own policies.</li>
+  </ul>
+
+  <h2>8. Your rights and deleting your data</h2>
+  <p>Depending on where you live (for example under the GDPR or Turkey’s KVKK), you can ask to access, correct or delete your personal data, or object to its use. Email <a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a>. Because there are no accounts, tell us what to look for (for example the email you used in feedback).</p>
+  <ul>
+    <li>Delete the app to remove data stored on your device.</li>
+    <li>iPhone/iPad: Settings → your name → iCloud → manage storage → Luna Reader to remove the iCloud copy.</li>
+    <li>Turn off tracking as described in section 3.</li>
+  </ul>
+
+  <h2>9. Children</h2>
+  <p>Luna Reader is a general-audience reading app. We do not knowingly collect personal data from children under 13. If you believe a child has sent us personal data, contact us and we will delete it.</p>
+
+  <h2>10. Security</h2>
+  <p>All connections between the app and our server use HTTPS. Server keys are not stored in the app.</p>
+
+  <h2>11. Changes</h2>
+  <p>We will update this page when the app’s data practices change and show the new date at the top.</p>
+</article>
+
+<!-- ───────── Türkçe ───────── -->
+<article data-lang="tr" hidden>
+  <p class="eyebrow">Luna Reader</p>
+  <h1>Gizlilik Politikası</h1>
+  <p class="updated">Son güncelleme: 27 Ekim 2026</p>
+
+  <div class="summary">
+    <h2>Kısaca</h2>
+    <ul>
+      <li>Hesap yok. Uygulamayı kullanmak için adını, e-postanı ya da telefon numaranı istemiyoruz.</li>
+      <li>Kaydettiğin kelimeler ve ilerlemen cihazında ve kendi iCloud’unda (iPhone, iPad) ya da Google yedeğinde (Android) durur. Biz bunları göremeyiz.</li>
+      <li>Hangi reklamların insanları Luna Reader’a getirdiğini ölçmek ve abonelikleri saymak için AppsFlyer, iPhone ve iPad’de ayrıca Meta kullanıyoruz. Cihazının reklam kimliği yalnız sen izin verirsen kullanılır.</li>
+      <li>Verini satmıyoruz ve Luna Reader reklam göstermiyor.</li>
+    </ul>
+  </div>
+
+  <h2>1. Biz kimiz</h2>
+  <p>Luna Reader’ı Lunasoft (“biz”) geliştirir. Bu politika iPhone, iPad ve Android için Luna Reader uygulamalarını kapsar. İletişim: <a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a>.</p>
+
+  <h2>2. Ne topluyoruz ve neden</h2>
+  <table class="table">
+    <tr><th>Veri</th><th>Neden</th><th>Nereye gider</th></tr>
+    <tr><td>Reklam kimliği (iPhone/iPad’de IDFA, Android’de Reklam Kimliği)</td><td>Reklam ilişkilendirmesi: hangi kampanyanın indirmeye ya da aboneliğe yol açtığını ölçmek. iPhone ve iPad’de yalnız sistem penceresinde izin verirsen.</td><td>AppsFlyer; Meta (yalnız iPhone/iPad)</td></tr>
+    <tr><td>Uygulama olayları: uygulama açıldı, abonelik başladı, yenilendi ya da iptal edildi; plan, tutar, para birimi ve mağazanın sipariş numarası</td><td>Abonelikleri saymak ve reklam başarısını ölçmek. İzin vermezsen bu olaylar kimliksiz gönderilir.</td><td>AppsFlyer; Meta (yalnız iPhone/iPad)</td></tr>
+    <tr><td>Bu SDK’ların topladığı cihaz ve ağ bilgisi (cihaz modeli, işletim sistemi sürümü, dil, IP adresi)</td><td>SDK’ların indirmeleri ilişkilendirmesi ve sahtekârlığı önlemesi için gerekir.</td><td>AppsFlyer; Meta (yalnız iPhone/iPad)</td></tr>
+    <tr><td>Çökme raporları: hata, teknik yığın izi, uygulama sürümü, cihaz modeli ve işletim sistemi sürümü</td><td>Çökmeleri bulup düzeltmek.</td><td>Sunucumuz (Microsoft Azure)</td></tr>
+    <tr><td>Uygulamadan gönderdiğin geri bildirim: mesajın, uygulama dili, sürümü, cihaz modeli, işletim sistemi sürümü; e-postan yalnız yazarsan</td><td>İsteğini okuyup cevap vermek.</td><td>Sunucumuz (Microsoft Azure)</td></tr>
+    <tr><td>Yapay zekâ ve dil özelliklerine gönderilen metin: dokunduğun kelimeler, cümleler, hikâye paragrafları, şarkı sözleri, LunAI konu ve seviyesi</td><td>Çeviri, kelime açıklaması, ses ve LunAI metinleri üretmek.</td><td>Sunucumuz, ardından Microsoft Azure OpenAI, Azure Translator ve Azure Speech</td></tr>
+    <tr><td>Bildirim jetonu, uygulama dili ve öğrenme dili (iPhone/iPad; yalnız bildirimlere izin verirsen)</td><td>Cihazı bildirimler için kaydetmek. Haber bildirimleri şu an kapalı; günlük hatırlatmalar cihazında planlanır.</td><td>Sunucumuz (Microsoft Azure) ve Apple Anlık Bildirim Servisi</td></tr>
+  </table>
+  <p>Adını, e-posta adresini (geri bildirime eklemediğin sürece), telefon numaranı, kişilerini, fotoğraflarını, kesin konumunu ya da sağlık verini toplamıyoruz.</p>
+
+  <h3>Sende kalan veriler</h3>
+  <p>Kaydettiğin kelimeler, cümleler, kart tekrar takvimi, okuma ilerlemesi, LunAI metinleri, yer imleri ve istatistikler cihazında saklanır. iPhone ve iPad’de yalnız senin Apple Kimliğinin erişebildiği özel iCloud veritabanın (Apple CloudKit) üzerinden eşitlenir. Android’de cihazının Google yedeğine dahil olabilir. Bu veriler bize gelmez.</p>
+
+  <h2>3. Takip ve senin tercihin</h2>
+  <p>iPhone ve iPad’de Luna Reader, Apple’ın Uygulama Takip Şeffaflığı penceresiyle izin ister. <strong>Uygulamadan Takip Etmemesini İste</strong> seçeneğini seçersen AppsFlyer anonim modda çalışır, reklam kimliği toplanmaz ve Meta’nın kimlik toplaması kapalı kalır. Bunu istediğin zaman Ayarlar → Gizlilik ve Güvenlik → Takip bölümünden değiştirebilirsin.</p>
+  <p>Android’de Reklam Kimliğini Ayarlar → Google → Reklamlar bölümünden sıfırlayabilir ya da silebilirsin (adlar cihaza göre değişebilir).</p>
+  <p>Bu verileri yalnız reklam ölçümü için kullanıyoruz. Luna Reader’da reklam yoktur; kişisel verileri satmıyor ya da kiralamıyoruz.</p>
+
+  <h2>4. Abonelik ve ödemeler</h2>
+  <p>Ödemeleri tamamen Apple (App Store) ya da Google (Google Play) yürütür. Kart ve fatura bilgilerini hiçbir zaman görmeyiz. Uygulama abonelik durumunu cihazında mağazayla kontrol eder.</p>
+
+  <h2>5. Başka servislerden gelen içerik</h2>
+  <p>Bazı özellikler içeriği doğrudan üçüncü taraflardan yükler; bu sırada IP adresin ve standart istek bilgileri onlara ulaşır:</p>
+  <ul>
+    <li>Müzik klipleri YouTube’un gömülü oynatıcısıyla oynar (Google’ın <a href="https://policies.google.com/privacy">gizlilik politikası</a> geçerlidir).</li>
+    <li>Şarkı sözleri lrclib.net’te aranır.</li>
+    <li>Haberler ve görselleri yayıncıların herkese açık haber akışlarından yüklenir.</li>
+    <li>Apple Music özellikleri, yalnız izin verirsen Apple’ın MusicKit’i üzerinden Apple Music hesabını kullanır.</li>
+  </ul>
+
+  <h2>6. Hizmet sağlayıcılar</h2>
+  <ul>
+    <li><strong>AppsFlyer</strong> — reklam ilişkilendirmesi (<a href="https://www.appsflyer.com/legal/privacy-policy/">gizlilik politikası</a>)</li>
+    <li><strong>Meta Platforms</strong> — reklam ölçümü, yalnız iPhone ve iPad (<a href="https://www.facebook.com/privacy/policy/">gizlilik politikası</a>)</li>
+    <li><strong>Microsoft Azure</strong> — sunucumuz, depolama, Azure OpenAI, Translator ve Speech (<a href="https://privacy.microsoft.com/privacystatement">gizlilik bildirimi</a>)</li>
+    <li><strong>Apple</strong> — App Store, iCloud, bildirimler (<a href="https://www.apple.com/legal/privacy/">gizlilik politikası</a>)</li>
+    <li><strong>Google</strong> — Google Play, YouTube (<a href="https://policies.google.com/privacy">gizlilik politikası</a>)</li>
+  </ul>
+  <p>Bu sağlayıcıların bazıları verileri Türkiye dışında, Amerika Birleşik Devletleri ve Avrupa Birliği dahil, işler.</p>
+
+  <h2>7. Verileri ne kadar tutuyoruz</h2>
+  <ul>
+    <li>Çökme raporları ve geri bildirimler: yalnız sorunu düzeltmek ya da sana cevap vermek için gerektiği kadar. Geri bildiriminin silinmesini istediğin zaman isteyebilirsin.</li>
+    <li>Bildirim jetonları: jeton geçersiz olana ya da yenisiyle değişene kadar.</li>
+    <li>Yapay zekâ ve çeviri istekleri: hiçbir kimlikle birlikte saklanmaz. Maliyeti düşürmek için kullanıcı bilgisi içermeyen ortak bir kelime çevirisi tablosu (ör. “книга → kitap”) tutabiliriz.</li>
+    <li>Sunucumuz IP adresini yalnız kötüye kullanımı sınırlamak için kısa süre bellekte kullanır; kaydetmez.</li>
+    <li>AppsFlyer ve Meta verileri kendi politikalarına göre saklar.</li>
+  </ul>
+
+  <h2>8. Hakların ve verilerini silme</h2>
+  <p>KVKK ve GDPR gibi düzenlemeler kapsamında kişisel verilerine erişmeyi, düzeltilmesini ya da silinmesini isteyebilir, işlenmesine itiraz edebilirsin. <a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a> adresine yaz. Hesap olmadığı için neyi aramamız gerektiğini belirt (ör. geri bildirimde kullandığın e-posta).</p>
+  <ul>
+    <li>Cihazındaki verileri silmek için uygulamayı sil.</li>
+    <li>iPhone/iPad: iCloud kopyasını silmek için Ayarlar → adın → iCloud → saklama alanını yönet → Luna Reader.</li>
+    <li>Takibi 3. bölümde anlatıldığı gibi kapat.</li>
+  </ul>
+
+  <h2>9. Çocuklar</h2>
+  <p>Luna Reader genel kitleye yönelik bir okuma uygulamasıdır. 13 yaşından küçük çocuklardan bilerek kişisel veri toplamıyoruz. Bir çocuğun bize kişisel veri gönderdiğini düşünüyorsan bize yaz, sileriz.</p>
+
+  <h2>10. Güvenlik</h2>
+  <p>Uygulama ile sunucumuz arasındaki bütün bağlantılar HTTPS kullanır. Sunucu anahtarları uygulamada saklanmaz.</p>
+
+  <h2>11. Değişiklikler</h2>
+  <p>Uygulamanın veri uygulamaları değiştiğinde bu sayfayı günceller, yeni tarihi en üstte gösteririz.</p>
+</article>
+</main>
+
+<footer>
+  <span>© <span id="year">2026</span> Lunasoft</span>
+  <nav>
+    <a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a>
+    <a href="/support.html" data-l="support">Support</a>
+    <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" data-l="terms">Terms of Use</a>
   </nav>
+</footer>
+</div>
 
-  <!-- HERO -->
-  <section class="privacy-hero">
-    <div class="container">
-      <h1 data-en="Privacy Policy" data-tr="Gizlilik Politikası">Privacy Policy</h1>
-      <p class="last-updated">
-        <span data-en="Last updated: April 25, 2026" data-tr="Son güncelleme: 25 Nisan 2026">Last updated: April 25, 2026</span>
-      </p>
-    </div>
-  </section>
-
-  <!-- CONTENT -->
-  <section class="privacy-content">
-    <div class="container">
-      <div class="privacy-wrapper">
-
-        <h2 data-en="1. Introduction" data-tr="1. Giriş">1. Introduction</h2>
-        <p data-en="LunaSoft (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) develops and publishes mobile applications under the Luna brand, including but not limited to Luna Russian Reading, Luna Stories, and related language learning applications (collectively, the &quot;Apps&quot;). This Privacy Policy explains what information we collect, how we use it, and your choices regarding your data when you use our Apps." data-tr="LunaSoft (&quot;biz&quot;, &quot;bize&quot;), Luna markası altında mobil uygulamalar geliştirir ve yayınlar; bunlar arasında Luna Russian Reading, Luna Stories ve ilgili dil öğrenme uygulamaları (toplu olarak &quot;Uygulamalar&quot;) bulunur. Bu Gizlilik Politikası, Uygulamalarımızı kullandığınızda hangi bilgileri topladığımızı, bunları nasıl kullandığımızı ve verilerinize ilişkin haklarınızı açıklar.">LunaSoft ("we", "us", or "our") develops and publishes mobile applications under the Luna brand, including but not limited to Luna Russian Reading, Luna Stories, and related language learning applications (collectively, the "Apps"). This Privacy Policy explains what information we collect, how we use it, and your choices regarding your data when you use our Apps.</p>
-
-        <div class="info-box">
-          <p data-en="Our Apps are designed with privacy in mind. We do not require you to create an account, and we do not collect personally identifiable information." data-tr="Uygulamalarımız gizlilik odaklı tasarlanmıştır. Hesap oluşturmanızı gerektirmeyiz ve sizi kişisel olarak tanımlayabilecek bilgileri toplamayız.">Our Apps are designed with privacy in mind. We do not require you to create an account, and we do not collect personally identifiable information.</p>
-        </div>
-
-        <h2 data-en="2. Information We Collect" data-tr="2. Topladığımız Bilgiler">2. Information We Collect</h2>
-
-        <h3 data-en="2.1 Information You Do Not Provide" data-tr="2.1 Sağlamadığınız Bilgiler">2.1 Information You Do Not Provide</h3>
-        <p data-en="The Apps do not require user registration. We do not collect your name, email address, phone number, photo, location, contacts, or any other personally identifiable information." data-tr="Uygulamalar kullanıcı kaydı gerektirmez. Adınızı, e-posta adresinizi, telefon numaranızı, fotoğrafınızı, konumunuzu, kişilerinizi veya sizi kişisel olarak tanımlayabilecek başka bilgileri toplamayız.">The Apps do not require user registration. We do not collect your name, email address, phone number, photo, location, contacts, or any other personally identifiable information.</p>
-
-        <h3 data-en="2.2 Content You Submit to AI Features" data-tr="2.2 Yapay Zekâ Özelliklerine Gönderdiğiniz İçerikler">2.2 Content You Submit to AI Features</h3>
-        <p data-en="Some Apps include AI-powered features such as text generation, reading comprehension, or translation. When you use these features, the text or prompt you submit is sent to our backend service and forwarded to OpenAI or Microsoft Azure OpenAI Service for processing. This content is used solely to generate the response you requested." data-tr="Bazı Uygulamalarımız metin üretimi, okuma anlama veya çeviri gibi yapay zekâ destekli özellikler içerir. Bu özellikleri kullandığınızda, gönderdiğiniz metin veya istem sunucu altyapımıza iletilir ve oradan OpenAI veya Microsoft Azure OpenAI hizmetine işlenmek üzere yönlendirilir. Bu içerik yalnızca talep ettiğiniz yanıtı üretmek için kullanılır.">Some Apps include AI-powered features such as text generation, reading comprehension, or translation. When you use these features, the text or prompt you submit is sent to our backend service and forwarded to OpenAI or Microsoft Azure OpenAI Service for processing. This content is used solely to generate the response you requested.</p>
-        <ul>
-          <li><strong data-en="What is sent:" data-tr="Gönderilen veriler:">What is sent:</strong> <span data-en="The text content you input into AI features." data-tr="Yapay zekâ özelliklerine girdiğiniz metin içeriği.">The text content you input into AI features.</span></li>
-          <li><strong data-en="What is NOT sent:" data-tr="Gönderilmeyen veriler:">What is NOT sent:</strong> <span data-en="Your name, device identifiers, location, or any account information." data-tr="Adınız, cihaz tanımlayıcıları, konum veya hesap bilgisi.">Your name, device identifiers, location, or any account information.</span></li>
-          <li><strong data-en="Retention:" data-tr="Saklama:">Retention:</strong> <span data-en="We do not store your AI prompts on our servers beyond what is required to deliver the response. OpenAI and Azure OpenAI handle the data according to their own enterprise data policies." data-tr="Yapay zekâ isteklerinizi, yanıt üretmek için gereken süre dışında sunucularımızda saklamayız. OpenAI ve Azure OpenAI verileri kendi kurumsal veri politikalarına göre işler.">We do not store your AI prompts on our servers beyond what is required to deliver the response. OpenAI and Azure OpenAI handle the data according to their own enterprise data policies.</span></li>
-        </ul>
-
-        <h3 data-en="2.3 Locally Stored Data" data-tr="2.3 Cihazınızda Saklanan Veriler">2.3 Locally Stored Data</h3>
-        <p data-en="Your learning progress, saved words, reading history, and preferences are stored locally on your device. This data does not leave your device and is not accessible to us. If you uninstall the App, this data is deleted." data-tr="Öğrenme ilerlemeniz, kaydettiğiniz kelimeler, okuma geçmişiniz ve tercihleriniz cihazınızda yerel olarak saklanır. Bu veriler cihazınızdan ayrılmaz ve bize erişilebilir değildir. Uygulamayı kaldırdığınızda bu veriler silinir.">Your learning progress, saved words, reading history, and preferences are stored locally on your device. This data does not leave your device and is not accessible to us. If you uninstall the App, this data is deleted.</p>
-
-        <h3 data-en="2.4 Purchases and Subscriptions" data-tr="2.4 Satın Alımlar ve Abonelikler">2.4 Purchases and Subscriptions</h3>
-        <p data-en="Any in-app purchases or subscriptions are processed entirely by Google Play (on Android) or the Apple App Store (on iOS). We do not receive or store your payment information, credit card numbers, or billing address. We only receive a confirmation that a purchase was made." data-tr="Uygulama içi satın alımlar ve abonelikler tamamen Google Play (Android) veya Apple App Store (iOS) tarafından işlenir. Ödeme bilgilerinizi, kredi kartı numaranızı veya fatura adresinizi almayız ve saklamayız. Yalnızca satın alımın gerçekleştiğine dair bir onay alırız.">Any in-app purchases or subscriptions are processed entirely by Google Play (on Android) or the Apple App Store (on iOS). We do not receive or store your payment information, credit card numbers, or billing address. We only receive a confirmation that a purchase was made.</p>
-
-        <h2 data-en="3. How We Use Information" data-tr="3. Bilgileri Nasıl Kullanırız">3. How We Use Information</h2>
-        <p data-en="The limited information processed through our Apps is used only to:" data-tr="Uygulamalarımız aracılığıyla işlenen sınırlı bilgi yalnızca şu amaçlarla kullanılır:">The limited information processed through our Apps is used only to:</p>
-        <ul>
-          <li data-en="Provide AI-generated responses to the prompts you submit." data-tr="Gönderdiğiniz isteklere yapay zekâ tarafından üretilen yanıtlar sunmak.">Provide AI-generated responses to the prompts you submit.</li>
-          <li data-en="Operate, maintain, and improve the functionality of the Apps." data-tr="Uygulamaların işlevselliğini sağlamak, sürdürmek ve geliştirmek.">Operate, maintain, and improve the functionality of the Apps.</li>
-          <li data-en="Comply with applicable legal obligations." data-tr="Geçerli yasal yükümlülüklere uymak.">Comply with applicable legal obligations.</li>
-        </ul>
-        <p data-en="We do not sell, rent, or trade any user information. We do not use your data for advertising or build user profiles." data-tr="Kullanıcı bilgilerini satmaz, kiralamaz veya takas etmeyiz. Verilerinizi reklam amacıyla kullanmaz, kullanıcı profili oluşturmayız.">We do not sell, rent, or trade any user information. We do not use your data for advertising or build user profiles.</p>
-
-        <h2 data-en="4. Third-Party Services" data-tr="4. Üçüncü Taraf Hizmetleri">4. Third-Party Services</h2>
-        <p data-en="To provide AI features and distribute our Apps, we rely on the following third-party processors:" data-tr="Yapay zekâ özelliklerini sağlamak ve Uygulamalarımızı dağıtmak için aşağıdaki üçüncü taraf işleyicilerden yararlanırız:">To provide AI features and distribute our Apps, we rely on the following third-party processors:</p>
-        <ul>
-          <li><strong>OpenAI</strong> — <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">openai.com/policies/privacy-policy</a></li>
-          <li><strong>Microsoft Azure OpenAI Service</strong> — <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener">privacy.microsoft.com/privacystatement</a></li>
-          <li><strong>Google Play (Android)</strong> — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a></li>
-          <li><strong>Apple App Store (iOS)</strong> — <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">apple.com/legal/privacy</a></li>
-        </ul>
-        <p data-en="These providers process data under their own privacy policies. We encourage you to review them." data-tr="Bu sağlayıcılar verileri kendi gizlilik politikalarına göre işler. Bu politikaları incelemenizi öneririz.">These providers process data under their own privacy policies. We encourage you to review them.</p>
-
-        <h2 data-en="5. Data Security" data-tr="5. Veri Güvenliği">5. Data Security</h2>
-        <p data-en="All communication between the Apps and our backend servers is encrypted using HTTPS/TLS. We follow industry-standard practices to protect data in transit. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security." data-tr="Uygulamalar ile sunucu altyapımız arasındaki tüm iletişim HTTPS/TLS ile şifrelenir. Aktarım sırasında verileri korumak için sektör standardı uygulamaları takip ederiz. Ancak internet üzerinden hiçbir aktarım yöntemi %100 güvenli değildir; mutlak güvenliği garanti edemeyiz.">All communication between the Apps and our backend servers is encrypted using HTTPS/TLS. We follow industry-standard practices to protect data in transit. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
-
-        <h2 data-en="6. Children's Privacy" data-tr="6. Çocukların Gizliliği">6. Children's Privacy</h2>
-        <p data-en="Our Apps are intended for users aged 13 and above. We do not knowingly collect any information from children under 13. If you believe a child under 13 has provided information to us, please contact us and we will take steps to remove it." data-tr="Uygulamalarımız 13 yaş ve üzeri kullanıcılar için tasarlanmıştır. 13 yaşın altındaki çocuklardan bilerek bilgi toplamayız. 13 yaşın altındaki bir çocuğun bize bilgi verdiğini düşünüyorsanız lütfen bizimle iletişime geçin; bu bilgiyi kaldırmak için gerekli adımları atarız.">Our Apps are intended for users aged 13 and above. We do not knowingly collect any information from children under 13. If you believe a child under 13 has provided information to us, please contact us and we will take steps to remove it.</p>
-
-        <h2 data-en="7. Your Rights" data-tr="7. Haklarınız">7. Your Rights</h2>
-        <p data-en="Because we do not store personally identifiable user data on our servers, there is generally no personal data for us to access, correct, or delete. However, depending on your jurisdiction (such as the EU under GDPR or California under CCPA), you may have the following rights:" data-tr="Sunucularımızda kişisel olarak tanımlanabilir kullanıcı verisi saklamadığımız için genellikle erişebileceğimiz, düzelteceğimiz veya sileceğimiz kişisel veri bulunmaz. Ancak yargı bölgenize göre (örneğin AB'de GDPR veya Kaliforniya'da CCPA), aşağıdaki haklara sahip olabilirsiniz:">Because we do not store personally identifiable user data on our servers, there is generally no personal data for us to access, correct, or delete. However, depending on your jurisdiction (such as the EU under GDPR or California under CCPA), you may have the following rights:</p>
-        <ul>
-          <li data-en="The right to access any data we may hold about you." data-tr="Hakkınızda tutabileceğimiz verilere erişme hakkı.">The right to access any data we may hold about you.</li>
-          <li data-en="The right to request deletion of any data." data-tr="Verilerin silinmesini talep etme hakkı.">The right to request deletion of any data.</li>
-          <li data-en="The right to object to processing." data-tr="İşlemeye itiraz etme hakkı.">The right to object to processing.</li>
-          <li data-en="The right to lodge a complaint with a data protection authority." data-tr="Bir veri koruma kurumuna şikâyette bulunma hakkı.">The right to lodge a complaint with a data protection authority.</li>
-        </ul>
-        <p data-en="To exercise any of these rights, contact us at the email address below." data-tr="Bu haklardan herhangi birini kullanmak için aşağıdaki e-posta adresinden bizimle iletişime geçebilirsiniz.">To exercise any of these rights, contact us at the email address below.</p>
-
-        <h2 data-en="8. Changes to This Policy" data-tr="8. Bu Politikadaki Değişiklikler">8. Changes to This Policy</h2>
-        <p data-en="We may update this Privacy Policy from time to time. The &quot;Last updated&quot; date at the top of this page indicates when the most recent changes were made. We encourage you to review this policy periodically." data-tr="Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Sayfanın üst kısmındaki &quot;Son güncelleme&quot; tarihi en son değişikliğin ne zaman yapıldığını gösterir. Bu politikayı periyodik olarak gözden geçirmenizi öneririz.">We may update this Privacy Policy from time to time. The "Last updated" date at the top of this page indicates when the most recent changes were made. We encourage you to review this policy periodically.</p>
-
-        <h2 data-en="9. Contact Us" data-tr="9. Bize Ulaşın">9. Contact Us</h2>
-        <p data-en="If you have any questions about this Privacy Policy or our practices, please contact us:" data-tr="Bu Gizlilik Politikası veya uygulamalarımız hakkında sorularınız varsa lütfen bizimle iletişime geçin:">If you have any questions about this Privacy Policy or our practices, please contact us:</p>
-        <div class="contact-block">
-          <p><strong>LunaSoft</strong></p>
-          <p data-en="Email:" data-tr="E-posta:">Email:</p>
-          <p><a href="mailto:info@lunasoft.com.tr">info@lunasoft.com.tr</a></p>
-          <p data-en="Website:" data-tr="Web Sitesi:">Website:</p>
-          <p><a href="https://lunasoft.com.tr">lunasoft.com.tr</a></p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- MINIMAL FOOTER -->
-  <footer class="footer">
-    <span data-en="© 2026 LunaSoft. All rights reserved." data-tr="© 2026 LunaSoft. Tüm hakları saklıdır.">© 2026 LunaSoft. All rights reserved.</span>
-  </footer>
-
-  <script>
-    // Language toggle - default English
-    let currentLang = 'en';
-    function toggleLang() {
-      currentLang = currentLang === 'en' ? 'tr' : 'en';
-      document.getElementById('langToggle').textContent = currentLang === 'tr' ? 'EN' : 'TR';
-      document.documentElement.lang = currentLang;
-      applyLang();
-    }
-    function applyLang() {
-      const attr = `data-${currentLang}`;
-      document.querySelectorAll(`[${attr}]`).forEach(el => {
-        el.textContent = el.getAttribute(attr);
-      });
-    }
-  </script>
-
+<script>
+(function(){
+  var labels={en:{support:"Support",terms:"Terms of Use"},tr:{support:"Destek",terms:"Kullanım Koşulları"}};
+  function set(l){
+    document.documentElement.lang=l;
+    document.querySelectorAll("[data-lang]").forEach(function(el){el.hidden=el.getAttribute("data-lang")!==l});
+    document.querySelectorAll("[data-set]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-set")===l)});
+    document.querySelectorAll("[data-l]").forEach(function(a){a.textContent=labels[l][a.getAttribute("data-l")]});
+    document.title=l==="tr"?"Luna Reader Gizlilik Politikası — Lunasoft":"Luna Reader Privacy Policy — Lunasoft";
+  }
+  var q=new URLSearchParams(location.search).get("lang");
+  var start=q==="tr"||q==="en"?q:((navigator.language||"").toLowerCase().indexOf("tr")===0?"tr":"en");
+  set(start);
+  document.querySelectorAll("[data-set]").forEach(function(b){b.addEventListener("click",function(){set(b.getAttribute("data-set"))})});
+  document.getElementById("year").textContent=new Date().getFullYear();
+})();
+</script>
 </body>
 </html>
