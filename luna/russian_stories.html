@@ -744,64 +744,6 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 })();
 </script>
 
-<!-- Auto-redirect to the store (mobile only) — restored from the older page, where this
-     is what actually got users into the App Store from Instagram. A top-level navigation
-     to the https universal link that is NOT tied to a tap is the one route Meta's webview
-     still honours; tapping the button alone is unreliable there. Any tap/scroll cancels
-     it, so a user who reaches for the button themselves keeps the normal flow.
-     It fires AutoRedirect (not Lead) and runs at most once per tab session. -->
-<script>
-(function(){
-  try {
-    // ?noredirect=1 disables it (handy for checking the page itself).
-    if (/[?&]noredirect=1/.test(window.location.search)) return;
-    // Already sent to the store in this tab (auto-redirect or a tap) → this is a Back /
-    // reload, not a new visitor. Let them read the page instead of bouncing them again.
-    try { if (sessionStorage.getItem('luna_handoff') || sessionStorage.getItem('luna_noauto')) return; } catch(e){}
-
-    var ua = navigator.userAgent || '';
-    var isIOS = /iphone|ipad|ipod/i.test(ua);
-    var isAndroid = /android/i.test(ua);
-    if (!isIOS && !isAndroid) return; // desktop just reads the page
-
-    var isInApp = /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
-    var delay = isInApp ? 1800 : 1200; // let the in-app sheet settle first
-
-    var url = isIOS
-      ? (window.appStoreUrl ? window.appStoreUrl('auto', false) : 'https://apps.apple.com/app/id6740998772')
-      : 'https://play.google.com/store/apps/details?id=com.luna.russianstories' +
-        (window.playReferrer ? window.playReferrer('auto_redirect') : '');
-
-    // Any deliberate interaction cancels the auto-redirect.
-    var aborted = false;
-    // Any interaction also sticks for the tab session: someone who tapped the Privacy
-    // Policy (or scrolled) and comes Back gets a fresh page load, which must not re-arm it.
-    function abort(){
-      aborted = true;
-      try { sessionStorage.setItem('luna_noauto', '1'); } catch(e){}
-    }
-    document.addEventListener('click', abort, true);
-    document.addEventListener('touchstart', abort, { capture:true, passive:true });
-    document.addEventListener('touchmove',  abort, { capture:true, passive:true });
-    // If the page is EVER backgrounded, kill the auto-redirect for good. An early tap
-    // (before this script ran) can open the App Store without setting `aborted`; this
-    // timer then suspends while Instagram is in the background and would fire the
-    // moment the user comes BACK from the store — yanking them there again and firing
-    // a duplicate AutoRedirect event on an already-tracked journey.
-    window.addEventListener('pagehide', abort, { once:true });
-    document.addEventListener('visibilitychange', function(){ if (document.hidden) abort(); });
-
-    setTimeout(function(){
-      if (aborted) return;
-      if (window.markHandoff) window.markHandoff('auto');
-      try {
-        if (window.trackAutoRedirect) window.trackAutoRedirect(isIOS ? 'AppStore' : 'GooglePlay');
-      } catch(e){}
-      window.location.href = url;
-    }, delay);
-  } catch(e){}
-})();
-</script>
 
 </body>
 </html>
