@@ -412,6 +412,14 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   .plat-ios .badge-as .small,.plat-android .badge-gp .small{font-size:11px;color:#3C3C43}
   .plat-ios .badge-as .big,.plat-android .badge-gp .big{font-size:17px;color:#000}
   .plat-ios .badge-as:hover,.plat-android .badge-gp:hover{background:#fff}
+  /* Invisible hit-area extension around the big store button. Clarity (Nov 2026) showed
+     Instagram-ad users' thumbs landing just below the button's edge — the tap hit <main>,
+     nothing happened, and they had to tap again. Kept ≤8px vertically so it can't reach
+     the "Also on …" link under it (stage gap ≥11px + the link's own 8px padding). */
+  .plat-ios .badge-as,.plat-android .badge-gp{position:relative;-webkit-tap-highlight-color:transparent}
+  .plat-ios .badge-as::after,.plat-android .badge-gp::after{
+    content:"";position:absolute;inset:-8px -14px;border-radius:20px;
+  }
 
   /* Keep a clear gap under the big button so a thumb aimed at it can't hit the other store. */
   .alt{display:none;margin-top:0}
