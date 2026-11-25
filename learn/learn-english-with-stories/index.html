@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en" data-site-language="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learn English with Stories and Audio | Luna Reader</title>
+<meta name="theme-color" content="#000000">
+
+<link rel="icon" type="image/png" href="../../luna/assets/Luna_logo_180.png">
+<link rel="apple-touch-icon" href="../../luna/assets/Luna_logo_180.png">
+
+<link rel="preconnect" href="https://connect.facebook.net">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preconnect" href="https://www.clarity.ms">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2VQJTF2X9K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2VQJTF2X9K', {
+    send_page_view: true,
+    anonymize_ip: true
+  });
+</script>
+
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wy9i734ovj");
+</script>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+(function(){
+  // external_id pixel init'ten önce hazır olsun (Advanced Matching için)
+  var eid = '';
+  try {
+    eid = localStorage.getItem('luna_eid');
+    if (!eid) {
+      eid = 'eid_' + Date.now().toString(36) + '_' +
+            Math.random().toString(36).slice(2, 10) +
+            Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('luna_eid', eid);
+    }
+  } catch(e){}
+  window.__lunaEid = eid || '';
+  var advMatch = eid ? { external_id: eid } : {};
+  // Auto-Config kapalı: Meta'nın otomatik algıladığı event'ler (buton tıklaması, sayfa
+  // metadata'sı) gönderilmesin — sadece bizim eventID'li event'lerimiz gitsin.
+  // Not: fbevents.js 'pcm_plugin-set_' ID'sini yalnızca eventID'si OLMAYAN event'lere atar;
+  // bizimkilerin hepsi eventID taşıdığı için dedup bundan etkilenmez. (true/"true" dışındaki
+  // her değer, string 'false' dahil, opt-out sayılır; boolean false en açık hâli.)
+  fbq('set', 'autoConfig', false, '2013897989521001');
+  fbq('init', '2013897989521001', advMatch);
+})();
+// PageView aşağıda event_id ile fire ediliyor (sendCAPI ile birlikte) — burada tekrar etmiyoruz, deduplication için
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></noscript>
+
+<!-- Store redirect defined EARLY: the first tap is never a "dead click", it shows
+     instant feedback, and works even before the bottom script runs / inside the
+     Instagram & Facebook in-app browsers. -->
+<script>
+  // Platform class on <html> before first paint: a phone gets ONE big button for its own
+  // store plus a small "Also on …" link to the other (CSS below). ~83% of Leads are Android,
+  // yet the App Store badge came first, and a wrong-store tap is a dead end (no install).
+  // Unknown UAs (desktop, iPadOS 'Macintosh') get two equal buttons side by side.
+  (function(){
+    var ua = navigator.userAgent || '';
+    var p = /iphone|ipad|ipod/i.test(ua) ? 'plat-ios' : (/android/i.test(ua) ? 'plat-android' : '');
+    if (p) document.documentElement.className += ' ' + p;
+  })();
+  // Per-tab "already sent to the store" marker. The auto-redirect checks it, so a Back /
+  // reload (Android WebView has no bfcache and re-runs the page) doesn't bounce the user
+  // to the store again or log another event.
+  window.markHandoff = function(kind){
+    try { sessionStorage.setItem('luna_handoff', kind); } catch(e){}
+  };
+  function clearOpening(){
+    var els = document.querySelectorAll('.badge.is-opening');
+    for (var i = 0; i < els.length; i++) els[i].classList.remove('is-opening');
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = '';
+  }
+  // Screen readers: the badges' static aria-labels hide the visual "Opening…" swap, so
+  // announce it through a polite live region instead.
+  function announceOpening(store){
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = 'Opening ' + (store === 'AppStore' ? 'the App Store' : 'Google Play') + '…';
+  }
+
+  // Click handler for the store <a> tags. On iOS in-app browsers it drives the
+  // navigation itself: itms-apps:// first (claimed directly by the App Store app, so
+  // the webview's universal-link block doesn't apply), plain https 1s later if that
+  // scheme goes unanswered.
+  window.openStoreFromLink = function(store, location, el){
+    // Repeat-tap lock: users who think the first tap was dead tap again. Each extra tap
+    // used to fire another Lead + custom event (pixel AND CAPI) and start a second set of
+    // fallback timers that raced the first hand-off. Swallow taps for 3.5s — long enough
+    // to cover the slowest chain (itms-apps → extbrowser @1.5s → https @3s) — and unlock
+    // as soon as the page comes back to the foreground so a returning user can retry.
+    // The lock is PER STORE: a mis-tap on the small "Also on …" link must not swallow the
+    // user's immediate tap on the big button for their own store.
+    var now = Date.now();
+    var locks = window.__storeLocks || (window.__storeLocks = {});
+    if (locks[store] && now - locks[store] < 3500) return false;
+    locks[store] = now;
+    // A tap on the other store supersedes any hand-off still in flight: drop its fallback
+    // timers so they can't hijack this navigation.
+    if (window.__handoffCancel) { try { window.__handoffCancel(); } catch(e){} window.__handoffCancel = null; }
+    window.markHandoff('tap');
+    // Visible "Opening…" state, so the user sees the tap registered instead of tapping again.
+    // One shared timer, so an earlier tap's timeout can't clear a later tap's state early.
+    clearTimeout(window.__openingT);
+    clearOpening();
+    announceOpening(store);
+    if (el && el.classList) {
+      el.classList.add('is-opening');
+      window.__openingT = setTimeout(clearOpening, 3500);
+    }
+    var ua = navigator.userAgent || '';
+    var isIOSInApp = /iphone|ipad|ipod/i.test(ua) &&
+                     /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    if (isIOSInApp && store === 'AppStore') {
+      try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+      // PROVEN flow from the old page (russian_stories1.html, in production May–Aug):
+      // fire itms-apps:// inside the tap gesture — Meta's webview hands it to the App
+      // Store app — and only fall back after a FULL 1.5s. The hand-off takes ~0.5–1s;
+      // the 350ms fallback this replaces fired while it was still in flight and
+      // hijacked the pending navigation, so the tap looked dead (Clarity showed users
+      // tapping repeatedly with nothing happening). If the App Store does open, the
+      // page is backgrounded → pagehide/visibilitychange cancels every fallback.
+      var IOS_ROUTE  = (location === 'alt') ? 'alt' : 'tap';
+      var IOS_NATIVE = window.appStoreUrl(IOS_ROUTE, true);
+      var IOS_WEB    = window.appStoreUrl(IOS_ROUTE, false);
+      var isIG = /instagram/i.test(ua);
+      var timers = [];
+      var cancel = function(){ while (timers.length) { try { clearTimeout(timers.pop()); } catch(e){} } };
+      window.__handoffCancel = cancel;
+      window.addEventListener('pagehide', cancel, { once:true });
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
+      if (isIG) {
+        // Instagram's own escape scheme opens the URL in the EXTERNAL browser (Safari),
+        // and since Nov 2025 apps.apple.com 301s iOS straight into the native App Store
+        // from there. Try it if itms-apps:// went unanswered; plain https is the last
+        // resort (inside the IG webview that 301 can dead-end, so it goes last).
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          try { window.location.href = 'instagram://extbrowser/?url=' + encodeURIComponent(IOS_WEB); } catch(e){}
+        }, 1500));
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 3000));
+      } else {
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 1500));
+      }
+      try { window.location.href = IOS_NATIVE; } catch(e){}
+      return false; // we drive the navigation ourselves
+    }
+    openStore(store, location);
+    return false;
+  };
+  // Back from the store (bfcache restore or the webview re-shown) → allow a fresh tap.
+  // pageshow ALSO fires on the initial load, after 'load' — only a bfcache restore
+  // (e.persisted) is a real return; otherwise it would unlock a tap made before 'load'.
+  window.addEventListener('pageshow', function(e){
+    if (e && e.persisted) { window.__storeLocks = {}; clearOpening(); }
+  });
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) { window.__storeLocks = {}; clearOpening(); }
+  });
+  // App Store install attribution: App Store Connect campaign link (provider token pt,
+  // campaign token ct ≤ 40 chars). App Analytics → Campaigns then shows product-page views
+  // and downloads per ct. ct = <source>_<route>: source 'meta' for Instagram/Facebook
+  // traffic, 'web' otherwise; route tap | alt | auto. Kept coarse on purpose — Apple hides
+  // small counts, so per-campaign ct values would mostly show up as hidden.
+  window.appStoreUrl = function(route, nativeScheme){
+    var src = 'web';
+    try {
+      if (/[?&](fbclid=|utm_source=(ig|fb|facebook|instagram|an|msg|meta)(&|$))/i.test(window.location.search) ||
+          /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(navigator.userAgent || '')) src = 'meta';
+    } catch(e){}
+    return (nativeScheme ? 'itms-apps' : 'https') +
+      '://apps.apple.com/app/id6740998772?pt=10625926&ct=' + src + '_' + route + '&mt=8';
+  };
+
+  // Google Play install attribution: '&referrer=…' on every Play URL. Play Console's
+  // acquisition reports (and the Install Referrer API) then split installs by ad source /
+  // campaign / ad (copied from the landing URL's utm_*) and by HOW the user got to the
+  // store (utm_medium = tap | tap_alt). Values are sanitised to
+  // [A-Za-z0-9_.-] and capped, since they come straight from the query string.
+  window.playReferrer = function(route){
+    try {
+      var q = new URLSearchParams(window.location.search);
+      var clean = function(v, d){
+        v = (v == null || v === '') ? d : String(v);
+        return v.replace(/[^A-Za-z0-9_.\-]/g, '_').slice(0, 100);
+      };
+      var ref = 'utm_source=' + clean(q.get('utm_source'), 'landing') +
+                '&utm_medium=' + clean(route, 'tap') +
+                '&utm_campaign=' + clean(q.get('utm_campaign') || q.get('utm_id'), 'none');
+      if (q.get('utm_content')) ref += '&utm_content=' + clean(q.get('utm_content'), '');
+      return '&referrer=' + encodeURIComponent(ref);
+    } catch(e){ return ''; }
+  };
+
+  // Opens the store reliably (native scheme first, https fallback). Defined here so a
+  // tap before the bottom script is ready still works. trackStoreClick is guarded — it
+  // just no-ops on an ultra-early tap; the full version below adds tracking.
+  window.openStore = function(store, location){
+    try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+    var ua = navigator.userAgent || '';
+    var isIOS = /iphone|ipad|ipod/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var IOS_URL = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', false);
+    var IOS_NATIVE = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', true);
+    var AND_PKG = 'com.luna.russianstories';
+    var AND_REF = window.playReferrer(location === 'alt' ? 'tap_alt' : 'tap');
+    var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG + AND_REF;
+    // Instagram/Facebook/Messenger in-app browsers silently drop custom-scheme
+    // navigations (itms-apps://, intent://) AND window.open — only plain https
+    // top-level navigation is reliable there.
+    var isInApp = /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    var goAndroid = (store === 'GooglePlay');
+    var goIOS = (store === 'AppStore');
+    if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
+    if (isInApp) {
+      // iOS in-app + App Store is handled entirely by openStoreFromLink (itms-apps://
+      // first, https fallback). Everything else here goes straight to plain https.
+      window.location.href = goAndroid ? AND_HTTPS : IOS_URL;
+      return;
+    }
+    if (goAndroid && isAndroid) {
+      var intentUrl = 'intent://details?id=' + AND_PKG + AND_REF +
+        '#Intent;scheme=market;package=com.android.vending;' +
+        'S.browser_fallback_url=' + encodeURIComponent(AND_HTTPS) + ';end';
+      var t = setTimeout(function(){ window.location.href = AND_HTTPS; }, 900);
+      var clear = function(){ try { clearTimeout(t); } catch(e){} };
+      window.__handoffCancel = clear;
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear(); }, { once:true });
+      window.addEventListener('pagehide', clear, { once:true });
+      try { window.location.href = intentUrl; } catch(e){ clear(); window.location.href = AND_HTTPS; }
+      return;
+    }
+    if (goIOS && isIOS) {
+      var t2 = setTimeout(function(){ window.location.href = IOS_URL; }, 900);
+      var clear2 = function(){ try { clearTimeout(t2); } catch(e){} };
+      window.__handoffCancel = clear2;
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear2(); }, { once:true });
+      window.addEventListener('pagehide', clear2, { once:true });
+      try { window.location.href = IOS_NATIVE; } catch(e){ clear2(); window.location.href = IOS_URL; }
+      return;
+    }
+    // Cross-platform fallback (e.g. App Store button tapped on Android, or desktop).
+    // In-app browsers (Instagram/Facebook) silently block window.open, so try it but
+    // fall back to a top-level navigation which always works.
+    var fallbackUrl = goAndroid ? AND_HTTPS : IOS_URL;
+    var popup = null;
+    try { popup = window.open(fallbackUrl, '_blank'); } catch(e){}
+    if (!popup) { window.location.href = fallbackUrl; }
+  };
+</script>
+
+<link rel="stylesheet" href="../../luna/redesign.css">
+<meta name="description" content="Read English stories with audio in Luna Reader, tap any word to see its meaning, and practise with exercises made from the stories you have read.">
+<link rel="canonical" href="https://lunasoft.com.tr/learn/learn-english-with-stories/">
+<link rel="alternate" hreflang="en" href="https://lunasoft.com.tr/learn/learn-english-with-stories/">
+<link rel="alternate" hreflang="tr" href="https://lunasoft.com.tr/tr/learn/learn-english-with-stories/">
+<link rel="alternate" hreflang="ru" href="https://lunasoft.com.tr/ru/learn/learn-english-with-stories/">
+<link rel="alternate" hreflang="x-default" href="https://lunasoft.com.tr/learn/learn-english-with-stories/">
+<meta property="og:title" content="Learn English with Stories and Audio | Luna Reader">
+<meta property="og:description" content="Read English stories with audio in Luna Reader, tap any word to see its meaning, and practise with exercises made from the stories you have read.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lunasoft.com.tr/learn/learn-english-with-stories/">
+<meta property="og:site_name" content="Luna Reader">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta property="og:image:alt" content="Luna Reader">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Learn English with Stories and Audio | Luna Reader">
+<meta name="twitter:description" content="Read English stories with audio in Luna Reader, tap any word to see its meaning, and practise with exercises made from the stories you have read.">
+<meta name="twitter:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
+<meta name="twitter:image:alt" content="Luna Reader">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://lunasoft.com.tr/#organization", "name": "Lunasoft", "url": "https://lunasoft.com.tr/", "logo": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png"}, {"@type": "WebSite", "@id": "https://lunasoft.com.tr/#website", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "SoftwareApplication", "@id": "https://lunasoft.com.tr/#app", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "applicationCategory": "EducationalApplication", "operatingSystem": "iOS, Android", "description": "Learn Russian, English, Turkish, German and Spanish with stories, audio, lyric translation and news. Download Luna Reader for iOS and Android.", "image": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png", "downloadUrl": ["https://apps.apple.com/app/id6740998772", "https://play.google.com/store/apps/details?id=com.luna.russianstories"], "featureList": ["Stories and audio", "Tap-to-translate words", "Music and lyric translation", "News in the language being learned", "Russian, English, Turkish, German and Spanish learning content"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free to download. Optional paid features and subscriptions are available."}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "WebPage", "@id": "https://lunasoft.com.tr/learn/learn-english-with-stories/#page", "url": "https://lunasoft.com.tr/learn/learn-english-with-stories/", "name": "Learn English with Stories and Audio | Luna Reader", "description": "Read English stories with audio in Luna Reader, tap any word to see its meaning, and practise with exercises made from the stories you have read.", "inLanguage": "en", "isPartOf": {"@id": "https://lunasoft.com.tr/#website"}, "about": {"@id": "https://lunasoft.com.tr/#app"}}, {"@type": "Article", "headline": "Learn English with Stories and Audio | Luna Reader", "description": "Read English stories with audio in Luna Reader, tap any word to see its meaning, and practise with exercises made from the stories you have read.", "inLanguage": "en", "mainEntityOfPage": {"@id": "https://lunasoft.com.tr/learn/learn-english-with-stories/#page"}, "author": {"@id": "https://lunasoft.com.tr/#organization"}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "FAQPage", "@id": "https://lunasoft.com.tr/learn/learn-english-with-stories/#faq", "inLanguage": "en", "isPartOf": {"@id": "https://lunasoft.com.tr/learn/learn-english-with-stories/#page"}, "mainEntity": [{"@type": "Question", "name": "Can I learn English by reading stories?", "acceptedAnswer": {"@type": "Answer", "text": "Stories let you meet English words inside a situation, which makes them easier to remember. In Luna Reader you read English stories grouped by level, listen to the audio, and tap a word to see its meaning. Afterwards you practise with exercises made from the same text."}}, {"@type": "Question", "name": "What English exercises does Luna Reader have?", "acceptedAnswer": {"@type": "Answer", "text": "There are four kinds of exercise based on your reading: fill in the blanks, build a sentence, paragraph ordering, and matching the words and phrases you saved."}}, {"@type": "Question", "name": "Are the exercises connected to what I read?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The exercises are built from the stories you have finished. Complete a level story and its fill-in-the-blank, sentence-building and paragraph-ordering exercises become available."}}, {"@type": "Question", "name": "Can I read English news in Luna Reader?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. With English selected as your learning language, the news section shows English-language articles, and you can tap any word to see its meaning, just as you do in stories."}}, {"@type": "Question", "name": "Can I see translations in my own language?", "acceptedAnswer": {"@type": "Answer", "text": "The app interface and word translations are available in more than 30 languages, so you can read English with translations into the language you know best."}}, {"@type": "Question", "name": "What level of English do I need to start?", "acceptedAnswer": {"@type": "Answer", "text": "Stories are grouped by level, starting at A1. Begin with texts you can follow and move up when they feel comfortable."}}, {"@type": "Question", "name": "Is Luna Reader free for learning English?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader is free to download and includes free stories at every level. Luna Premium is an optional monthly or yearly subscription for readers who want more."}}]}]}</script>
+</head><body><p id="sr-status" class="sr-only" aria-live="polite"></p><header class="header wrap"><a class="brand" href="../../" aria-label="Luna Reader home"><img src="../../luna/assets/Luna_logo_180.png" width="42" height="42" alt="">Luna Reader</a><button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="Open menu">☰</button><nav id="navigation" aria-label="Main navigation"><a href="../../#features" data-i="features">Features</a><a href="../../#languages" data-i="languages">Languages</a><a href="../../#stories" data-i="stories">Free Stories</a><a href="../../#journal" data-i="blog">Blog</a><a href="../../#about" data-i="about">About</a></nav><div class="header-actions"><label class="language-label"><span aria-hidden="true">◎</span><span class="sr-only">Website language</span><select id="site-language" aria-label="Website language"><option value="en" data-url="./" selected>English</option><option value="tr" data-url="../../tr/learn/learn-english-with-stories/">Türkçe</option><option value="ru" data-url="../../ru/learn/learn-english-with-stories/">Русский</option></select></label><a class="button small" href="#download" data-i="get">Get the App</a></div></header><main class="guide-page wrap"><nav class="breadcrumbs"><a href="../../">Home</a><span aria-hidden="true"> / </span><span>Explore ways to learn</span></nav><article><div class="guide-hero"><div><span class="eyebrow">LUNA READER</span><h1>Read English stories and hear how the words sound</h1><p class="guide-intro">English words are often not pronounced the way they are written, so reading alone leaves a gap. Stories with audio close it: you see a sentence and hear it at the same time. Luna Reader brings English stories, audio and word translation together so you can follow a narrative while exploring the language.</p></div><div class="guide-story-art reading-mascot" role="img" aria-label="Luna Reader"></div></div><div class="guide-body"><section><h2>Start with a short passage</h2><p>Choose a short section rather than a whole story. Read it once for the situation: who is there, where they are and what happens. Tap a word when it stops you from following, then go back to the sentence and read it again as a whole.</p></section><section><h2>Listen while you read</h2><p>Play the audio for a passage and follow the words on the page. Notice where the spelling and the sound differ, and which words run together when a sentence is spoken. Then repeat a short sentence aloud at your own pace.</p></section><section><h2>Notice words that travel together</h2><p>English often carries meaning in small groups of words: look for, give up, at last. Watch for them as you read. In Luna Reader you can save phrases as well as single words, and practise both later.</p></section><section><h2>Try an original English example</h2><p>On Saturday morning, Maya walks to the market. The air is cold, but the bread is still warm. She buys two loaves and takes the long way home. This original example illustrates the reading approach; it is not a promise of a particular in-app title.</p></section><section id="practice"><h2>Practise with the stories you have read</h2><p>Finishing a story is where practice begins. When you complete a level story in Luna Reader, its exercises appear in the practice area, built from the text you have just read.</p><ul><li><strong>Fill in the blanks:</strong> complete the missing words in stories you have read.</li><li><strong>Build a sentence:</strong> put the words back in order to rebuild up to 10 sentences from a story.</li><li><strong>Paragraph ordering:</strong> arrange the paragraphs of a story in the right order.</li><li><strong>Word practice:</strong> match the words and phrases you saved while reading with their meanings.</li></ul></section></div><section class="feature-showcase news-feature" id="news"><figure class="showcase-art"><img src="../../luna/assets/wizard-news.webp" srcset="../../luna/assets/wizard-news-640.webp 640w, ../../luna/assets/wizard-news-800.webp 800w, ../../luna/assets/wizard-news.webp 1254w" sizes="(max-width: 800px) 92vw, 500px" width="1254" height="1254" loading="lazy" decoding="async" alt="The Luna wizard reading a newspaper"></figure><div class="showcase-copy"><span class="eyebrow">ENGLISH NEWS</span><h2>Read English news as well</h2><p>When English is your learning language, the news section of Luna Reader shows articles in English. You read them the same way as a story: tap a word to see its meaning and save the ones you want to practise later. It brings current topics into your English reading alongside the stories.</p><div class="feature-pills"><span>Read the news</span><span>Learn in context</span></div><a class="text-link" href="../learn-english-with-news/">Make English news part of your reading</a></div></section><section class="feature-showcase music-feature" id="music"><div class="showcase-copy"><span class="eyebrow">ENGLISH SONGS</span><h2>Listen to English songs with the lyrics</h2><p>Search for an English song you like, listen to it in Luna Reader and follow the lyrics with their translation. Songs let you hear how the words you met in stories sound when they are sung.</p><div class="feature-pills"><span>Listen to music</span><span>Translate lyrics</span></div><a class="text-link" href="../learn-languages-with-music/">Discover learning through music</a></div><figure class="showcase-art"><img src="../../luna/assets/wizard-music.webp" srcset="../../luna/assets/wizard-music-640.webp 640w, ../../luna/assets/wizard-music-800.webp 800w, ../../luna/assets/wizard-music.webp 1254w" sizes="(max-width: 800px) 92vw, 500px" width="1254" height="1254" loading="lazy" decoding="async" alt="The Luna wizard listening to music with headphones"></figure></section><div class="guide-body"><section id="faq" class="guide-faq"><h2>Questions about learning English with Luna Reader</h2><details><summary>Can I learn English by reading stories?</summary><p>Stories let you meet English words inside a situation, which makes them easier to remember. In Luna Reader you read English stories grouped by level, listen to the audio, and tap a word to see its meaning. Afterwards you practise with exercises made from the same text.</p></details><details><summary>What English exercises does Luna Reader have?</summary><p>There are four kinds of exercise based on your reading: fill in the blanks, build a sentence, paragraph ordering, and matching the words and phrases you saved.</p></details><details><summary>Are the exercises connected to what I read?</summary><p>Yes. The exercises are built from the stories you have finished. Complete a level story and its fill-in-the-blank, sentence-building and paragraph-ordering exercises become available.</p></details><details><summary>Can I read English news in Luna Reader?</summary><p>Yes. With English selected as your learning language, the news section shows English-language articles, and you can tap any word to see its meaning, just as you do in stories.</p></details><details><summary>Can I see translations in my own language?</summary><p>The app interface and word translations are available in more than 30 languages, so you can read English with translations into the language you know best.</p></details><details><summary>What level of English do I need to start?</summary><p>Stories are grouped by level, starting at A1. Begin with texts you can follow and move up when they feel comfortable.</p></details><details><summary>Is Luna Reader free for learning English?</summary><p>Luna Reader is free to download and includes free stories at every level. Luna Premium is an optional monthly or yearly subscription for readers who want more.</p></details></section></div></article><section id="download" class="guide-download"><h2>Get Luna Reader</h2><p>Free to download. Optional paid features and subscriptions are available.</p><div class="store-links"><a class="badge store apple" data-store="ios" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8"  onclick="return openStoreFromLink('AppStore','main',this);"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M16 5c1.6-1.8 1.5-3.6 1.4-4.2-1.5.1-3.3 1-4.3 2.2-1.1 1.3-1.8 2.8-1.6 4.2 1.7.1 3.3-.7 4.5-2.2ZM20 15c0-3 2.5-4.5 2.6-4.6-1.4-2.1-3.6-2.4-4.4-2.4-1.9-.2-3.7 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.2 0-4.3 1.3-5.4 3.2-2.3 4 .6 10 2.8 13.2 1.1 1.5 2.3 3.1 3.9 3 1.5-.1 2.1-1 4-1s2.4 1 4.1 1c1.7 0 2.8-1.5 3.8-3 .9-1.2 1.5-2.6 1.8-3.3-3.5-1.4-4.4-4.4-4.4-6.1Z"/></svg><span><small><span class="default">Download on the</span><span class="opening">Opening the</span></small><strong>App Store</strong></span></a><a class="badge store play" data-store="android" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"  onclick="return openStoreFromLink('GooglePlay','main',this);"><svg viewBox="0 0 30 34" aria-hidden="true"><path fill="#d9e4ed" d="M1 1 18 17 1 33Z"/><path fill="#fff" d="m1 1 22 12-5 4Z"/><path fill="#b1b7c1" d="m1 33 22-12-5-4Z"/><path fill="#ead6b2" d="m18 17 5-4 6 4-6 4Z"/></svg><span><small><span class="default">GET IT ON</span><span class="opening">OPENING</span></small><strong>Google Play</strong></span></a></div></section></main><section class="seo-guides wrap"><h2>Explore ways to learn</h2><p>Practical ideas for reading, listening and discovering words in context.</p><div class="seo-guide-grid"><a href="../learn-languages-with-music/"><h3>Learn a language with the songs you love</h3><p>Listen to music and translate song lyrics with Luna Reader. Explore a simple listening routine that connects words, meaning and pronunciation.</p></a><a href="../learn-english-with-news/"><h3>Make English news part of your reading practice</h3><p>Read English news with Luna Reader and build a manageable daily reading habit. Learn how to choose a topic and understand words in context.</p></a><a href="../learn-russian-with-stories/"><h3>Read Russian stories, one sentence at a time</h3><p>Explore Russian stories with audio and tap-to-translate words in Luna Reader. Try a short original reading sample and a practical study routine.</p></a><a href="../learn-turkish-with-stories/"><h3>Read Turkish stories and see how the words are built</h3><p>Read Turkish stories with audio in Luna Reader, tap any word to see its meaning, and practise with exercises made from what you read.</p></a><a href="./"><h3>Read English stories and hear how the words sound</h3><p>Read English stories with audio in Luna Reader, tap any word to see its meaning, and practise with exercises made from what you read.</p></a></div></section><footer class="wrap"><a class="brand" href="../../"><img src="../../luna/assets/Luna_logo_180.png" width="30" alt="">Luna Reader</a><span>© <span id="year"></span> Luna Reader</span><a href="../../privacy.html" data-i="privacy">Privacy Policy</a><nav class="locale-links" aria-label="Website language"><a data-locale-link href="./" hreflang="en" lang="en" aria-current="page">English</a><a data-locale-link href="../../tr/learn/learn-english-with-stories/" hreflang="tr" lang="tr">Türkçe</a><a data-locale-link href="../../ru/learn/learn-english-with-stories/" hreflang="ru" lang="ru">Русский</a></nav></footer><!-- Page locale for ad measurement and UI -->
+<script>
+var adLang = window.location.search.match(/[?&]lang=(tr|en|ru)(?:&|$)/i);
+window.__lunaLang = adLang ? adLang[1].toLowerCase() : (document.documentElement.dataset.siteLanguage || 'en');
+try { localStorage.setItem('luna_lang', window.__lunaLang); } catch(e){}
+</script>
+<!-- Tracking -->
+<script>
+(function() {
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
+    return m ? m[1] : undefined;
+  }
+  // Meta cookie domain, found the way fbevents.js finds it: try the shortest domain first
+  // ('tr', 'com.tr', 'lunasoft.com.tr'), keep the first one the browser accepts, and use its
+  // position as the index in the 'fb.<index>.' prefix (here: fb.2 on .lunasoft.com.tr).
+  // This page used to write host-only 'fb.1.' cookies. The pixel then derived '.com.tr' (a
+  // public suffix the browser rejects) whenever it tried to update them, so a refreshed fbc
+  // (IG's brid/aem suffix, a newer ad click) never persisted and CAPI kept the stale value.
+  var FB_CK = (function(){
+    try {
+      var parts = window.location.hostname.split('.');
+      for (var i = 0; i < parts.length; i++) {
+        var dom = parts.slice(parts.length - 1 - i).join('.');
+        document.cookie = '__luna_ck=1;path=/;domain=.' + dom;
+        if (/(?:^|; )__luna_ck=1/.test(document.cookie)) {
+          document.cookie = '__luna_ck=;max-age=0;path=/;domain=.' + dom;
+          return { idx: i, domain: dom };
+        }
+      }
+    } catch(e){}
+    return { idx: 1, domain: '' }; // every test write failed (cookies blocked / sandboxed): host-only, as before
+  })();
+  function setFbCookie(name, payload, days){
+    try {
+      var d = new Date();
+      d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+      // Drop a host-only copy first so reads can't return a stale duplicate.
+      if (FB_CK.domain) document.cookie = name + '=;max-age=0;path=/';
+      document.cookie = name + '=fb.' + FB_CK.idx + '.' + payload + ';expires=' + d.toUTCString() +
+        ';path=/;SameSite=Lax' + (FB_CK.domain ? ';domain=.' + FB_CK.domain : '');
+    } catch(e) {}
+  }
+  // One-time migration for returning visitors: re-home cookies written the old way (host-only
+  // 'fb.1.') with the right index + domain, keeping their timestamp and value — same _fbp id.
+  (function(){
+    try {
+      if (!FB_CK.domain) return;
+      ['_fbc', '_fbp'].forEach(function(n){
+        var v = getCookie(n);
+        if (v && v.indexOf('fb.1.') === 0) setFbCookie(n, v.slice(5), 90);
+      });
+    } catch(e){}
+  })();
+  (function(){
+    try {
+      var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+      if (!m) return;
+      var fbclid = m[1];
+      // Raw query value goes into document.cookie: accept only real fbclid characters, so a
+      // crafted link can't inject cookie attributes (';domain=…', ';expires=…').
+      if (!/^[A-Za-z0-9_\-]{1,500}$/.test(fbclid)) return;
+      var existing = getCookie('_fbc');
+      if (existing && existing.indexOf(fbclid) !== -1) return;
+      // Same payload the pixel builds (its cookie config maps IG's 'brid' to an '_aem_' suffix):
+      // otherwise the landing PageView's CAPI copy is sent before the pixel refreshes the cookie
+      // and lacks the suffix its browser copy carries.
+      var bm = window.location.search.match(/[?&]brid=([^&]+)/);
+      var brid = (bm && /^[A-Za-z0-9_\-]{1,500}$/.test(bm[1])) ? bm[1] : '';
+      setFbCookie('_fbc', Date.now() + '.' + fbclid + (brid ? '_aem_' + brid : ''), 90);
+    } catch(e){}
+  })();
+  (function(){
+    try {
+      if (getCookie('_fbp')) return;
+      setFbCookie('_fbp', Date.now() + '.' + Math.floor(Math.random()*2147483647), 90);
+    } catch(e){}
+  })();
+  // Kalıcı external_id — dedup match anahtarı (Meta için "Harici Kod")
+  function getExternalId(){
+    try {
+      var eid = localStorage.getItem('luna_eid');
+      if (!eid) {
+        eid = 'eid_' + Date.now().toString(36) + '_' +
+              Math.random().toString(36).slice(2, 10) +
+              Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('luna_eid', eid);
+      }
+      return eid;
+    } catch(e){ return ''; }
+  }
+  // Reuse the id the <head> already handed to fbq('init') so pixel and CAPI always carry the
+  // SAME external_id — even when localStorage.setItem throws and nothing was persisted.
+  window.__lunaEid = window.__lunaEid || getExternalId();
+
+  function sendCAPI(eventName, eventId, extra){
+    try {
+      var payload = {
+        event_name: eventName, event_id: eventId,
+        event_time: Math.floor(Date.now() / 1000),  // browser zamanı — server-browser timing match için
+        url: window.location.href,
+        fbc: getCookie('_fbc'), fbp: getCookie('_fbp'),
+        external_id: window.__lunaEid || getExternalId(),
+        custom_data: extra || {}
+      };
+      fetch('/api/capi', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        keepalive:true, body:JSON.stringify(payload)
+      }).catch(function(){});
+    } catch(e){}
+  }
+  window.trackStoreClick = function(store, location){
+    try {
+      var prefix = (store === 'AppStore') ? 'as_' : 'gp_';
+      var customName = (store === 'AppStore') ? 'AppStoreClick' : 'GooglePlayClick';
+      var leadId = prefix + 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var customId = prefix + 'cc_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var data = { content_name: store, location: location, lang: (window.__lunaLang || 'en') };
+      // Both badges show on every phone, so an Android user can tap App Store (or an iPhone
+      // user Google Play). They can't install from there — record the click, but not a Lead.
+      var ua = navigator.userAgent || '';
+      var wrongStore = (store === 'AppStore' && /android/i.test(ua)) ||
+                       (store === 'GooglePlay' && /iphone|ipad|ipod/i.test(ua));
+      if (wrongStore) data.wrong_store = true;
+      // One Lead per browser per 24 h: a visitor who taps again later (or taps both badges)
+      // is still one lead, so Lead-optimised delivery doesn't overweight repeat tappers.
+      // AppStoreClick / GooglePlayClick still fire on every tap (the exclusion audience uses them).
+      var sendLead = !wrongStore;
+      if (sendLead) {
+        try {
+          var lastLead = parseInt(localStorage.getItem('luna_lead_at') || '0', 10);
+          if (Date.now() - lastLead < 24 * 60 * 60 * 1000) sendLead = false;
+          else localStorage.setItem('luna_lead_at', String(Date.now()));
+        } catch(e){}
+      }
+      if (window.fbq) {
+        if (sendLead) fbq('track', 'Lead', data, { eventID: leadId });
+        fbq('trackCustom', customName, data, { eventID: customId });
+      }
+      if (sendLead) sendCAPI('Lead', leadId, data);
+      sendCAPI(customName, customId, data);
+      // GA4 event
+      if (window.gtag) {
+        gtag('event', 'store_click', {
+          store: store,
+          location: location,
+          wrong_store: wrongStore,
+          lang: (window.__lunaLang || 'en')
+        });
+      }
+      // Clarity custom event + tag
+      if (window.clarity) {
+        clarity('event', 'store_click');
+        clarity('set', 'store', store);
+        clarity('set', 'click_location', location);
+      }
+    } catch(e){}
+  };
+  // openStoreFromLink + openStore are defined EARLY in the <head> so a tap that lands
+  // before this script runs still opens the store. On iOS they fire itms-apps://, which
+  // iOS routes to the App Store app itself — never a web page inside the in-app browser.
+
+  try {
+    var pvId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    if (window.fbq) fbq('track', 'PageView', {}, { eventID: pvId });
+    sendCAPI('PageView', pvId, { lang: (window.__lunaLang || 'en') });
+  } catch(e){}
+})();
+</script>
+
+
+
+<script src="../../luna/seo-navigation.js"></script></body></html>
