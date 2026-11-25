@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="tr" data-site-language="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sesli Hikâyelerle İspanyolca Öğrenme | Luna Reader</title>
+<meta name="theme-color" content="#000000">
+
+<link rel="icon" type="image/png" href="../../../luna/assets/Luna_logo_180.png">
+<link rel="apple-touch-icon" href="../../../luna/assets/Luna_logo_180.png">
+
+<link rel="preconnect" href="https://connect.facebook.net">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preconnect" href="https://www.clarity.ms">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2VQJTF2X9K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2VQJTF2X9K', {
+    send_page_view: true,
+    anonymize_ip: true
+  });
+</script>
+
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wy9i734ovj");
+</script>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+(function(){
+  // external_id pixel init'ten önce hazır olsun (Advanced Matching için)
+  var eid = '';
+  try {
+    eid = localStorage.getItem('luna_eid');
+    if (!eid) {
+      eid = 'eid_' + Date.now().toString(36) + '_' +
+            Math.random().toString(36).slice(2, 10) +
+            Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('luna_eid', eid);
+    }
+  } catch(e){}
+  window.__lunaEid = eid || '';
+  var advMatch = eid ? { external_id: eid } : {};
+  // Auto-Config kapalı: Meta'nın otomatik algıladığı event'ler (buton tıklaması, sayfa
+  // metadata'sı) gönderilmesin — sadece bizim eventID'li event'lerimiz gitsin.
+  // Not: fbevents.js 'pcm_plugin-set_' ID'sini yalnızca eventID'si OLMAYAN event'lere atar;
+  // bizimkilerin hepsi eventID taşıdığı için dedup bundan etkilenmez. (true/"true" dışındaki
+  // her değer, string 'false' dahil, opt-out sayılır; boolean false en açık hâli.)
+  fbq('set', 'autoConfig', false, '2013897989521001');
+  fbq('init', '2013897989521001', advMatch);
+})();
+// PageView aşağıda event_id ile fire ediliyor (sendCAPI ile birlikte) — burada tekrar etmiyoruz, deduplication için
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></noscript>
+
+<!-- Store redirect defined EARLY: the first tap is never a "dead click", it shows
+     instant feedback, and works even before the bottom script runs / inside the
+     Instagram & Facebook in-app browsers. -->
+<script>
+  // Platform class on <html> before first paint: a phone gets ONE big button for its own
+  // store plus a small "Also on …" link to the other (CSS below). ~83% of Leads are Android,
+  // yet the App Store badge came first, and a wrong-store tap is a dead end (no install).
+  // Unknown UAs (desktop, iPadOS 'Macintosh') get two equal buttons side by side.
+  (function(){
+    var ua = navigator.userAgent || '';
+    var p = /iphone|ipad|ipod/i.test(ua) ? 'plat-ios' : (/android/i.test(ua) ? 'plat-android' : '');
+    if (p) document.documentElement.className += ' ' + p;
+  })();
+  // Per-tab "already sent to the store" marker. The auto-redirect checks it, so a Back /
+  // reload (Android WebView has no bfcache and re-runs the page) doesn't bounce the user
+  // to the store again or log another event.
+  window.markHandoff = function(kind){
+    try { sessionStorage.setItem('luna_handoff', kind); } catch(e){}
+  };
+  function clearOpening(){
+    var els = document.querySelectorAll('.badge.is-opening');
+    for (var i = 0; i < els.length; i++) els[i].classList.remove('is-opening');
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = '';
+  }
+  // Screen readers: the badges' static aria-labels hide the visual "Opening…" swap, so
+  // announce it through a polite live region instead.
+  function announceOpening(store){
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = 'Opening ' + (store === 'AppStore' ? 'the App Store' : 'Google Play') + '…';
+  }
+
+  // Click handler for the store <a> tags. On iOS in-app browsers it drives the
+  // navigation itself: itms-apps:// first (claimed directly by the App Store app, so
+  // the webview's universal-link block doesn't apply), plain https 1s later if that
+  // scheme goes unanswered.
+  window.openStoreFromLink = function(store, location, el){
+    // Repeat-tap lock: users who think the first tap was dead tap again. Each extra tap
+    // used to fire another Lead + custom event (pixel AND CAPI) and start a second set of
+    // fallback timers that raced the first hand-off. Swallow taps for 3.5s — long enough
+    // to cover the slowest chain (itms-apps → extbrowser @1.5s → https @3s) — and unlock
+    // as soon as the page comes back to the foreground so a returning user can retry.
+    // The lock is PER STORE: a mis-tap on the small "Also on …" link must not swallow the
+    // user's immediate tap on the big button for their own store.
+    var now = Date.now();
+    var locks = window.__storeLocks || (window.__storeLocks = {});
+    if (locks[store] && now - locks[store] < 3500) return false;
+    locks[store] = now;
+    // A tap on the other store supersedes any hand-off still in flight: drop its fallback
+    // timers so they can't hijack this navigation.
+    if (window.__handoffCancel) { try { window.__handoffCancel(); } catch(e){} window.__handoffCancel = null; }
+    window.markHandoff('tap');
+    // Visible "Opening…" state, so the user sees the tap registered instead of tapping again.
+    // One shared timer, so an earlier tap's timeout can't clear a later tap's state early.
+    clearTimeout(window.__openingT);
+    clearOpening();
+    announceOpening(store);
+    if (el && el.classList) {
+      el.classList.add('is-opening');
+      window.__openingT = setTimeout(clearOpening, 3500);
+    }
+    var ua = navigator.userAgent || '';
+    var isIOSInApp = /iphone|ipad|ipod/i.test(ua) &&
+                     /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    if (isIOSInApp && store === 'AppStore') {
+      try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+      // PROVEN flow from the old page (russian_stories1.html, in production May–Aug):
+      // fire itms-apps:// inside the tap gesture — Meta's webview hands it to the App
+      // Store app — and only fall back after a FULL 1.5s. The hand-off takes ~0.5–1s;
+      // the 350ms fallback this replaces fired while it was still in flight and
+      // hijacked the pending navigation, so the tap looked dead (Clarity showed users
+      // tapping repeatedly with nothing happening). If the App Store does open, the
+      // page is backgrounded → pagehide/visibilitychange cancels every fallback.
+      var IOS_ROUTE  = (location === 'alt') ? 'alt' : 'tap';
+      var IOS_NATIVE = window.appStoreUrl(IOS_ROUTE, true);
+      var IOS_WEB    = window.appStoreUrl(IOS_ROUTE, false);
+      var isIG = /instagram/i.test(ua);
+      var timers = [];
+      var cancel = function(){ while (timers.length) { try { clearTimeout(timers.pop()); } catch(e){} } };
+      window.__handoffCancel = cancel;
+      window.addEventListener('pagehide', cancel, { once:true });
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
+      if (isIG) {
+        // Instagram's own escape scheme opens the URL in the EXTERNAL browser (Safari),
+        // and since Nov 2025 apps.apple.com 301s iOS straight into the native App Store
+        // from there. Try it if itms-apps:// went unanswered; plain https is the last
+        // resort (inside the IG webview that 301 can dead-end, so it goes last).
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          try { window.location.href = 'instagram://extbrowser/?url=' + encodeURIComponent(IOS_WEB); } catch(e){}
+        }, 1500));
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 3000));
+      } else {
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 1500));
+      }
+      try { window.location.href = IOS_NATIVE; } catch(e){}
+      return false; // we drive the navigation ourselves
+    }
+    openStore(store, location);
+    return false;
+  };
+  // Back from the store (bfcache restore or the webview re-shown) → allow a fresh tap.
+  // pageshow ALSO fires on the initial load, after 'load' — only a bfcache restore
+  // (e.persisted) is a real return; otherwise it would unlock a tap made before 'load'.
+  window.addEventListener('pageshow', function(e){
+    if (e && e.persisted) { window.__storeLocks = {}; clearOpening(); }
+  });
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) { window.__storeLocks = {}; clearOpening(); }
+  });
+  // App Store install attribution: App Store Connect campaign link (provider token pt,
+  // campaign token ct ≤ 40 chars). App Analytics → Campaigns then shows product-page views
+  // and downloads per ct. ct = <source>_<route>: source 'meta' for Instagram/Facebook
+  // traffic, 'web' otherwise; route tap | alt | auto. Kept coarse on purpose — Apple hides
+  // small counts, so per-campaign ct values would mostly show up as hidden.
+  window.appStoreUrl = function(route, nativeScheme){
+    var src = 'web';
+    try {
+      if (/[?&](fbclid=|utm_source=(ig|fb|facebook|instagram|an|msg|meta)(&|$))/i.test(window.location.search) ||
+          /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(navigator.userAgent || '')) src = 'meta';
+    } catch(e){}
+    return (nativeScheme ? 'itms-apps' : 'https') +
+      '://apps.apple.com/app/id6740998772?pt=10625926&ct=' + src + '_' + route + '&mt=8';
+  };
+
+  // Google Play install attribution: '&referrer=…' on every Play URL. Play Console's
+  // acquisition reports (and the Install Referrer API) then split installs by ad source /
+  // campaign / ad (copied from the landing URL's utm_*) and by HOW the user got to the
+  // store (utm_medium = tap | tap_alt). Values are sanitised to
+  // [A-Za-z0-9_.-] and capped, since they come straight from the query string.
+  window.playReferrer = function(route){
+    try {
+      var q = new URLSearchParams(window.location.search);
+      var clean = function(v, d){
+        v = (v == null || v === '') ? d : String(v);
+        return v.replace(/[^A-Za-z0-9_.\-]/g, '_').slice(0, 100);
+      };
+      var ref = 'utm_source=' + clean(q.get('utm_source'), 'landing') +
+                '&utm_medium=' + clean(route, 'tap') +
+                '&utm_campaign=' + clean(q.get('utm_campaign') || q.get('utm_id'), 'none');
+      if (q.get('utm_content')) ref += '&utm_content=' + clean(q.get('utm_content'), '');
+      return '&referrer=' + encodeURIComponent(ref);
+    } catch(e){ return ''; }
+  };
+
+  // Opens the store reliably (native scheme first, https fallback). Defined here so a
+  // tap before the bottom script is ready still works. trackStoreClick is guarded — it
+  // just no-ops on an ultra-early tap; the full version below adds tracking.
+  window.openStore = function(store, location){
+    try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+    var ua = navigator.userAgent || '';
+    var isIOS = /iphone|ipad|ipod/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var IOS_URL = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', false);
+    var IOS_NATIVE = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', true);
+    var AND_PKG = 'com.luna.russianstories';
+    var AND_REF = window.playReferrer(location === 'alt' ? 'tap_alt' : 'tap');
+    var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG + AND_REF;
+    // Instagram/Facebook/Messenger in-app browsers silently drop custom-scheme
+    // navigations (itms-apps://, intent://) AND window.open — only plain https
+    // top-level navigation is reliable there.
+    var isInApp = /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    var goAndroid = (store === 'GooglePlay');
+    var goIOS = (store === 'AppStore');
+    if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
+    if (isInApp) {
+      // iOS in-app + App Store is handled entirely by openStoreFromLink (itms-apps://
+      // first, https fallback). Everything else here goes straight to plain https.
+      window.location.href = goAndroid ? AND_HTTPS : IOS_URL;
+      return;
+    }
+    if (goAndroid && isAndroid) {
+      var intentUrl = 'intent://details?id=' + AND_PKG + AND_REF +
+        '#Intent;scheme=market;package=com.android.vending;' +
+        'S.browser_fallback_url=' + encodeURIComponent(AND_HTTPS) + ';end';
+      var t = setTimeout(function(){ window.location.href = AND_HTTPS; }, 900);
+      var clear = function(){ try { clearTimeout(t); } catch(e){} };
+      window.__handoffCancel = clear;
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear(); }, { once:true });
+      window.addEventListener('pagehide', clear, { once:true });
+      try { window.location.href = intentUrl; } catch(e){ clear(); window.location.href = AND_HTTPS; }
+      return;
+    }
+    if (goIOS && isIOS) {
+      var t2 = setTimeout(function(){ window.location.href = IOS_URL; }, 900);
+      var clear2 = function(){ try { clearTimeout(t2); } catch(e){} };
+      window.__handoffCancel = clear2;
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear2(); }, { once:true });
+      window.addEventListener('pagehide', clear2, { once:true });
+      try { window.location.href = IOS_NATIVE; } catch(e){ clear2(); window.location.href = IOS_URL; }
+      return;
+    }
+    // Cross-platform fallback (e.g. App Store button tapped on Android, or desktop).
+    // In-app browsers (Instagram/Facebook) silently block window.open, so try it but
+    // fall back to a top-level navigation which always works.
+    var fallbackUrl = goAndroid ? AND_HTTPS : IOS_URL;
+    var popup = null;
+    try { popup = window.open(fallbackUrl, '_blank'); } catch(e){}
+    if (!popup) { window.location.href = fallbackUrl; }
+  };
+</script>
+
+<link rel="stylesheet" href="../../../luna/redesign.css">
+<meta name="description" content="Luna Reader’da sesli İspanyolca hikâyeler oku, kelimelere dokunarak anlamlarını gör ve okuduğun hikâyelerden oluşturulan alıştırmalarla pratik yap.">
+<link rel="canonical" href="https://lunasoft.com.tr/tr/learn/learn-spanish-with-stories/">
+<link rel="alternate" hreflang="en" href="https://lunasoft.com.tr/learn/learn-spanish-with-stories/">
+<link rel="alternate" hreflang="tr" href="https://lunasoft.com.tr/tr/learn/learn-spanish-with-stories/">
+<link rel="alternate" hreflang="ru" href="https://lunasoft.com.tr/ru/learn/learn-spanish-with-stories/">
+<link rel="alternate" hreflang="x-default" href="https://lunasoft.com.tr/learn/learn-spanish-with-stories/">
+<meta property="og:title" content="Sesli Hikâyelerle İspanyolca Öğrenme | Luna Reader">
+<meta property="og:description" content="Luna Reader’da sesli İspanyolca hikâyeler oku, kelimelere dokunarak anlamlarını gör ve okuduğun hikâyelerden oluşturulan alıştırmalarla pratik yap.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lunasoft.com.tr/tr/learn/learn-spanish-with-stories/">
+<meta property="og:site_name" content="Luna Reader">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta property="og:image:alt" content="Luna Reader">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sesli Hikâyelerle İspanyolca Öğrenme | Luna Reader">
+<meta name="twitter:description" content="Luna Reader’da sesli İspanyolca hikâyeler oku, kelimelere dokunarak anlamlarını gör ve okuduğun hikâyelerden oluşturulan alıştırmalarla pratik yap.">
+<meta name="twitter:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
+<meta name="twitter:image:alt" content="Luna Reader">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://lunasoft.com.tr/#organization", "name": "Lunasoft", "url": "https://lunasoft.com.tr/", "logo": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png"}, {"@type": "WebSite", "@id": "https://lunasoft.com.tr/#website", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "SoftwareApplication", "@id": "https://lunasoft.com.tr/#app", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "applicationCategory": "EducationalApplication", "operatingSystem": "iOS, Android", "description": "Rusça, İngilizce, Türkçe, Almanca ve İspanyolca öğren. Sesli hikâyeler, şarkı sözü çevirisi ve haberlerle Luna Reader’ı iOS ve Android’de keşfet.", "image": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png", "downloadUrl": ["https://apps.apple.com/app/id6740998772", "https://play.google.com/store/apps/details?id=com.luna.russianstories"], "featureList": ["Stories and audio", "Tap-to-translate words", "Music and lyric translation", "News in the language being learned", "Russian, English, Turkish, German and Spanish learning content"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Ücretsiz indirilebilir. İsteğe bağlı ücretli özellikler ve abonelikler bulunur."}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "WebPage", "@id": "https://lunasoft.com.tr/tr/learn/learn-spanish-with-stories/#page", "url": "https://lunasoft.com.tr/tr/learn/learn-spanish-with-stories/", "name": "Sesli Hikâyelerle İspanyolca Öğrenme | Luna Reader", "description": "Luna Reader’da sesli İspanyolca hikâyeler oku, kelimelere dokunarak anlamlarını gör ve okuduğun hikâyelerden oluşturulan alıştırmalarla pratik yap.", "inLanguage": "tr", "isPartOf": {"@id": "https://lunasoft.com.tr/#website"}, "about": {"@id": "https://lunasoft.com.tr/#app"}}, {"@type": "Article", "headline": "Sesli Hikâyelerle İspanyolca Öğrenme | Luna Reader", "description": "Luna Reader’da sesli İspanyolca hikâyeler oku, kelimelere dokunarak anlamlarını gör ve okuduğun hikâyelerden oluşturulan alıştırmalarla pratik yap.", "inLanguage": "tr", "mainEntityOfPage": {"@id": "https://lunasoft.com.tr/tr/learn/learn-spanish-with-stories/#page"}, "author": {"@id": "https://lunasoft.com.tr/#organization"}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "FAQPage", "@id": "https://lunasoft.com.tr/tr/learn/learn-spanish-with-stories/#faq", "inLanguage": "tr", "isPartOf": {"@id": "https://lunasoft.com.tr/tr/learn/learn-spanish-with-stories/#page"}, "mainEntity": [{"@type": "Question", "name": "Hikâye okuyarak İspanyolca öğrenilir mi?", "acceptedAnswer": {"@type": "Answer", "text": "Hikâyeler, İspanyolca kelimeleri bir durumun içinde karşına çıkarır; bu da onları hatırlamayı kolaylaştırır. Luna Reader’da seviyelere ayrılmış İspanyolca hikâyeler okur, seslendirmesini dinler ve bir kelimeye dokunarak anlamını görürsün. Ardından aynı metinden oluşturulan alıştırmalarla pratik yaparsın."}}, {"@type": "Question", "name": "Luna Reader’da hangi İspanyolca alıştırmalar var?", "acceptedAnswer": {"@type": "Answer", "text": "Okuduklarına dayanan dört tür alıştırma vardır: boşluk doldurma, cümle kurma, paragraf sıralama ve kaydettiğin kelime ile ifadeleri eşleştirme."}}, {"@type": "Question", "name": "Alıştırmalar okuduğum metinlerle ilgili mi?", "acceptedAnswer": {"@type": "Answer", "text": "Evet. Alıştırmalar bitirdiğin hikâyelerden oluşturulur. Bir seviye hikâyesini tamamladığında o hikâyenin boşluk doldurma, cümle kurma ve paragraf sıralama alıştırmaları açılır."}}, {"@type": "Question", "name": "Çevirileri Türkçe görebilir miyim?", "acceptedAnswer": {"@type": "Answer", "text": "Evet. Uygulama arayüzü ve kelime çevirileri Türkçe dahil 30’dan fazla dilde sunulur; İspanyolca metinleri Türkçe çevirilerle okuyabilirsin."}}, {"@type": "Question", "name": "Başlamak için İspanyolcam hangi seviyede olmalı?", "acceptedAnswer": {"@type": "Answer", "text": "Hikâyeler A1’den başlayarak seviyelere ayrılmıştır. Takip edebildiğin metinlerle başla, kolay gelmeye başladığında bir üst seviyeye geç."}}, {"@type": "Question", "name": "Luna Reader İspanyolca öğrenmek için ücretsiz mi?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader ücretsiz indirilir ve her seviyede ücretsiz hikâyeler içerir. Luna Premium, daha fazlasını isteyenler için isteğe bağlı aylık veya yıllık bir aboneliktir."}}]}]}</script>
+</head><body><p id="sr-status" class="sr-only" aria-live="polite"></p><header class="header wrap"><a class="brand" href="../../" aria-label="Luna Reader home"><img src="../../../luna/assets/Luna_logo_180.png" width="42" height="42" alt="">Luna Reader</a><button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="Open menu">☰</button><nav id="navigation" aria-label="Main navigation"><a href="../../#features" data-i="features">Özellikler</a><a href="../../#languages" data-i="languages">Diller</a><a href="../../#stories" data-i="stories">Ücretsiz Hikâyeler</a><a href="../../#journal" data-i="blog">Blog</a><a href="../../#about" data-i="about">Hakkında</a></nav><div class="header-actions"><label class="language-label"><span aria-hidden="true">◎</span><span class="sr-only">Website language</span><select id="site-language" aria-label="Site dili"><option value="en" data-url="../../../learn/learn-spanish-with-stories/">English</option><option value="tr" data-url="./" selected>Türkçe</option><option value="ru" data-url="../../../ru/learn/learn-spanish-with-stories/">Русский</option></select></label><a class="button small" href="#download" data-i="get">Uygulamayı İndir</a></div></header><main class="guide-page wrap"><nav class="breadcrumbs"><a href="../../">Ana sayfa</a><span aria-hidden="true"> / </span><span>Öğrenmenin farklı yollarını keşfet</span></nav><article><div class="guide-hero"><div><span class="eyebrow">LUNA READER</span><h1>İspanyolca hikâyeler oku, fiillerin nasıl değiştiğini gör</h1><p class="guide-intro">İspanyolcada fiilin eki, işi kimin yaptığını söyler; bu yüzden özne çoğu zaman yazılmaz. Hikâyeler bu ekleri anlamlı cümlelerin içinde tekrar tekrar karşına çıkarır. Luna Reader, İspanyolca hikâyeleri, seslendirmeyi ve kelime çevirisini bir araya getirir; böylece dili keşfederken hikâyeyi de takip edebilirsin.</p></div><div class="guide-story-art reading-mascot" role="img" aria-label="Luna Reader"></div></div><div class="guide-body"><section><h2>Kısa bir bölümle başla</h2><p>Bütün hikâye yerine kısa bir bölüm seç. Önce durumu anlamak için oku: kim var, neredeler, ne oluyor? Bir kelime hikâyeyi takip etmeni engellediğinde ona dokun, sonra cümleye dönüp bütün olarak yeniden oku.</p></section><section><h2>Okurken dinle</h2><p>İspanyolca büyük ölçüde okunduğu gibi yazılır; bu yüzden dinlerken metni takip etmek harflerle sesleri kısa sürede eşleştirir. Bir bölümün seslendirmesini aç, kelimeleri sayfada takip et, vurgunun nereye düştüğüne dikkat et ve kısa bir cümleyi kendi hızında sesli tekrar et.</p></section><section><h2>Fiil eklerine dikkat et</h2><p>İspanyolcada fiilin eki kişiye göre değişir: leo “okuyorum”, lees “okuyorsun”, lee “okuyor” demektir. Bu bilgi ekte taşındığı için cümlede özne çoğu zaman bulunmaz. Luna Reader’da bir kelimeye dokunup anlamını gör, okumaya devam et ve kalıpları zamanla tanı.</p></section><section><h2>Özgün bir İspanyolca örnek dene</h2><p>Por la mañana, Lucía abre la ventana. Afuera llueve, pero la calle está tranquila. Toma un café y lee la primera página de su libro. — Sabah Lucía pencereyi açıyor. Dışarıda yağmur yağıyor ama sokak sessiz. Bir kahve içiyor ve kitabının ilk sayfasını okuyor. Bu özgün örnek okuma yaklaşımını göstermek içindir; uygulamadaki belirli bir hikâyenin vaadi değildir.</p></section><section id="practice"><h2>Okuduğun hikâyelerle pratik yap</h2><p>Bir hikâyeyi bitirmek, pratiğin başladığı yerdir. Luna Reader’da bir seviye hikâyesini tamamladığında, az önce okuduğun metinden oluşturulan alıştırmalar pratik bölümünde açılır.</p><ul><li><strong>Boşluk doldurma:</strong> okuduğun hikâyelerdeki eksik kelimeleri tamamla.</li><li><strong>Cümle kurma:</strong> kelimeleri doğru sıraya dizerek bir hikâyeden en fazla 10 cümleyi yeniden kur.</li><li><strong>Paragraf sıralama:</strong> bir hikâyenin paragraflarını doğru sıraya koy.</li><li><strong>Kelime pratiği:</strong> okurken kaydettiğin kelime ve ifadeleri anlamlarıyla eşleştir.</li></ul></section></div><section class="feature-showcase music-feature" id="music"><div class="showcase-copy"><span class="eyebrow">İSPANYOLCA ŞARKILAR</span><h2>İspanyolca şarkıları sözleriyle dinle</h2><p>Sevdiğin bir İspanyolca şarkıyı ara, Luna Reader’da dinle ve sözlerini çevirisiyle birlikte takip et. Şarkılar, hikâyelerde karşılaştığın kelimelerin söylenirken nasıl duyulduğunu fark etmeni sağlar.</p><div class="feature-pills"><span>Müzik dinle</span><span>Sözleri çevir</span></div><a class="text-link" href="../learn-languages-with-music/">Müzikle öğrenmeyi keşfet</a></div><figure class="showcase-art"><img src="../../../luna/assets/wizard-music.webp" srcset="../../../luna/assets/wizard-music-640.webp 640w, ../../../luna/assets/wizard-music-800.webp 800w, ../../../luna/assets/wizard-music.webp 1254w" sizes="(max-width: 800px) 92vw, 500px" width="1254" height="1254" loading="lazy" decoding="async" alt="Kulaklıkla müzik dinleyen Luna büyücüsü"></figure></section><div class="guide-body"><section id="faq" class="guide-faq"><h2>Luna Reader ile İspanyolca öğrenmek hakkında sorular</h2><details><summary>Hikâye okuyarak İspanyolca öğrenilir mi?</summary><p>Hikâyeler, İspanyolca kelimeleri bir durumun içinde karşına çıkarır; bu da onları hatırlamayı kolaylaştırır. Luna Reader’da seviyelere ayrılmış İspanyolca hikâyeler okur, seslendirmesini dinler ve bir kelimeye dokunarak anlamını görürsün. Ardından aynı metinden oluşturulan alıştırmalarla pratik yaparsın.</p></details><details><summary>Luna Reader’da hangi İspanyolca alıştırmalar var?</summary><p>Okuduklarına dayanan dört tür alıştırma vardır: boşluk doldurma, cümle kurma, paragraf sıralama ve kaydettiğin kelime ile ifadeleri eşleştirme.</p></details><details><summary>Alıştırmalar okuduğum metinlerle ilgili mi?</summary><p>Evet. Alıştırmalar bitirdiğin hikâyelerden oluşturulur. Bir seviye hikâyesini tamamladığında o hikâyenin boşluk doldurma, cümle kurma ve paragraf sıralama alıştırmaları açılır.</p></details><details><summary>Çevirileri Türkçe görebilir miyim?</summary><p>Evet. Uygulama arayüzü ve kelime çevirileri Türkçe dahil 30’dan fazla dilde sunulur; İspanyolca metinleri Türkçe çevirilerle okuyabilirsin.</p></details><details><summary>Başlamak için İspanyolcam hangi seviyede olmalı?</summary><p>Hikâyeler A1’den başlayarak seviyelere ayrılmıştır. Takip edebildiğin metinlerle başla, kolay gelmeye başladığında bir üst seviyeye geç.</p></details><details><summary>Luna Reader İspanyolca öğrenmek için ücretsiz mi?</summary><p>Luna Reader ücretsiz indirilir ve her seviyede ücretsiz hikâyeler içerir. Luna Premium, daha fazlasını isteyenler için isteğe bağlı aylık veya yıllık bir aboneliktir.</p></details></section></div></article><section id="download" class="guide-download"><h2>Luna Reader’ı indir</h2><p>Ücretsiz indirilebilir. İsteğe bağlı ücretli özellikler ve abonelikler bulunur.</p><div class="store-links"><a class="badge store apple" data-store="ios" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8"  onclick="return openStoreFromLink('AppStore','main',this);"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M16 5c1.6-1.8 1.5-3.6 1.4-4.2-1.5.1-3.3 1-4.3 2.2-1.1 1.3-1.8 2.8-1.6 4.2 1.7.1 3.3-.7 4.5-2.2ZM20 15c0-3 2.5-4.5 2.6-4.6-1.4-2.1-3.6-2.4-4.4-2.4-1.9-.2-3.7 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.2 0-4.3 1.3-5.4 3.2-2.3 4 .6 10 2.8 13.2 1.1 1.5 2.3 3.1 3.9 3 1.5-.1 2.1-1 4-1s2.4 1 4.1 1c1.7 0 2.8-1.5 3.8-3 .9-1.2 1.5-2.6 1.8-3.3-3.5-1.4-4.4-4.4-4.4-6.1Z"/></svg><span><small><span class="default">Download on the</span><span class="opening">Opening the</span></small><strong>App Store</strong></span></a><a class="badge store play" data-store="android" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"  onclick="return openStoreFromLink('GooglePlay','main',this);"><svg viewBox="0 0 30 34" aria-hidden="true"><path fill="#d9e4ed" d="M1 1 18 17 1 33Z"/><path fill="#fff" d="m1 1 22 12-5 4Z"/><path fill="#b1b7c1" d="m1 33 22-12-5-4Z"/><path fill="#ead6b2" d="m18 17 5-4 6 4-6 4Z"/></svg><span><small><span class="default">GET IT ON</span><span class="opening">OPENING</span></small><strong>Google Play</strong></span></a></div></section></main><section class="seo-guides wrap"><h2>Öğrenmenin farklı yollarını keşfet</h2><p>Okuma, dinleme ve kelimeleri bağlamıyla keşfetmek için uygulanabilir fikirler.</p><div class="seo-guide-grid"><a href="../learn-languages-with-music/"><h3>Sevdiğin şarkılarla dil öğren</h3><p>Luna Reader ile müzik dinlerken şarkı sözlerini çevir. Dinleme, kelime anlamı ve telaffuzu bir araya getiren kısa bir çalışma rutini keşfet.</p></a><a href="./"><h3>İspanyolca hikâyeler oku, fiillerin nasıl değiştiğini gör</h3><p>Luna Reader’da sesli İspanyolca hikâyeler oku, kelimelere dokunarak anlamlarını gör ve okuduklarından oluşturulan alıştırmalarla pratik yap.</p></a></div></section><footer class="wrap"><a class="brand" href="../../"><img src="../../../luna/assets/Luna_logo_180.png" width="30" alt="">Luna Reader</a><span>© <span id="year"></span> Luna Reader</span><a href="../../../privacy.html" data-i="privacy">Gizlilik Politikası</a><nav class="locale-links" aria-label="Site dili"><a data-locale-link href="../../../learn/learn-spanish-with-stories/" hreflang="en" lang="en">English</a><a data-locale-link href="./" hreflang="tr" lang="tr" aria-current="page">Türkçe</a><a data-locale-link href="../../../ru/learn/learn-spanish-with-stories/" hreflang="ru" lang="ru">Русский</a></nav></footer><!-- Page locale for ad measurement and UI -->
+<script>
+var adLang = window.location.search.match(/[?&]lang=(tr|en|ru)(?:&|$)/i);
+window.__lunaLang = adLang ? adLang[1].toLowerCase() : (document.documentElement.dataset.siteLanguage || 'en');
+try { localStorage.setItem('luna_lang', window.__lunaLang); } catch(e){}
+</script>
+<!-- Tracking -->
+<script>
+(function() {
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
+    return m ? m[1] : undefined;
+  }
+  // Meta cookie domain, found the way fbevents.js finds it: try the shortest domain first
+  // ('tr', 'com.tr', 'lunasoft.com.tr'), keep the first one the browser accepts, and use its
+  // position as the index in the 'fb.<index>.' prefix (here: fb.2 on .lunasoft.com.tr).
+  // This page used to write host-only 'fb.1.' cookies. The pixel then derived '.com.tr' (a
+  // public suffix the browser rejects) whenever it tried to update them, so a refreshed fbc
+  // (IG's brid/aem suffix, a newer ad click) never persisted and CAPI kept the stale value.
+  var FB_CK = (function(){
+    try {
+      var parts = window.location.hostname.split('.');
+      for (var i = 0; i < parts.length; i++) {
+        var dom = parts.slice(parts.length - 1 - i).join('.');
+        document.cookie = '__luna_ck=1;path=/;domain=.' + dom;
+        if (/(?:^|; )__luna_ck=1/.test(document.cookie)) {
+          document.cookie = '__luna_ck=;max-age=0;path=/;domain=.' + dom;
+          return { idx: i, domain: dom };
+        }
+      }
+    } catch(e){}
+    return { idx: 1, domain: '' }; // every test write failed (cookies blocked / sandboxed): host-only, as before
+  })();
+  function setFbCookie(name, payload, days){
+    try {
+      var d = new Date();
+      d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+      // Drop a host-only copy first so reads can't return a stale duplicate.
+      if (FB_CK.domain) document.cookie = name + '=;max-age=0;path=/';
+      document.cookie = name + '=fb.' + FB_CK.idx + '.' + payload + ';expires=' + d.toUTCString() +
+        ';path=/;SameSite=Lax' + (FB_CK.domain ? ';domain=.' + FB_CK.domain : '');
+    } catch(e) {}
+  }
+  // One-time migration for returning visitors: re-home cookies written the old way (host-only
+  // 'fb.1.') with the right index + domain, keeping their timestamp and value — same _fbp id.
+  (function(){
+    try {
+      if (!FB_CK.domain) return;
+      ['_fbc', '_fbp'].forEach(function(n){
+        var v = getCookie(n);
+        if (v && v.indexOf('fb.1.') === 0) setFbCookie(n, v.slice(5), 90);
+      });
+    } catch(e){}
+  })();
+  (function(){
+    try {
+      var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+      if (!m) return;
+      var fbclid = m[1];
+      // Raw query value goes into document.cookie: accept only real fbclid characters, so a
+      // crafted link can't inject cookie attributes (';domain=…', ';expires=…').
+      if (!/^[A-Za-z0-9_\-]{1,500}$/.test(fbclid)) return;
+      var existing = getCookie('_fbc');
+      if (existing && existing.indexOf(fbclid) !== -1) return;
+      // Same payload the pixel builds (its cookie config maps IG's 'brid' to an '_aem_' suffix):
+      // otherwise the landing PageView's CAPI copy is sent before the pixel refreshes the cookie
+      // and lacks the suffix its browser copy carries.
+      var bm = window.location.search.match(/[?&]brid=([^&]+)/);
+      var brid = (bm && /^[A-Za-z0-9_\-]{1,500}$/.test(bm[1])) ? bm[1] : '';
+      setFbCookie('_fbc', Date.now() + '.' + fbclid + (brid ? '_aem_' + brid : ''), 90);
+    } catch(e){}
+  })();
+  (function(){
+    try {
+      if (getCookie('_fbp')) return;
+      setFbCookie('_fbp', Date.now() + '.' + Math.floor(Math.random()*2147483647), 90);
+    } catch(e){}
+  })();
+  // Kalıcı external_id — dedup match anahtarı (Meta için "Harici Kod")
+  function getExternalId(){
+    try {
+      var eid = localStorage.getItem('luna_eid');
+      if (!eid) {
+        eid = 'eid_' + Date.now().toString(36) + '_' +
+              Math.random().toString(36).slice(2, 10) +
+              Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('luna_eid', eid);
+      }
+      return eid;
+    } catch(e){ return ''; }
+  }
+  // Reuse the id the <head> already handed to fbq('init') so pixel and CAPI always carry the
+  // SAME external_id — even when localStorage.setItem throws and nothing was persisted.
+  window.__lunaEid = window.__lunaEid || getExternalId();
+
+  function sendCAPI(eventName, eventId, extra){
+    try {
+      var payload = {
+        event_name: eventName, event_id: eventId,
+        event_time: Math.floor(Date.now() / 1000),  // browser zamanı — server-browser timing match için
+        url: window.location.href,
+        fbc: getCookie('_fbc'), fbp: getCookie('_fbp'),
+        external_id: window.__lunaEid || getExternalId(),
+        custom_data: extra || {}
+      };
+      fetch('/api/capi', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        keepalive:true, body:JSON.stringify(payload)
+      }).catch(function(){});
+    } catch(e){}
+  }
+  window.trackStoreClick = function(store, location){
+    try {
+      var prefix = (store === 'AppStore') ? 'as_' : 'gp_';
+      var customName = (store === 'AppStore') ? 'AppStoreClick' : 'GooglePlayClick';
+      var leadId = prefix + 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var customId = prefix + 'cc_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var data = { content_name: store, location: location, lang: (window.__lunaLang || 'en') };
+      // Both badges show on every phone, so an Android user can tap App Store (or an iPhone
+      // user Google Play). They can't install from there — record the click, but not a Lead.
+      var ua = navigator.userAgent || '';
+      var wrongStore = (store === 'AppStore' && /android/i.test(ua)) ||
+                       (store === 'GooglePlay' && /iphone|ipad|ipod/i.test(ua));
+      if (wrongStore) data.wrong_store = true;
+      // One Lead per browser per 24 h: a visitor who taps again later (or taps both badges)
+      // is still one lead, so Lead-optimised delivery doesn't overweight repeat tappers.
+      // AppStoreClick / GooglePlayClick still fire on every tap (the exclusion audience uses them).
+      var sendLead = !wrongStore;
+      if (sendLead) {
+        try {
+          var lastLead = parseInt(localStorage.getItem('luna_lead_at') || '0', 10);
+          if (Date.now() - lastLead < 24 * 60 * 60 * 1000) sendLead = false;
+          else localStorage.setItem('luna_lead_at', String(Date.now()));
+        } catch(e){}
+      }
+      if (window.fbq) {
+        if (sendLead) fbq('track', 'Lead', data, { eventID: leadId });
+        fbq('trackCustom', customName, data, { eventID: customId });
+      }
+      if (sendLead) sendCAPI('Lead', leadId, data);
+      sendCAPI(customName, customId, data);
+      // GA4 event
+      if (window.gtag) {
+        gtag('event', 'store_click', {
+          store: store,
+          location: location,
+          wrong_store: wrongStore,
+          lang: (window.__lunaLang || 'en')
+        });
+      }
+      // Clarity custom event + tag
+      if (window.clarity) {
+        clarity('event', 'store_click');
+        clarity('set', 'store', store);
+        clarity('set', 'click_location', location);
+      }
+    } catch(e){}
+  };
+  // openStoreFromLink + openStore are defined EARLY in the <head> so a tap that lands
+  // before this script runs still opens the store. On iOS they fire itms-apps://, which
+  // iOS routes to the App Store app itself — never a web page inside the in-app browser.
+
+  try {
+    var pvId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    if (window.fbq) fbq('track', 'PageView', {}, { eventID: pvId });
+    sendCAPI('PageView', pvId, { lang: (window.__lunaLang || 'en') });
+  } catch(e){}
+})();
+</script>
+
+
+
+<script src="../../../luna/seo-navigation.js"></script></body></html>
