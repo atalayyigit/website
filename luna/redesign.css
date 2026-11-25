@@ -22,3 +22,6 @@
 
 /* Guide pages: exercise lists and question accordion. */
 .guide-body ul{margin:18px 0 0;padding-left:22px;font-size:18px;line-height:1.8;color:#c2c2c8}.guide-body li{margin-top:8px}.guide-body li strong{color:var(--text);font-weight:600}.guide-faq details{border-bottom:1px solid var(--line);padding:16px 0}.guide-faq h2{margin-bottom:10px}.guide-faq summary{cursor:pointer;font-size:18px;line-height:1.4}.guide-faq details p{font-size:17px;color:var(--muted);margin-top:12px}
+
+/* Guide cards: fit as many per row as the width allows. */
+.seo-guide-grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
