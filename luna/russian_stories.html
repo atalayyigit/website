@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Luna Reader – Read Russian, Turkish &amp; English</title>
-<meta name="description" content="Read Russian, Turkish and English stories with audio and tap any word for instant translation. Luna Reader — free on the App Store and Google Play.">
+<title>Luna Reader – Read Russian, Turkish, English, German &amp; Spanish</title>
+<meta name="description" content="Read Russian, Turkish, English, German and Spanish stories with audio and tap any word for instant translation. Luna Reader — free on the App Store and Google Play.">
 <meta name="theme-color" content="#000000">
 
-<meta property="og:title" content="Luna Reader – Read Russian, Turkish &amp; English">
+<meta property="og:title" content="Luna Reader – Read Russian, Turkish, English, German &amp; Spanish">
 <meta property="og:description" content="Stories with audio. Tap any word for instant translation.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/Luna_logo_1024.png">
@@ -284,288 +284,41 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   };
 </script>
 
-<style>
-  :root{
-    --bg:#000000;
-    --surface:#0C0C0E;
-    --border:rgba(255,255,255,.10);
-    --border-2:rgba(255,255,255,.20);
-    --text:#FFFFFF;
-    --text-2:#9AA0AA;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    /* System fonts only (SF Pro on iOS, Roboto on Android): no render-blocking Google Fonts
-       stylesheet in <head> delaying the in-app browser, and no visitor IP sent to Google. */
-    font-family:-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    min-height:100vh;
-    min-height:100dvh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:32px 24px calc(32px + env(safe-area-inset-bottom));
-    overflow-x:hidden;
-  }
-  ::selection{background:rgba(255,255,255,.20);color:#fff}
-  img,svg{display:block;max-width:100%}
-  a{font:inherit;color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
-
-  .stage{
-    width:100%;
-    max-width:440px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    gap:22px;
-  }
-
-  /* App icon */
-  .logo{
-    width:104px;height:104px;border-radius:24px;
-    display:grid;place-items:center;overflow:hidden;
-    border:1px solid var(--border);
-    box-shadow:0 10px 32px -12px rgba(255,255,255,.18);
-  }
-  .logo img{width:100%;height:100%;object-fit:cover}
-
-  /* App name */
-  .name{
-    font-size:clamp(22px,6vw,40px);
-    font-weight:800;
-    letter-spacing:-.025em;
-    line-height:1.1;
-    color:var(--text);
-    max-width:100%;
-    text-wrap:balance;
-  }
-  .tagline{
-    font-size:15px;
-    font-weight:500;
-    color:var(--text-2);
-    letter-spacing:.01em;
-    margin-top:-8px;
-    text-wrap:balance;
-  }
-
-  /* Language chips */
-  .langs{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:8px;
-    list-style:none;
-  }
-  .lang{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:6px 12px;border-radius:999px;
-    background:var(--surface);
-    border:1px solid var(--border);
-    font-size:12.5px;font-weight:600;color:var(--text);
-    letter-spacing:.01em;
-  }
-  .lang svg{
-    width:20px;height:14px;border-radius:3px;
-    box-shadow:0 0 0 1px rgba(255,255,255,.12);
-  }
-
-  /* Store banners — two equal buttons side by side when the platform is unknown. */
-  .badges{
-    display:flex;
-    flex-direction:row;
-    justify-content:center;
-    gap:10px;
-    width:100%;
-    max-width:420px;
-    margin-top:6px;
-  }
-  .badge{
-    flex:1 1 0;min-width:0;max-width:200px;
-    display:inline-flex;align-items:center;justify-content:center;gap:9px;
-    padding:12px 10px;border-radius:14px;
-    background:var(--surface);
-    border:1px solid var(--border);
-    color:#fff;
-    transition:transform .16s ease,border-color .16s ease,background .16s ease;
-  }
-  .badge:hover{transform:translateY(-2px);border-color:var(--border-2);background:#141416}
-  .badge:active{transform:translateY(0)}
-  .badge .icon{flex-shrink:0;display:grid;place-items:center}
-  .badge .icon svg{width:auto;height:24px}
-  .badge .txt{display:flex;flex-direction:column;line-height:1.15;text-align:left;white-space:nowrap}
-  .badge .small{font-size:10px;color:var(--text-2);font-weight:500;letter-spacing:.02em}
-  .badge .big{font-size:15.5px;font-weight:700;letter-spacing:-.01em;margin-top:1px;color:#fff}
-
-  /* Detected phone: ONE big white button for its own store; the other store drops to a
-     small "Also on …" text link underneath (.alt) so both platforms stay visible. */
-  .plat-ios .badge-gp,.plat-android .badge-as{display:none}
-  .plat-ios .badge-as,.plat-android .badge-gp{
-    max-width:320px;padding:15px 22px;gap:12px;
-    background:#fff;border-color:#fff;color:#000;
-  }
-  .plat-ios .badge-as .icon svg,.plat-android .badge-gp .icon svg{height:28px}
-  .plat-ios .badge-as .small,.plat-android .badge-gp .small{font-size:11px;color:#3C3C43}
-  .plat-ios .badge-as .big,.plat-android .badge-gp .big{font-size:17px;color:#000}
-  .plat-ios .badge-as:hover,.plat-android .badge-gp:hover{background:#fff}
-  /* Invisible hit-area extension around the big store button. Clarity (Nov 2026) showed
-     Instagram-ad users' thumbs landing just below the button's edge — the tap hit <main>,
-     nothing happened, and they had to tap again. Kept ≤8px vertically so it can't reach
-     the "Also on …" link under it (stage gap ≥11px + the link's own 8px padding). */
-  .plat-ios .badge-as,.plat-android .badge-gp{position:relative;-webkit-tap-highlight-color:transparent}
-  .plat-ios .badge-as::after,.plat-android .badge-gp::after{
-    content:"";position:absolute;inset:-8px -14px;border-radius:20px;
-  }
-
-  /* Keep a clear gap under the big button so a thumb aimed at it can't hit the other store. */
-  .alt{display:none;margin-top:0}
-  .plat-ios .alt,.plat-android .alt{display:block}
-  .alt a{
-    display:none;padding:8px 12px;
-    font-size:13px;font-weight:500;color:var(--text-2);
-    text-decoration:underline;text-decoration-color:rgba(154,160,170,.4);text-underline-offset:3px;
-  }
-  .plat-ios .alt-gp,.plat-android .alt-as{display:inline-block}
-  /* Tap acknowledged — the store is opening. */
-  .badge .opening{display:none}
-  .badge.is-opening{opacity:.6;pointer-events:none}
-  .badge.is-opening .default{display:none}
-  .badge.is-opening .opening{display:inline}
-
-  .appname{
-    font-size:13px;font-weight:600;color:var(--text-2);
-    letter-spacing:.06em;text-transform:uppercase;margin-top:-6px;
-  }
-  .foot{
-    font-size:11.5px;line-height:1.5;color:#858A94;max-width:320px;
-  }
-  .foot a{color:var(--text-2);text-decoration:underline;text-underline-offset:2px}
-  .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-
-  @media(prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
-  }
-
-  /* Short viewports — Instagram/Facebook open ad links in a half-height sheet, so the
-     page gets far less height than a normal browser tab. Centering the content there
-     pushes it off BOTH edges and the store buttons end up below the fold. Pin to the
-     top and scale the artwork down so everything fits without scrolling.
-     Placed last so these win over the base .logo/.name rules above. */
-  @media (max-height:700px){
-    body{
-      align-items:flex-start;
-      padding-top:20px;
-      padding-bottom:calc(20px + env(safe-area-inset-bottom));
-    }
-    .stage{ gap:16px; }
-    .logo{ width:84px;height:84px;border-radius:20px; }
-    .name{ font-size:clamp(20px,5.4vw,32px); }
-  }
-  @media (max-height:560px){
-    body{ padding-top:14px; }
-    .stage{ gap:11px; }
-    .logo{ width:64px;height:64px;border-radius:16px; }
-    .name{ font-size:clamp(19px,5vw,26px); }
-    .tagline{ font-size:14px;margin-top:-6px; }
-    .badge{ padding:10px 10px; }
-    .plat-ios .badge-as,.plat-android .badge-gp{ padding:12px 20px; }
-    .appname{ display:none; }
-  }
-</style>
+<link rel="stylesheet" href="redesign.css">
 </head>
 <body>
+<p id="sr-status" class="sr-only" aria-live="polite"></p>
+<header class="header wrap"><a class="brand" href="#" aria-label="Luna Reader home"><img src="assets/Luna_logo_180.png" width="42" height="42" alt="">Luna Reader</a><button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="Open menu">☰</button><nav id="navigation" aria-label="Main navigation"><a href="#features" data-i="features">Features</a><a href="#languages" data-i="languages">Languages</a><a href="#stories" data-i="stories">Free Stories</a><a href="#journal" data-i="blog">Blog</a><a href="#about" data-i="about">About</a></nav><div class="header-actions"><label class="language-label"><span aria-hidden="true">◎</span><span class="sr-only">Website language</span><select id="site-language"><option value="en">English</option><option value="tr">Türkçe</option><option value="ru">Русский</option></select></label><a class="button small" href="#download" data-i="get">Get the App</a></div></header>
+<main>
+<section class="hero wrap"><div class="hero-copy"><h1 data-i="headline">Learn Languages<br>with <em>Stories.</em></h1><p class="intro" data-i="intro">Discover languages through stories, music and news. Read, listen, and find meaning in every word.</p><div class="store-links"><a class="badge store apple" data-store="ios" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8" aria-label="Download on the App Store" onclick="return openStoreFromLink('AppStore','main',this);"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M16 5c1.6-1.8 1.5-3.6 1.4-4.2-1.5.1-3.3 1-4.3 2.2-1.1 1.3-1.8 2.8-1.6 4.2 1.7.1 3.3-.7 4.5-2.2ZM20 15c0-3 2.5-4.5 2.6-4.6-1.4-2.1-3.6-2.4-4.4-2.4-1.9-.2-3.7 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.2 0-4.3 1.3-5.4 3.2-2.3 4 .6 10 2.8 13.2 1.1 1.5 2.3 3.1 3.9 3 1.5-.1 2.1-1 4-1s2.4 1 4.1 1c1.7 0 2.8-1.5 3.8-3 .9-1.2 1.5-2.6 1.8-3.3-3.5-1.4-4.4-4.4-4.4-6.1Z"/></svg><span><small><span class="default">Download on the</span><span class="opening">Opening the</span></small><strong>App Store</strong></span></a><a class="badge store play" data-store="android" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js" aria-label="Get it on Google Play" onclick="return openStoreFromLink('GooglePlay','main',this);"><svg viewBox="0 0 30 34" aria-hidden="true"><path fill="#d9e4ed" d="M1 1 18 17 1 33Z"/><path fill="#fff" d="m1 1 22 12-5 4Z"/><path fill="#b1b7c1" d="m1 33 22-12-5-4Z"/><path fill="#ead6b2" d="m18 17 5-4 6 4-6 4Z"/></svg><span><small><span class="default">GET IT ON</span><span class="opening">OPENING</span></small><strong>Google Play</strong></span></a></div><div class="feature-strip"><div><span>♧</span><p data-i="f1">Stories for<br>every day</p></div><div><span>♬</span><p data-i="f2">Audio<br>Content</p></div><div><span>文</span><p data-i="f3">Tap to<br>Translate</p></div><div><span>▥</span><p data-i="f4">Learn at<br>your level</p></div></div></div><div class="hero-art" role="img" aria-label="A friendly wizard in a starry blue hat reading a magical book"><img src="assets/design-reference.png" alt="" fetchpriority="high"></div></section>
+<section class="languages-section" id="languages"><div class="wrap"><div class="section-heading"><h2 data-i="explore">Explore Languages</h2><p data-i="exploreText">Learn Russian, English, Turkish, German and Spanish through engaging stories.</p></div><div class="language-grid"><a class="language-card" href="#stories" data-language="ru"><div class="landmark russian"></div><div class="card-copy"><span class="flag">🇷🇺</span><h3 data-i="russian">Learn Russian</h3><p data-i="readListen">Read · Listen · Discover</p><span class="circle">↗</span></div></a><a class="language-card" href="#stories" data-language="en"><div class="landmark english"></div><div class="card-copy"><span class="flag">🇬🇧</span><h3 data-i="english">Learn English</h3><p data-i="readListen">Read · Listen · Discover</p><span class="circle">↗</span></div></a><a class="language-card" href="#stories" data-language="tr"><div class="landmark turkish"></div><div class="card-copy"><span class="flag">🇹🇷</span><h3 data-i="turkish">Learn Turkish</h3><p data-i="readListen">Read · Listen · Discover</p><span class="circle">↗</span></div></a><a class="language-card" href="#stories" data-language="de"><div class="landmark german"></div><div class="card-copy"><span class="flag">🇩🇪</span><h3 data-i="german">Learn German</h3><p data-i="readListen">Read · Listen · Discover</p><span class="circle">↗</span></div></a><a class="language-card" href="#stories" data-language="es"><div class="landmark spanish" aria-hidden="true"><span>¡Hola!</span></div><div class="card-copy"><span class="flag">🇪🇸</span><h3 data-i="spanish">Learn Spanish</h3><p data-i="readListen">Read · Listen · Discover</p><span class="circle">↗</span></div></a></div></section>
+<nav class="feature-jump wrap" aria-label="Explore app features"><a href="#features" data-i="jumpStories">Stories & audio</a><a href="#music" data-i="jumpMusic">Music & lyrics</a><a href="#news" data-i="jumpNews">News & reading</a></nav><section class="experience wrap" id="features"><div class="reading-mascot" role="img" aria-label="Luna's wizard reading a storybook"></div><div class="experience-copy"><span class="eyebrow" data-i="magic">A LITTLE EVERY DAY</span><h2 data-i="featureTitle">Get lost in a story.<br>Find your words.</h2><p data-i="featureText">Follow the story, listen to the language, and tap a word when you need a little help. Make reading part of your everyday life.</p><div class="feature-detail"><span>01</span><div><h3 data-i="featureOne">Read with curiosity</h3><p data-i="featureOneText">Discover language in context, one story at a time.</p></div></div><div class="feature-detail"><span>02</span><div><h3 data-i="featureTwo">Listen as you go</h3><p data-i="featureTwoText">Connect the words on the page with their sound.</p></div></div><a class="text-link" href="#download" data-i="start">Start your next chapter</a></div></section>
 
-  <main class="stage">
-    <p id="sr-status" class="sr-only" aria-live="polite"></p>
-    <div class="logo">
-      <img src="assets/Luna_logo_320.png" alt="Luna Reader app icon" width="104" height="104" loading="eager">
-    </div>
-
-    <p class="appname">Luna Reader</p>
-    <h1 class="name">Read in Russian, Turkish &amp; English</h1>
-    <p class="tagline">Tap any word for instant translation. Stories with audio.</p>
-
-    <ul class="langs" aria-label="Languages">
-      <li class="lang">
-        <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <rect width="60" height="13.33" fill="#fff"/>
-          <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
-          <rect y="26.66" width="60" height="13.34" fill="#D52B1E"/>
-        </svg>
-        Russian
-      </li>
-      <li class="lang">
-        <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <rect width="60" height="40" fill="#E30A17"/>
-          <circle cx="22" cy="20" r="10" fill="#fff"/>
-          <circle cx="24.5" cy="20" r="8" fill="#E30A17"/>
-          <path fill="#fff" d="M39.5,20 L36.05,21.12 L36.05,24.76 L33.91,21.82 L30.45,22.94 L32.59,20 L30.45,17.06 L33.91,18.18 L36.05,15.24 L36.05,18.88 Z"/>
-        </svg>
-        Turkish
-      </li>
-      <li class="lang">
-        <svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <rect width="60" height="30" fill="#012169"/>
-          <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-          <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="3.6"/>
-          <path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/>
-          <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/>
-        </svg>
-        English
-      </li>
-    </ul>
-
-    <div class="badges">
-      <a class="badge badge-as" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8"
-         onclick="return openStoreFromLink('AppStore','main',this);"
-         aria-label="Download on the App Store">
-        <span class="icon" aria-hidden="true">
-          <svg width="22" height="28" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-        </span>
-        <span class="txt">
-          <span class="small"><span class="default">Download on the</span><span class="opening">Opening the</span></span>
-          <span class="big">App Store</span>
-        </span>
-      </a>
-
-      <a class="badge badge-gp" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"
-         onclick="return openStoreFromLink('GooglePlay','main',this);"
-         aria-label="Get it on Google Play">
-        <span class="icon" aria-hidden="true">
-          <svg width="24" height="28" viewBox="0 0 512 512">
-            <defs>
-              <linearGradient id="ga" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00A0FF"/><stop offset="1" stop-color="#00E2FF"/></linearGradient>
-              <linearGradient id="gb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFBD00"/><stop offset="1" stop-color="#FFE000"/></linearGradient>
-              <linearGradient id="gc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF3A44"/><stop offset="1" stop-color="#C31162"/></linearGradient>
-              <linearGradient id="gd" x1="0" y1="0" x2="1" y2="-1"><stop offset="0" stop-color="#32A071"/><stop offset="1" stop-color="#2DA771"/></linearGradient>
-            </defs>
-            <path fill="url(#ga)" d="M62 36c-7 7-11 18-11 32v384c0 14 4 25 11 32l1 1 215-215v-5L63 50z"/>
-            <path fill="url(#gb)" d="M349 339l-71-71v-5l71-72 2 1 85 48c24 14 24 37 0 51z"/>
-            <path fill="url(#gc)" d="M351 338l-73-73L62 484c8 8 21 9 36 1z"/>
-            <path fill="url(#gd)" d="M62 36c-15-8-28-7-36 1l216 216 73-73L98 35c-15-9-28-9-36 1z"/>
-          </svg>
-        </span>
-        <span class="txt">
-          <span class="small"><span class="default">GET IT ON</span><span class="opening">OPENING</span></span>
-          <span class="big">Google Play</span>
-        </span>
-      </a>
-    </div>
-
-    <p class="alt">
-      <a class="alt-as" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8"
-         onclick="return openStoreFromLink('AppStore','alt');">Also on the App Store</a>
-      <a class="alt-gp" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"
-         onclick="return openStoreFromLink('GooglePlay','alt');">Also on Google Play</a>
-    </p>
-
-    <p class="foot">Free to download. This page uses cookies for analytics and ad measurement.
-      <a href="https://atalayyigit.github.io/privacy/lunaprivacy.html" rel="noopener">Privacy Policy</a></p>
-  </main>
+<section class="feature-showcase music-feature wrap" id="music">
+  <div class="showcase-copy"><span class="eyebrow" data-i="musicEyebrow">LANGUAGE HAS A RHYTHM</span>
+    <h2 data-i="musicTitle">Your favourite songs.<br>A whole new meaning.</h2>
+    <p data-i="musicText">Listen to music and translate the lyrics as you go. Discover what the words mean in the songs you love.</p>
+    <div class="feature-pills"><span data-i="musicPill1">Listen to music</span><span data-i="musicPill2">Translate lyrics</span></div>
+    <div class="lyric-preview"><span class="preview-label" data-i="lyricLabel">A LITTLE EXAMPLE</span><p>“Every day, a new beginning.”</p><p class="lyric-translation">“Her gün yeni bir başlangıç.”</p><span class="preview-note" data-i="lyricNote">An illustrative phrase, not an app screenshot.</span></div>
+    <a class="text-link" href="#download" data-i="musicCta">Discover learning through music</a>
+  </div>
+  <figure class="showcase-art"><img src="assets/wizard-music.png" width="1254" height="1254" loading="lazy" decoding="async" alt="The Luna wizard listening to music with headphones and holding a phone"></figure>
+</section>
+<section class="feature-showcase news-feature wrap" id="news">
+  <figure class="showcase-art"><img src="assets/wizard-news.png" width="1254" height="1254" loading="lazy" decoding="async" alt="The same Luna wizard reading a newspaper"></figure>
+  <div class="showcase-copy"><span class="eyebrow" data-i="newsEyebrow">A NEW WAY TO SEE THE WORLD</span>
+    <h2 data-i="newsTitle">Read the world.<br>In the language you’re learning.</h2>
+    <p data-i="newsText">Read news in the language you’re learning. Make the topics you care about part of your everyday reading practice.</p>
+    <div class="feature-pills"><span data-i="newsPill1">Read the news</span><span data-i="newsPill2">Learn in context</span></div>
+    <div class="news-note"><span aria-hidden="true">◎</span><p data-i="newsNote">A story connects you to a new world. The news connects you to this one.</p></div>
+    <a class="text-link" href="#download" data-i="newsCta">Explore news with Luna</a>
+  </div>
+</section>
+<section class="stories-section wrap" id="stories"><div class="section-heading"><span class="eyebrow" data-i="try">A TASTE OF LUNA</span><h2 data-i="storyTitle">Your first story starts here.</h2><p data-i="storyText">Try a short reading sample. Select a highlighted word to reveal its meaning.</p></div><div class="story-tabs" role="group" aria-label="Story language"><button class="active" data-story="en" aria-pressed="true">English</button><button data-story="tr" aria-pressed="false">Türkçe</button><button data-story="ru" aria-pressed="false">Русский</button><button data-story="de" aria-pressed="false">Deutsch</button><button data-story="es" aria-pressed="false">Español</button></div><article class="reading-card"><div class="reading-meta"><span data-i="sample">INTERACTIVE READING SAMPLE</span><span>☾</span></div><h3 id="story-name"></h3><p id="story-body"></p><div id="translation" role="status" aria-live="polite" data-i="hint">Tap a highlighted word to discover its meaning.</div></article></section>
+<section class="journal wrap" id="journal"><div><span class="eyebrow">LUNA JOURNAL</span><h2 data-i="journalTitle">Small habits. New worlds.</h2></div><details><summary data-i="tip1">How to build a daily reading habit</summary><p data-i="tip1Text">Choose a short story and a regular moment in your day. Read a little, return tomorrow, and focus on enjoying the story rather than understanding every word.</p></details><details><summary data-i="tip2">Read and listen together</summary><p data-i="tip2Text">Read a passage first, then listen and follow along. Revisit a sentence you liked and say it aloud at your own pace.</p></details></section>
+<section class="about wrap" id="about"><img src="assets/Luna_logo_180.png" width="56" height="56" alt=""><h2 data-i="aboutTitle">A world of stories, in your pocket.</h2><p data-i="aboutText">Luna Reader brings stories, audio and word translations together, so you can explore a language through something you enjoy.</p></section>
+<section class="download wrap" id="download"><span class="eyebrow" data-i="next">YOUR NEXT CHAPTER AWAITS</span><h2 data-i="downloadTitle">Let your story begin.</h2><p data-i="downloadText">Find Luna Reader on the App Store and Google Play.</p><div id="download-links" class="store-links"><a class="badge store apple" data-store="ios" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8" aria-label="Download on the App Store" onclick="return openStoreFromLink('AppStore','footer',this);"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M16 5c1.6-1.8 1.5-3.6 1.4-4.2-1.5.1-3.3 1-4.3 2.2-1.1 1.3-1.8 2.8-1.6 4.2 1.7.1 3.3-.7 4.5-2.2ZM20 15c0-3 2.5-4.5 2.6-4.6-1.4-2.1-3.6-2.4-4.4-2.4-1.9-.2-3.7 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.2 0-4.3 1.3-5.4 3.2-2.3 4 .6 10 2.8 13.2 1.1 1.5 2.3 3.1 3.9 3 1.5-.1 2.1-1 4-1s2.4 1 4.1 1c1.7 0 2.8-1.5 3.8-3 .9-1.2 1.5-2.6 1.8-3.3-3.5-1.4-4.4-4.4-4.4-6.1Z"/></svg><span><small><span class="default">Download on the</span><span class="opening">Opening the</span></small><strong>App Store</strong></span></a><a class="badge store play" data-store="android" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js" aria-label="Get it on Google Play" onclick="return openStoreFromLink('GooglePlay','footer',this);"><svg viewBox="0 0 30 34" aria-hidden="true"><path fill="#d9e4ed" d="M1 1 18 17 1 33Z"/><path fill="#fff" d="m1 1 22 12-5 4Z"/><path fill="#b1b7c1" d="m1 33 22-12-5-4Z"/><path fill="#ead6b2" d="m18 17 5-4 6 4-6 4Z"/></svg><span><small><span class="default">GET IT ON</span><span class="opening">OPENING</span></small><strong>Google Play</strong></span></a></div><p class="download-note" data-i="free">Free to download.</p></section>
+<p class="tracking-notice">This page uses cookies for analytics and ad measurement. <a href="https://atalayyigit.github.io/privacy/lunaprivacy.html">Privacy Policy</a></p></main><footer class="wrap"><a class="brand" href="#"><img src="assets/Luna_logo_180.png" width="30" alt="">Luna Reader</a><span>© <span id="year"></span> Luna Reader</span><a href="https://atalayyigit.github.io/privacy/lunaprivacy.html" data-i="privacy">Privacy Policy</a></footer>
 
 <!-- Minimal language tag (no UI) — keeps ?lang=tr ad-segment tracking in analytics/CAPI -->
 <script>
@@ -746,5 +499,7 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 </script>
 
 
+
+<script src="redesign-ui.js"></script>
 </body>
 </html>
