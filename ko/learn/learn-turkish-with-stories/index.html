@@ -1,23 +1,313 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-site-language="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>이야기로 튀르키예어 배우기 | Luna Reader</title>
-<meta name="description" content="이야기로 튀르키예어 배우기 · 먼저 한 번 읽고 상황을 파악하세요. 그다음 모르는 단어를 확인하고 소리 내어 다시 읽어 보세요.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>이야기와 오디오로 튀르키예어 배우기 | Luna Reader</title>
+<meta name="theme-color" content="#000000">
+
+<link rel="icon" type="image/png" href="../../../luna/assets/Luna_logo_180.png">
+<link rel="apple-touch-icon" href="../../../luna/assets/Luna_logo_180.png">
+
+<link rel="preconnect" href="https://connect.facebook.net">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preconnect" href="https://www.clarity.ms">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2VQJTF2X9K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2VQJTF2X9K', {
+    send_page_view: true,
+    anonymize_ip: true
+  });
+</script>
+
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wy9i734ovj");
+</script>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+(function(){
+  // external_id pixel init'ten önce hazır olsun (Advanced Matching için)
+  var eid = '';
+  try {
+    eid = localStorage.getItem('luna_eid');
+    if (!eid) {
+      eid = 'eid_' + Date.now().toString(36) + '_' +
+            Math.random().toString(36).slice(2, 10) +
+            Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('luna_eid', eid);
+    }
+  } catch(e){}
+  window.__lunaEid = eid || '';
+  var advMatch = eid ? { external_id: eid } : {};
+  // Auto-Config kapalı: Meta'nın otomatik algıladığı event'ler (buton tıklaması, sayfa
+  // metadata'sı) gönderilmesin — sadece bizim eventID'li event'lerimiz gitsin.
+  // Not: fbevents.js 'pcm_plugin-set_' ID'sini yalnızca eventID'si OLMAYAN event'lere atar;
+  // bizimkilerin hepsi eventID taşıdığı için dedup bundan etkilenmez. (true/"true" dışındaki
+  // her değer, string 'false' dahil, opt-out sayılır; boolean false en açık hâli.)
+  fbq('set', 'autoConfig', false, '2013897989521001');
+  fbq('init', '2013897989521001', advMatch);
+})();
+// PageView aşağıda event_id ile fire ediliyor (sendCAPI ile birlikte) — burada tekrar etmiyoruz, deduplication için
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></noscript>
+
+<!-- Store redirect defined EARLY: the first tap is never a "dead click", it shows
+     instant feedback, and works even before the bottom script runs / inside the
+     Instagram & Facebook in-app browsers. -->
+<script>
+  // Platform class on <html> before first paint: a phone gets ONE big button for its own
+  // store plus a small "Also on …" link to the other (CSS below). ~83% of Leads are Android,
+  // yet the App Store badge came first, and a wrong-store tap is a dead end (no install).
+  // Unknown UAs (desktop, iPadOS 'Macintosh') get two equal buttons side by side.
+  (function(){
+    var ua = navigator.userAgent || '';
+    var p = /iphone|ipad|ipod/i.test(ua) ? 'plat-ios' : (/android/i.test(ua) ? 'plat-android' : '');
+    if (p) document.documentElement.className += ' ' + p;
+  })();
+  // Per-tab "already sent to the store" marker. The auto-redirect checks it, so a Back /
+  // reload (Android WebView has no bfcache and re-runs the page) doesn't bounce the user
+  // to the store again or log another event.
+  window.markHandoff = function(kind){
+    try { sessionStorage.setItem('luna_handoff', kind); } catch(e){}
+  };
+  function clearOpening(){
+    var els = document.querySelectorAll('.badge.is-opening');
+    for (var i = 0; i < els.length; i++) els[i].classList.remove('is-opening');
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = '';
+  }
+  // Screen readers: the badges' static aria-labels hide the visual "Opening…" swap, so
+  // announce it through a polite live region instead.
+  function announceOpening(store){
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = 'Opening ' + (store === 'AppStore' ? 'the App Store' : 'Google Play') + '…';
+  }
+
+  // Click handler for the store <a> tags. On iOS in-app browsers it drives the
+  // navigation itself: itms-apps:// first (claimed directly by the App Store app, so
+  // the webview's universal-link block doesn't apply), plain https 1s later if that
+  // scheme goes unanswered.
+  window.openStoreFromLink = function(store, location, el){
+    // Repeat-tap lock: users who think the first tap was dead tap again. Each extra tap
+    // used to fire another Lead + custom event (pixel AND CAPI) and start a second set of
+    // fallback timers that raced the first hand-off. Swallow taps for 3.5s — long enough
+    // to cover the slowest chain (itms-apps → extbrowser @1.5s → https @3s) — and unlock
+    // as soon as the page comes back to the foreground so a returning user can retry.
+    // The lock is PER STORE: a mis-tap on the small "Also on …" link must not swallow the
+    // user's immediate tap on the big button for their own store.
+    var now = Date.now();
+    var locks = window.__storeLocks || (window.__storeLocks = {});
+    if (locks[store] && now - locks[store] < 3500) return false;
+    locks[store] = now;
+    // A tap on the other store supersedes any hand-off still in flight: drop its fallback
+    // timers so they can't hijack this navigation.
+    if (window.__handoffCancel) { try { window.__handoffCancel(); } catch(e){} window.__handoffCancel = null; }
+    window.markHandoff('tap');
+    // Visible "Opening…" state, so the user sees the tap registered instead of tapping again.
+    // One shared timer, so an earlier tap's timeout can't clear a later tap's state early.
+    clearTimeout(window.__openingT);
+    clearOpening();
+    announceOpening(store);
+    if (el && el.classList) {
+      el.classList.add('is-opening');
+      window.__openingT = setTimeout(clearOpening, 3500);
+    }
+    var ua = navigator.userAgent || '';
+    var isIOSInApp = /iphone|ipad|ipod/i.test(ua) &&
+                     /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    if (isIOSInApp && store === 'AppStore') {
+      try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+      // PROVEN flow from the old page (russian_stories1.html, in production May–Aug):
+      // fire itms-apps:// inside the tap gesture — Meta's webview hands it to the App
+      // Store app — and only fall back after a FULL 1.5s. The hand-off takes ~0.5–1s;
+      // the 350ms fallback this replaces fired while it was still in flight and
+      // hijacked the pending navigation, so the tap looked dead (Clarity showed users
+      // tapping repeatedly with nothing happening). If the App Store does open, the
+      // page is backgrounded → pagehide/visibilitychange cancels every fallback.
+      var IOS_ROUTE  = (location === 'alt') ? 'alt' : 'tap';
+      var IOS_NATIVE = window.appStoreUrl(IOS_ROUTE, true);
+      var IOS_WEB    = window.appStoreUrl(IOS_ROUTE, false);
+      var isIG = /instagram/i.test(ua);
+      var timers = [];
+      var cancel = function(){ while (timers.length) { try { clearTimeout(timers.pop()); } catch(e){} } };
+      window.__handoffCancel = cancel;
+      window.addEventListener('pagehide', cancel, { once:true });
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
+      if (isIG) {
+        // Instagram's own escape scheme opens the URL in the EXTERNAL browser (Safari),
+        // and since Nov 2025 apps.apple.com 301s iOS straight into the native App Store
+        // from there. Try it if itms-apps:// went unanswered; plain https is the last
+        // resort (inside the IG webview that 301 can dead-end, so it goes last).
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          try { window.location.href = 'instagram://extbrowser/?url=' + encodeURIComponent(IOS_WEB); } catch(e){}
+        }, 1500));
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 3000));
+      } else {
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 1500));
+      }
+      try { window.location.href = IOS_NATIVE; } catch(e){}
+      return false; // we drive the navigation ourselves
+    }
+    openStore(store, location);
+    return false;
+  };
+  // Back from the store (bfcache restore or the webview re-shown) → allow a fresh tap.
+  // pageshow ALSO fires on the initial load, after 'load' — only a bfcache restore
+  // (e.persisted) is a real return; otherwise it would unlock a tap made before 'load'.
+  window.addEventListener('pageshow', function(e){
+    if (e && e.persisted) { window.__storeLocks = {}; clearOpening(); }
+  });
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) { window.__storeLocks = {}; clearOpening(); }
+  });
+  // App Store install attribution: App Store Connect campaign link (provider token pt,
+  // campaign token ct ≤ 40 chars). App Analytics → Campaigns then shows product-page views
+  // and downloads per ct. ct = <source>_<route>: source 'meta' for Instagram/Facebook
+  // traffic, 'web' otherwise; route tap | alt | auto. Kept coarse on purpose — Apple hides
+  // small counts, so per-campaign ct values would mostly show up as hidden.
+  window.appStoreUrl = function(route, nativeScheme){
+    var src = 'web';
+    try {
+      if (/[?&](fbclid=|utm_source=(ig|fb|facebook|instagram|an|msg|meta)(&|$))/i.test(window.location.search) ||
+          /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(navigator.userAgent || '')) src = 'meta';
+    } catch(e){}
+    return (nativeScheme ? 'itms-apps' : 'https') +
+      '://apps.apple.com/app/id6740998772?pt=10625926&ct=' + src + '_' + route + '&mt=8&ppid=895a842b-0732-437a-a8ec-9813e37c26d3';
+  };
+
+  // Google Play install attribution: '&referrer=…' on every Play URL. Play Console's
+  // acquisition reports (and the Install Referrer API) then split installs by ad source /
+  // campaign / ad (copied from the landing URL's utm_*) and by HOW the user got to the
+  // store (utm_medium = tap | tap_alt). Values are sanitised to
+  // [A-Za-z0-9_.-] and capped, since they come straight from the query string.
+  window.playReferrer = function(route){
+    try {
+      var q = new URLSearchParams(window.location.search);
+      var clean = function(v, d){
+        v = (v == null || v === '') ? d : String(v);
+        return v.replace(/[^A-Za-z0-9_.\-]/g, '_').slice(0, 100);
+      };
+      var ref = 'utm_source=' + clean(q.get('utm_source'), 'landing') +
+                '&utm_medium=' + clean(route, 'tap') +
+                '&utm_campaign=' + clean(q.get('utm_campaign') || q.get('utm_id'), 'none');
+      if (q.get('utm_content')) ref += '&utm_content=' + clean(q.get('utm_content'), '');
+      return '&referrer=' + encodeURIComponent(ref);
+    } catch(e){ return ''; }
+  };
+
+  // Opens the store reliably (native scheme first, https fallback). Defined here so a
+  // tap before the bottom script is ready still works. trackStoreClick is guarded — it
+  // just no-ops on an ultra-early tap; the full version below adds tracking.
+  window.openStore = function(store, location){
+    try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+    var ua = navigator.userAgent || '';
+    var isIOS = /iphone|ipad|ipod/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var IOS_URL = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', false);
+    var IOS_NATIVE = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', true);
+    var AND_PKG = 'com.luna.russianstories';
+    var AND_REF = window.playReferrer(location === 'alt' ? 'tap_alt' : 'tap');
+    var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG + AND_REF;
+    // Instagram/Facebook/Messenger in-app browsers silently drop custom-scheme
+    // navigations (itms-apps://, intent://) AND window.open — only plain https
+    // top-level navigation is reliable there.
+    var isInApp = /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    var goAndroid = (store === 'GooglePlay');
+    var goIOS = (store === 'AppStore');
+    if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
+    if (isInApp) {
+      // iOS in-app + App Store is handled entirely by openStoreFromLink (itms-apps://
+      // first, https fallback). Everything else here goes straight to plain https.
+      window.location.href = goAndroid ? AND_HTTPS : IOS_URL;
+      return;
+    }
+    if (goAndroid && isAndroid) {
+      var intentUrl = 'intent://details?id=' + AND_PKG + AND_REF +
+        '#Intent;scheme=market;package=com.android.vending;' +
+        'S.browser_fallback_url=' + encodeURIComponent(AND_HTTPS) + ';end';
+      var t = setTimeout(function(){ window.location.href = AND_HTTPS; }, 900);
+      var clear = function(){ try { clearTimeout(t); } catch(e){} };
+      window.__handoffCancel = clear;
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear(); }, { once:true });
+      window.addEventListener('pagehide', clear, { once:true });
+      try { window.location.href = intentUrl; } catch(e){ clear(); window.location.href = AND_HTTPS; }
+      return;
+    }
+    if (goIOS && isIOS) {
+      var t2 = setTimeout(function(){ window.location.href = IOS_URL; }, 900);
+      var clear2 = function(){ try { clearTimeout(t2); } catch(e){} };
+      window.__handoffCancel = clear2;
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear2(); }, { once:true });
+      window.addEventListener('pagehide', clear2, { once:true });
+      try { window.location.href = IOS_NATIVE; } catch(e){ clear2(); window.location.href = IOS_URL; }
+      return;
+    }
+    // Cross-platform fallback (e.g. App Store button tapped on Android, or desktop).
+    // In-app browsers (Instagram/Facebook) silently block window.open, so try it but
+    // fall back to a top-level navigation which always works.
+    var fallbackUrl = goAndroid ? AND_HTTPS : IOS_URL;
+    var popup = null;
+    try { popup = window.open(fallbackUrl, '_blank'); } catch(e){}
+    if (!popup) { window.location.href = fallbackUrl; }
+  };
+</script>
+
+<link rel="stylesheet" href="../../../luna/redesign.css">
+<meta name="description" content="Luna Reader에서 튀르키예어 이야기를 오디오와 함께 읽고, 어떤 단어든 탭해 의미를 확인하고, 읽은 이야기로 만든 연습 문제로 연습해 보세요.">
 <link rel="canonical" href="https://lunasoft.com.tr/ko/learn/learn-turkish-with-stories/">
-<meta property="og:title" content="이야기로 튀르키예어 배우기 | Luna Reader">
-<meta property="og:description" content="이야기로 튀르키예어 배우기 · 먼저 한 번 읽고 상황을 파악하세요. 그다음 모르는 단어를 확인하고 소리 내어 다시 읽어 보세요.">
-<meta property="og:type" content="website">
+<meta property="og:title" content="이야기와 오디오로 튀르키예어 배우기 | Luna Reader">
+<meta property="og:description" content="Luna Reader에서 튀르키예어 이야기를 오디오와 함께 읽고, 어떤 단어든 탭해 의미를 확인하고, 읽은 이야기로 만든 연습 문제로 연습해 보세요.">
+<meta property="og:type" content="article">
 <meta property="og:url" content="https://lunasoft.com.tr/ko/learn/learn-turkish-with-stories/">
 <meta property="og:site_name" content="Luna Reader">
+<meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta property="og:image:alt" content="Luna Reader">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="el_GR">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="zh_CN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="이야기와 오디오로 튀르키예어 배우기 | Luna Reader">
+<meta name="twitter:description" content="Luna Reader에서 튀르키예어 이야기를 오디오와 함께 읽고, 어떤 단어든 탭해 의미를 확인하고, 읽은 이야기로 만든 연습 문제로 연습해 보세요.">
 <meta name="twitter:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
-<link rel="icon" href="../../../luna/assets/Luna_logo_180.png">
-<link rel="stylesheet" href="../../../luna/redesign.css">
-<link rel="stylesheet" href="../../../luna/localized-home.css">
-<script src="../../../luna/seo-navigation.js" defer></script>
+<meta name="twitter:image:alt" content="Luna Reader">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://lunasoft.com.tr/#organization", "name": "Lunasoft", "url": "https://lunasoft.com.tr/", "logo": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png"}, {"@type": "WebSite", "@id": "https://lunasoft.com.tr/#website", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "SoftwareApplication", "@id": "https://lunasoft.com.tr/#app", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "applicationCategory": "EducationalApplication", "operatingSystem": "iOS, Android", "description": "이야기, 오디오, 가사 번역, 뉴스로 러시아어, 영어, 튀르키예어, 독일어, 스페인어를 배워 보세요. iOS와 Android에서 Luna Reader를 다운로드하세요.", "image": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png", "downloadUrl": ["https://apps.apple.com/app/id6740998772", "https://play.google.com/store/apps/details?id=com.luna.russianstories"], "featureList": ["이야기와 오디오", "탭해서 단어 번역", "음악과 가사 번역", "배우고 있는 언어로 읽는 뉴스", "러시아어, 영어, 튀르키예어, 독일어, 스페인어 학습 콘텐츠"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "무료로 다운로드할 수 있어요. 선택형 유료 기능과 구독이 제공돼요."}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "WebPage", "@id": "https://lunasoft.com.tr/ko/learn/learn-turkish-with-stories/#page", "url": "https://lunasoft.com.tr/ko/learn/learn-turkish-with-stories/", "name": "이야기와 오디오로 튀르키예어 배우기 | Luna Reader", "description": "Luna Reader에서 튀르키예어 이야기를 오디오와 함께 읽고, 어떤 단어든 탭해 의미를 확인하고, 읽은 이야기로 만든 연습 문제로 연습해 보세요.", "inLanguage": "ko", "isPartOf": {"@id": "https://lunasoft.com.tr/#website"}, "about": {"@id": "https://lunasoft.com.tr/#app"}}, {"@type": "Article", "headline": "이야기와 오디오로 튀르키예어 배우기 | Luna Reader", "description": "Luna Reader에서 튀르키예어 이야기를 오디오와 함께 읽고, 어떤 단어든 탭해 의미를 확인하고, 읽은 이야기로 만든 연습 문제로 연습해 보세요.", "inLanguage": "ko", "mainEntityOfPage": {"@id": "https://lunasoft.com.tr/ko/learn/learn-turkish-with-stories/#page"}, "author": {"@id": "https://lunasoft.com.tr/#organization"}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "FAQPage", "@id": "https://lunasoft.com.tr/ko/learn/learn-turkish-with-stories/#faq", "inLanguage": "ko", "isPartOf": {"@id": "https://lunasoft.com.tr/ko/learn/learn-turkish-with-stories/#page"}, "mainEntity": [{"@type": "Question", "name": "이야기를 읽으면서 튀르키예어를 배울 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "이야기에서는 튀르키예어 단어와 그 어미를 상황 속에서 만나게 되어 더 쉽게 기억할 수 있어요. Luna Reader에서는 레벨별로 나뉜 튀르키예어 이야기를 읽고, 오디오를 듣고, 단어를 탭해 의미를 확인해요. 그런 다음 같은 글로 만든 연습 문제로 연습해요."}}, {"@type": "Question", "name": "Luna Reader에는 어떤 튀르키예어 연습 문제가 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "읽은 내용을 바탕으로 한 연습이 네 가지 있어요. 빈칸 채우기, 문장 만들기, 문단 순서 맞추기, 그리고 저장한 단어와 표현 짝짓기예요."}}, {"@type": "Question", "name": "연습 문제는 제가 읽은 내용과 연결되어 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "네. 연습 문제는 다 읽은 이야기로 만들어져요. 레벨 이야기를 끝내면 그 이야기의 빈칸 채우기, 문장 만들기, 문단 순서 맞추기 연습을 할 수 있게 돼요."}}, {"@type": "Question", "name": "Luna Reader에서 튀르키예어 뉴스를 읽을 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "네. 학습 언어로 튀르키예어를 선택하면 뉴스 섹션에 튀르키예어 기사가 표시되고, 이야기에서처럼 어떤 단어든 탭해서 의미를 확인할 수 있어요."}}, {"@type": "Question", "name": "제 언어로 번역을 볼 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "앱 인터페이스와 단어 번역은 30개가 넘는 언어로 제공되어, 가장 잘 아는 언어로 된 번역과 함께 튀르키예어를 읽을 수 있어요."}}, {"@type": "Question", "name": "튀르키예어를 어느 정도 알아야 시작할 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "이야기는 A1부터 레벨별로 나뉘어 있어요. 따라갈 수 있는 글부터 시작하고, 편하게 느껴지면 다음 레벨로 올라가세요."}}, {"@type": "Question", "name": "튀르키예어를 배울 때 Luna Reader는 무료인가요?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader는 무료로 다운로드할 수 있고, 모든 레벨에 무료 이야기가 들어 있어요. Luna Premium은 더 많은 것을 원하는 분들을 위한 월간 또는 연간 선택형 구독이에요."}}]}]}</script>
 <link rel="alternate" hreflang="en" href="https://lunasoft.com.tr/learn/learn-turkish-with-stories/">
 <link rel="alternate" hreflang="tr" href="https://lunasoft.com.tr/tr/learn/learn-turkish-with-stories/">
 <link rel="alternate" hreflang="ru" href="https://lunasoft.com.tr/ru/learn/learn-turkish-with-stories/">
@@ -30,12 +320,176 @@
 <link rel="alternate" hreflang="ja" href="https://lunasoft.com.tr/ja/learn/learn-turkish-with-stories/">
 <link rel="alternate" hreflang="ko" href="https://lunasoft.com.tr/ko/learn/learn-turkish-with-stories/">
 <link rel="alternate" hreflang="x-default" href="https://lunasoft.com.tr/learn/learn-turkish-with-stories/">
-</head><body>
-<header class="wrap localized-header"><a class="brand" href="../../">Luna Reader</a><a class="button" href="#download">앱 다운로드</a></header>
-<main class="wrap guide-page"><article>
-<p class="eyebrow">학습 가이드</p><h1>이야기로 튀르키예어 배우기</h1>
-<div class="guide-body"><section><h2>단계별로 연습하기</h2><p>먼저 한 번 읽고 상황을 파악하세요. 그다음 모르는 단어를 확인하고 소리 내어 다시 읽어 보세요.</p></section>
-<section class="reading-card"><h2>짧은 예문</h2><p lang="tr" dir="ltr">Anna bir kitap açar. Dışarıda yağmur yağıyor.</p><p>안나는 책을 펼칩니다. 밖에는 비가 옵니다.</p></section></div>
-</article><section class="download" id="download"><h2>앱 다운로드</h2><div class="store-links" dir="ltr"><a class="store apple" href="https://apps.apple.com/app/id6740998772">App Store</a><a class="store play" href="https://play.google.com/store/apps/details?id=com.luna.russianstories">Google Play</a></div></section></main>
-<footer class="wrap"><nav class="locale-links" aria-label="사이트 언어"><a data-locale-link lang="en" hreflang="en" href="../../../learn/learn-turkish-with-stories/">English</a><a data-locale-link lang="tr" hreflang="tr" href="../../../tr/learn/learn-turkish-with-stories/">Türkçe</a><a data-locale-link lang="ru" hreflang="ru" href="../../../ru/learn/learn-turkish-with-stories/">Русский</a><a data-locale-link lang="ar" hreflang="ar" href="../../../ar/learn/learn-turkish-with-stories/">العربية</a><a data-locale-link lang="fr" hreflang="fr" href="../../../fr/learn/learn-turkish-with-stories/">Français</a><a data-locale-link lang="zh-Hans" hreflang="zh-Hans" href="../../../zh-hans/learn/learn-turkish-with-stories/">简体中文</a><a data-locale-link lang="de" hreflang="de" href="../../../de/learn/learn-turkish-with-stories/">Deutsch</a><a data-locale-link lang="el" hreflang="el" href="../../../el/learn/learn-turkish-with-stories/">Ελληνικά</a><a data-locale-link lang="es" hreflang="es" href="../../../es/learn/learn-turkish-with-stories/">Español</a><a data-locale-link lang="ja" hreflang="ja" href="../../../ja/learn/learn-turkish-with-stories/">日本語</a><a data-locale-link lang="ko" hreflang="ko" href="./" aria-current="page">한국어</a></nav></footer>
-</body></html>
+</head><body><p id="sr-status" class="sr-only" aria-live="polite"></p><header class="header wrap"><a class="brand" href="../../" aria-label="Luna Reader 홈"><img src="../../../luna/assets/Luna_logo_180.png" width="42" height="42" alt="">Luna Reader</a><button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="메뉴 열기">☰</button><nav id="navigation" aria-label="주요 내비게이션"><a href="../../#features" data-i="features">기능</a><a href="../../#languages" data-i="languages">언어</a><a href="../../#stories" data-i="stories">무료 이야기</a><a href="../../#journal" data-i="blog">블로그</a><a href="../../#about" data-i="about">소개</a></nav><div class="header-actions"><label class="language-label"><span aria-hidden="true">◎</span><span class="sr-only">웹사이트 언어</span><select id="site-language" aria-label="웹사이트 언어"><option value="en" data-url="../../../learn/learn-turkish-with-stories/">English</option><option value="tr" data-url="../../../tr/learn/learn-turkish-with-stories/">Türkçe</option><option value="ru" data-url="../../../ru/learn/learn-turkish-with-stories/">Русский</option><option value="ar" data-url="../../../ar/learn/learn-turkish-with-stories/">العربية</option><option value="fr" data-url="../../../fr/learn/learn-turkish-with-stories/">Français</option><option value="zh-Hans" data-url="../../../zh-hans/learn/learn-turkish-with-stories/">简体中文</option><option value="de" data-url="../../../de/learn/learn-turkish-with-stories/">Deutsch</option><option value="el" data-url="../../../el/learn/learn-turkish-with-stories/">Ελληνικά</option><option value="es" data-url="../../../es/learn/learn-turkish-with-stories/">Español</option><option value="ja" data-url="../../../ja/learn/learn-turkish-with-stories/">日本語</option><option value="ko" data-url="../../../ko/learn/learn-turkish-with-stories/" selected>한국어</option></select></label><a class="button small" href="#download" data-i="get">앱 받기</a></div></header><main class="guide-page wrap"><nav class="breadcrumbs"><a href="../../">홈</a><span aria-hidden="true"> / </span><span>다양한 학습 방법 알아보기</span></nav><article><div class="guide-hero"><div><span class="eyebrow">LUNA READER</span><h1>튀르키예어 이야기를 읽으며 단어가 만들어지는 방식 살펴보기</h1><p class="guide-intro">튀르키예어는 단어에 어미를 붙여 의미를 만들어 가기 때문에, 다른 언어에서는 여러 단어가 필요한 말을 한 단어로 표현할 수 있어요. 이야기는 그 어미들이 실제 문장에서 어떻게 쓰이는지 보여 줘요. Luna Reader는 튀르키예어 이야기와 오디오, 단어 번역을 한데 모아, 줄거리를 따라가면서 언어를 탐험할 수 있게 해 줘요.</p></div><div class="guide-story-art reading-mascot" role="img" aria-label="Luna Reader"></div></div><div class="guide-body"><section><h2>짧은 대목부터 시작하기</h2><p>이야기 전체보다 짧은 부분을 골라 보세요. 먼저 한 번 읽으며 상황을 파악해요. 누가 있는지, 어디에 있는지, 무슨 일이 일어나는지요. 단어 때문에 따라가기 어려울 때 그 단어를 탭하고, 문장으로 돌아가 전체를 다시 읽어 보세요.</p></section><section><h2>읽는 동안 들어 보기</h2><p>튀르키예어는 소리 나는 대로 적는 편이라, 들으면서 글을 따라가면 글자와 소리가 금세 이어져요. 한 대목의 오디오를 재생하고, 화면의 단어를 따라가며, 짧은 문장을 나만의 속도로 소리 내어 따라 말해 보세요.</p></section><section><h2>어미에 주목하기</h2><p>튀르키예어 단어는 별도의 단어를 덧붙이기보다 어미가 바뀌는 경우가 많아요. ev는 “집”, evde는 “집에서”, evden은 “집으로부터”예요. Luna Reader에서 단어를 탭하면 지금 눈앞에 있는 형태의 의미가 보여서, 계속 읽어 나가며 패턴에 자연스럽게 익숙해질 수 있어요.</p></section><section><h2>오리지널 튀르키예어 예시 읽어 보기</h2><p>Sabah Elif pencereyi açıyor. Dışarıda yağmur yağıyor ama sokak sessiz. Bir bardak çay alıyor ve kitabın ilk sayfasını okuyor. — 아침에 엘리프가 창문을 열어요. 밖에는 비가 내리지만 거리는 조용해요. 엘리프는 차 한 잔을 들고 책의 첫 페이지를 읽어요. 이 오리지널 예시는 읽기 방식을 보여 주기 위한 것으로, 앱에 특정 작품이 있다는 약속은 아니에요.</p></section><section id="practice"><h2>읽은 이야기로 연습하기</h2><p>이야기를 다 읽은 순간부터 연습이 시작돼요. Luna Reader에서 레벨 이야기를 끝내면, 방금 읽은 글로 만든 연습 문제가 연습 영역에 나타나요.</p><ul><li><strong>빈칸 채우기:</strong> 읽은 이야기에서 빠진 단어를 채워요.</li><li><strong>문장 만들기:</strong> 단어를 순서대로 다시 놓아 이야기 속 문장을 최대 10개까지 완성해요.</li><li><strong>문단 순서 맞추기:</strong> 이야기의 문단을 올바른 순서로 배열해요.</li><li><strong>단어 연습:</strong> 읽으면서 저장한 단어와 표현을 의미와 짝지어요.</li></ul></section></div><section class="feature-showcase news-feature" id="news"><figure class="showcase-art"><img src="../../../luna/assets/wizard-news.webp" srcset="../../../luna/assets/wizard-news-640.webp 640w, ../../../luna/assets/wizard-news-800.webp 800w, ../../../luna/assets/wizard-news.webp 1254w" sizes="(max-width: 800px) 92vw, 500px" width="1254" height="1254" loading="lazy" decoding="async" alt="신문을 읽는 Luna 마법사"></figure><div class="showcase-copy"><span class="eyebrow">튀르키예어 뉴스</span><h2>튀르키예어 뉴스도 읽어 보세요</h2><p>학습 언어가 튀르키예어라면 Luna Reader의 뉴스 섹션에 튀르키예어 기사가 표시돼요. 이야기와 같은 방식으로 읽으면 돼요. 단어를 탭해 의미를 확인하고, 나중에 연습하고 싶은 단어는 저장하세요. 이야기와 더불어 최신 주제를 튀르키예어 읽기에 담아 줘요.</p><div class="feature-pills"><span>뉴스 읽기</span><span>문맥 속에서 배우기</span></div></div></section><section class="feature-showcase music-feature" id="music"><div class="showcase-copy"><span class="eyebrow">튀르키예어 노래</span><h2>가사와 함께 튀르키예어 노래 듣기</h2><p>좋아하는 튀르키예어 노래를 검색해 Luna Reader에서 듣고, 번역과 함께 가사를 따라가 보세요. 이야기에서 만난 단어가 노래로 불릴 때 어떻게 들리는지 느낄 수 있어요.</p><div class="feature-pills"><span>음악 듣기</span><span>가사 번역하기</span></div><a class="text-link" href="../learn-languages-with-music/">음악으로 배우는 즐거움 알아보기</a></div><figure class="showcase-art"><img src="../../../luna/assets/wizard-music.webp" srcset="../../../luna/assets/wizard-music-640.webp 640w, ../../../luna/assets/wizard-music-800.webp 800w, ../../../luna/assets/wizard-music.webp 1254w" sizes="(max-width: 800px) 92vw, 500px" width="1254" height="1254" loading="lazy" decoding="async" alt="헤드폰으로 음악을 듣는 Luna 마법사"></figure></section><div class="guide-body"><section id="faq" class="guide-faq"><h2>Luna Reader로 튀르키예어 배우기에 대한 질문</h2><details><summary>이야기를 읽으면서 튀르키예어를 배울 수 있나요?</summary><p>이야기에서는 튀르키예어 단어와 그 어미를 상황 속에서 만나게 되어 더 쉽게 기억할 수 있어요. Luna Reader에서는 레벨별로 나뉜 튀르키예어 이야기를 읽고, 오디오를 듣고, 단어를 탭해 의미를 확인해요. 그런 다음 같은 글로 만든 연습 문제로 연습해요.</p></details><details><summary>Luna Reader에는 어떤 튀르키예어 연습 문제가 있나요?</summary><p>읽은 내용을 바탕으로 한 연습이 네 가지 있어요. 빈칸 채우기, 문장 만들기, 문단 순서 맞추기, 그리고 저장한 단어와 표현 짝짓기예요.</p></details><details><summary>연습 문제는 제가 읽은 내용과 연결되어 있나요?</summary><p>네. 연습 문제는 다 읽은 이야기로 만들어져요. 레벨 이야기를 끝내면 그 이야기의 빈칸 채우기, 문장 만들기, 문단 순서 맞추기 연습을 할 수 있게 돼요.</p></details><details><summary>Luna Reader에서 튀르키예어 뉴스를 읽을 수 있나요?</summary><p>네. 학습 언어로 튀르키예어를 선택하면 뉴스 섹션에 튀르키예어 기사가 표시되고, 이야기에서처럼 어떤 단어든 탭해서 의미를 확인할 수 있어요.</p></details><details><summary>제 언어로 번역을 볼 수 있나요?</summary><p>앱 인터페이스와 단어 번역은 30개가 넘는 언어로 제공되어, 가장 잘 아는 언어로 된 번역과 함께 튀르키예어를 읽을 수 있어요.</p></details><details><summary>튀르키예어를 어느 정도 알아야 시작할 수 있나요?</summary><p>이야기는 A1부터 레벨별로 나뉘어 있어요. 따라갈 수 있는 글부터 시작하고, 편하게 느껴지면 다음 레벨로 올라가세요.</p></details><details><summary>튀르키예어를 배울 때 Luna Reader는 무료인가요?</summary><p>Luna Reader는 무료로 다운로드할 수 있고, 모든 레벨에 무료 이야기가 들어 있어요. Luna Premium은 더 많은 것을 원하는 분들을 위한 월간 또는 연간 선택형 구독이에요.</p></details></section></div></article><section id="download" class="guide-download"><h2>Luna Reader 받기</h2><p>무료로 다운로드할 수 있어요. 선택형 유료 기능과 구독이 제공돼요.</p><div class="store-links"><a class="badge store apple" data-store="ios" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8&amp;ppid=895a842b-0732-437a-a8ec-9813e37c26d3"  onclick="return openStoreFromLink('AppStore','main',this);"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M16 5c1.6-1.8 1.5-3.6 1.4-4.2-1.5.1-3.3 1-4.3 2.2-1.1 1.3-1.8 2.8-1.6 4.2 1.7.1 3.3-.7 4.5-2.2ZM20 15c0-3 2.5-4.5 2.6-4.6-1.4-2.1-3.6-2.4-4.4-2.4-1.9-.2-3.7 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.2 0-4.3 1.3-5.4 3.2-2.3 4 .6 10 2.8 13.2 1.1 1.5 2.3 3.1 3.9 3 1.5-.1 2.1-1 4-1s2.4 1 4.1 1c1.7 0 2.8-1.5 3.8-3 .9-1.2 1.5-2.6 1.8-3.3-3.5-1.4-4.4-4.4-4.4-6.1Z"/></svg><span><small><span class="default">다운로드</span><span class="opening">여는 중</span></small><strong>App Store</strong></span></a><a class="badge store play" data-store="android" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"  onclick="return openStoreFromLink('GooglePlay','main',this);"><svg viewBox="0 0 30 34" aria-hidden="true"><path fill="#d9e4ed" d="M1 1 18 17 1 33Z"/><path fill="#fff" d="m1 1 22 12-5 4Z"/><path fill="#b1b7c1" d="m1 33 22-12-5-4Z"/><path fill="#ead6b2" d="m18 17 5-4 6 4-6 4Z"/></svg><span><small><span class="default">다운로드하기</span><span class="opening">여는 중</span></small><strong>Google Play</strong></span></a></div></section></main><section class="seo-guides wrap"><h2>다양한 학습 방법 알아보기</h2><p>읽고, 듣고, 문맥 속에서 단어를 발견하는 실용적인 아이디어.</p><div class="seo-guide-grid"><a href="../learn-languages-with-music/"><h3>좋아하는 노래로 언어 배우기</h3><p>Luna Reader로 음악을 듣고 노래 가사를 번역해 보세요. 단어와 의미, 발음을 이어 주는 간단한 듣기 루틴을 소개해요.</p></a><a href="./"><h3>튀르키예어 이야기를 읽으며 단어가 만들어지는 방식 살펴보기</h3><p>Luna Reader에서 튀르키예어 이야기를 오디오와 함께 읽고, 어떤 단어든 탭해 의미를 확인하고, 읽은 내용으로 만든 연습 문제로 연습해 보세요.</p></a></div></section><footer class="wrap"><a class="brand" href="../../"><img src="../../../luna/assets/Luna_logo_180.png" width="30" alt="">Luna Reader</a><span>© <span id="year"></span> Luna Reader</span><a href="../../../privacy.html" data-i="privacy">개인정보 처리방침</a><nav class="locale-links" aria-label="웹사이트 언어"><a data-locale-link lang="en" hreflang="en" href="../../../learn/learn-turkish-with-stories/">English</a><a data-locale-link lang="tr" hreflang="tr" href="../../../tr/learn/learn-turkish-with-stories/">Türkçe</a><a data-locale-link lang="ru" hreflang="ru" href="../../../ru/learn/learn-turkish-with-stories/">Русский</a><a data-locale-link lang="ar" hreflang="ar" href="../../../ar/learn/learn-turkish-with-stories/">العربية</a><a data-locale-link lang="fr" hreflang="fr" href="../../../fr/learn/learn-turkish-with-stories/">Français</a><a data-locale-link lang="zh-Hans" hreflang="zh-Hans" href="../../../zh-hans/learn/learn-turkish-with-stories/">简体中文</a><a data-locale-link lang="de" hreflang="de" href="../../../de/learn/learn-turkish-with-stories/">Deutsch</a><a data-locale-link lang="el" hreflang="el" href="../../../el/learn/learn-turkish-with-stories/">Ελληνικά</a><a data-locale-link lang="es" hreflang="es" href="../../../es/learn/learn-turkish-with-stories/">Español</a><a data-locale-link lang="ja" hreflang="ja" href="../../../ja/learn/learn-turkish-with-stories/">日本語</a><a data-locale-link lang="ko" hreflang="ko" href="../../../ko/learn/learn-turkish-with-stories/" aria-current="page">한국어</a></nav></footer><!-- Page locale for ad measurement and UI -->
+<script>
+var adLang = window.location.search.match(/[?&]lang=(tr|en|ru)(?:&|$)/i);
+window.__lunaLang = adLang ? adLang[1].toLowerCase() : (document.documentElement.dataset.siteLanguage || 'en');
+try { localStorage.setItem('luna_lang', window.__lunaLang); } catch(e){}
+</script>
+<!-- Tracking -->
+<script>
+(function() {
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
+    return m ? m[1] : undefined;
+  }
+  // Meta cookie domain, found the way fbevents.js finds it: try the shortest domain first
+  // ('tr', 'com.tr', 'lunasoft.com.tr'), keep the first one the browser accepts, and use its
+  // position as the index in the 'fb.<index>.' prefix (here: fb.2 on .lunasoft.com.tr).
+  // This page used to write host-only 'fb.1.' cookies. The pixel then derived '.com.tr' (a
+  // public suffix the browser rejects) whenever it tried to update them, so a refreshed fbc
+  // (IG's brid/aem suffix, a newer ad click) never persisted and CAPI kept the stale value.
+  var FB_CK = (function(){
+    try {
+      var parts = window.location.hostname.split('.');
+      for (var i = 0; i < parts.length; i++) {
+        var dom = parts.slice(parts.length - 1 - i).join('.');
+        document.cookie = '__luna_ck=1;path=/;domain=.' + dom;
+        if (/(?:^|; )__luna_ck=1/.test(document.cookie)) {
+          document.cookie = '__luna_ck=;max-age=0;path=/;domain=.' + dom;
+          return { idx: i, domain: dom };
+        }
+      }
+    } catch(e){}
+    return { idx: 1, domain: '' }; // every test write failed (cookies blocked / sandboxed): host-only, as before
+  })();
+  function setFbCookie(name, payload, days){
+    try {
+      var d = new Date();
+      d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+      // Drop a host-only copy first so reads can't return a stale duplicate.
+      if (FB_CK.domain) document.cookie = name + '=;max-age=0;path=/';
+      document.cookie = name + '=fb.' + FB_CK.idx + '.' + payload + ';expires=' + d.toUTCString() +
+        ';path=/;SameSite=Lax' + (FB_CK.domain ? ';domain=.' + FB_CK.domain : '');
+    } catch(e) {}
+  }
+  // One-time migration for returning visitors: re-home cookies written the old way (host-only
+  // 'fb.1.') with the right index + domain, keeping their timestamp and value — same _fbp id.
+  (function(){
+    try {
+      if (!FB_CK.domain) return;
+      ['_fbc', '_fbp'].forEach(function(n){
+        var v = getCookie(n);
+        if (v && v.indexOf('fb.1.') === 0) setFbCookie(n, v.slice(5), 90);
+      });
+    } catch(e){}
+  })();
+  (function(){
+    try {
+      var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+      if (!m) return;
+      var fbclid = m[1];
+      // Raw query value goes into document.cookie: accept only real fbclid characters, so a
+      // crafted link can't inject cookie attributes (';domain=…', ';expires=…').
+      if (!/^[A-Za-z0-9_\-]{1,500}$/.test(fbclid)) return;
+      var existing = getCookie('_fbc');
+      if (existing && existing.indexOf(fbclid) !== -1) return;
+      // Same payload the pixel builds (its cookie config maps IG's 'brid' to an '_aem_' suffix):
+      // otherwise the landing PageView's CAPI copy is sent before the pixel refreshes the cookie
+      // and lacks the suffix its browser copy carries.
+      var bm = window.location.search.match(/[?&]brid=([^&]+)/);
+      var brid = (bm && /^[A-Za-z0-9_\-]{1,500}$/.test(bm[1])) ? bm[1] : '';
+      setFbCookie('_fbc', Date.now() + '.' + fbclid + (brid ? '_aem_' + brid : ''), 90);
+    } catch(e){}
+  })();
+  (function(){
+    try {
+      if (getCookie('_fbp')) return;
+      setFbCookie('_fbp', Date.now() + '.' + Math.floor(Math.random()*2147483647), 90);
+    } catch(e){}
+  })();
+  // Kalıcı external_id — dedup match anahtarı (Meta için "Harici Kod")
+  function getExternalId(){
+    try {
+      var eid = localStorage.getItem('luna_eid');
+      if (!eid) {
+        eid = 'eid_' + Date.now().toString(36) + '_' +
+              Math.random().toString(36).slice(2, 10) +
+              Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('luna_eid', eid);
+      }
+      return eid;
+    } catch(e){ return ''; }
+  }
+  // Reuse the id the <head> already handed to fbq('init') so pixel and CAPI always carry the
+  // SAME external_id — even when localStorage.setItem throws and nothing was persisted.
+  window.__lunaEid = window.__lunaEid || getExternalId();
+
+  function sendCAPI(eventName, eventId, extra){
+    try {
+      var payload = {
+        event_name: eventName, event_id: eventId,
+        event_time: Math.floor(Date.now() / 1000),  // browser zamanı — server-browser timing match için
+        url: window.location.href,
+        fbc: getCookie('_fbc'), fbp: getCookie('_fbp'),
+        external_id: window.__lunaEid || getExternalId(),
+        custom_data: extra || {}
+      };
+      fetch('/api/capi', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        keepalive:true, body:JSON.stringify(payload)
+      }).catch(function(){});
+    } catch(e){}
+  }
+  window.trackStoreClick = function(store, location){
+    try {
+      var prefix = (store === 'AppStore') ? 'as_' : 'gp_';
+      var customName = (store === 'AppStore') ? 'AppStoreClick' : 'GooglePlayClick';
+      var leadId = prefix + 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var customId = prefix + 'cc_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var data = { content_name: store, location: location, lang: (window.__lunaLang || 'en') };
+      // Both badges show on every phone, so an Android user can tap App Store (or an iPhone
+      // user Google Play). They can't install from there — record the click, but not a Lead.
+      var ua = navigator.userAgent || '';
+      var wrongStore = (store === 'AppStore' && /android/i.test(ua)) ||
+                       (store === 'GooglePlay' && /iphone|ipad|ipod/i.test(ua));
+      if (wrongStore) data.wrong_store = true;
+      // One Lead per browser per 24 h: a visitor who taps again later (or taps both badges)
+      // is still one lead, so Lead-optimised delivery doesn't overweight repeat tappers.
+      // AppStoreClick / GooglePlayClick still fire on every tap (the exclusion audience uses them).
+      var sendLead = !wrongStore;
+      if (sendLead) {
+        try {
+          var lastLead = parseInt(localStorage.getItem('luna_lead_at') || '0', 10);
+          if (Date.now() - lastLead < 24 * 60 * 60 * 1000) sendLead = false;
+          else localStorage.setItem('luna_lead_at', String(Date.now()));
+        } catch(e){}
+      }
+      if (window.fbq) {
+        if (sendLead) fbq('track', 'Lead', data, { eventID: leadId });
+        fbq('trackCustom', customName, data, { eventID: customId });
+      }
+      if (sendLead) sendCAPI('Lead', leadId, data);
+      sendCAPI(customName, customId, data);
+      // GA4 event
+      if (window.gtag) {
+        gtag('event', 'store_click', {
+          store: store,
+          location: location,
+          wrong_store: wrongStore,
+          lang: (window.__lunaLang || 'en')
+        });
+      }
+      // Clarity custom event + tag
+      if (window.clarity) {
+        clarity('event', 'store_click');
+        clarity('set', 'store', store);
+        clarity('set', 'click_location', location);
+      }
+    } catch(e){}
+  };
+  // openStoreFromLink + openStore are defined EARLY in the <head> so a tap that lands
+  // before this script runs still opens the store. On iOS they fire itms-apps://, which
+  // iOS routes to the App Store app itself — never a web page inside the in-app browser.
+
+  try {
+    var pvId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    if (window.fbq) fbq('track', 'PageView', {}, { eventID: pvId });
+    sendCAPI('PageView', pvId, { lang: (window.__lunaLang || 'en') });
+  } catch(e){}
+})();
+</script>
+
+
+
+<script src="../../../luna/seo-navigation.js"></script></body></html>

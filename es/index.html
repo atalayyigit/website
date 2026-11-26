@@ -1,11 +1,405 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-site-language="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aprende idiomas con historias | Luna Reader</title>
-<meta name="description" content="Lee historias de tu nivel, escucha la narración y toca una palabra para ver su traducción.">
+<script>
+(function () {
+  const routes = {en: '', tr: 'tr/', ru: 'ru/', ar: 'ar/', fr: 'fr/', zh: 'zh-hans/', de: 'de/', el: 'el/', es: 'es/', ja: 'ja/', ko: 'ko/'};
+  const supported = value => {
+    const key = String(value || '').toLowerCase().split('-')[0];
+    return Object.prototype.hasOwnProperty.call(routes, key) ? key : null;
+  };
+  const query = new URLSearchParams(location.search);
+  if (query.has('noredirect')) return;
+  let preference;
+  try { preference = localStorage.getItem('luna_site_language'); } catch (_) {}
+  const browserLanguages = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+  const language = supported(query.get('lang')) || supported(preference) || browserLanguages.map(supported).find(Boolean);
+  if (language && routes[language]) {
+    const target = new URL(routes[language], location.href);
+    target.search = location.search;
+    target.hash = location.hash;
+    location.replace(target.href);
+  }
+})();
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Luna Reader — Aprende idiomas con historias, música y noticias</title>
+<meta name="theme-color" content="#000000">
+
+<link rel="icon" type="image/png" href="../luna/assets/Luna_logo_180.png">
+<link rel="apple-touch-icon" href="../luna/assets/Luna_logo_180.png">
+
+<link rel="preconnect" href="https://connect.facebook.net">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preconnect" href="https://www.clarity.ms">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2VQJTF2X9K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2VQJTF2X9K', {
+    send_page_view: true,
+    anonymize_ip: true
+  });
+</script>
+
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wy9i734ovj");
+</script>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+(function(){
+  // external_id pixel init'ten önce hazır olsun (Advanced Matching için)
+  var eid = '';
+  try {
+    eid = localStorage.getItem('luna_eid');
+    if (!eid) {
+      eid = 'eid_' + Date.now().toString(36) + '_' +
+            Math.random().toString(36).slice(2, 10) +
+            Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('luna_eid', eid);
+    }
+  } catch(e){}
+  window.__lunaEid = eid || '';
+  var advMatch = eid ? { external_id: eid } : {};
+  // Auto-Config kapalı: Meta'nın otomatik algıladığı event'ler (buton tıklaması, sayfa
+  // metadata'sı) gönderilmesin — sadece bizim eventID'li event'lerimiz gitsin.
+  // Not: fbevents.js 'pcm_plugin-set_' ID'sini yalnızca eventID'si OLMAYAN event'lere atar;
+  // bizimkilerin hepsi eventID taşıdığı için dedup bundan etkilenmez. (true/"true" dışındaki
+  // her değer, string 'false' dahil, opt-out sayılır; boolean false en açık hâli.)
+  fbq('set', 'autoConfig', false, '2013897989521001');
+  fbq('init', '2013897989521001', advMatch);
+})();
+// PageView aşağıda event_id ile fire ediliyor (sendCAPI ile birlikte) — burada tekrar etmiyoruz, deduplication için
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></noscript>
+
+<!-- Store redirect defined EARLY: the first tap is never a "dead click", it shows
+     instant feedback, and works even before the bottom script runs / inside the
+     Instagram & Facebook in-app browsers. -->
+<script>
+  // Platform class on <html> before first paint: a phone gets ONE big button for its own
+  // store plus a small "Also on …" link to the other (CSS below). ~83% of Leads are Android,
+  // yet the App Store badge came first, and a wrong-store tap is a dead end (no install).
+  // Unknown UAs (desktop, iPadOS 'Macintosh') get two equal buttons side by side.
+  (function(){
+    var ua = navigator.userAgent || '';
+    var p = /iphone|ipad|ipod/i.test(ua) ? 'plat-ios' : (/android/i.test(ua) ? 'plat-android' : '');
+    if (p) document.documentElement.className += ' ' + p;
+  })();
+  // Per-tab "already sent to the store" marker. The auto-redirect checks it, so a Back /
+  // reload (Android WebView has no bfcache and re-runs the page) doesn't bounce the user
+  // to the store again or log another event.
+  window.markHandoff = function(kind){
+    try { sessionStorage.setItem('luna_handoff', kind); } catch(e){}
+  };
+  function clearOpening(){
+    var els = document.querySelectorAll('.badge.is-opening');
+    for (var i = 0; i < els.length; i++) els[i].classList.remove('is-opening');
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = '';
+  }
+  // Screen readers: the badges' static aria-labels hide the visual "Opening…" swap, so
+  // announce it through a polite live region instead.
+  function announceOpening(store){
+    var sr = document.getElementById('sr-status');
+    if (sr) sr.textContent = 'Opening ' + (store === 'AppStore' ? 'the App Store' : 'Google Play') + '…';
+  }
+
+  // Click handler for the store <a> tags. On iOS in-app browsers it drives the
+  // navigation itself: itms-apps:// first (claimed directly by the App Store app, so
+  // the webview's universal-link block doesn't apply), plain https 1s later if that
+  // scheme goes unanswered.
+  window.openStoreFromLink = function(store, location, el){
+    // Repeat-tap lock: users who think the first tap was dead tap again. Each extra tap
+    // used to fire another Lead + custom event (pixel AND CAPI) and start a second set of
+    // fallback timers that raced the first hand-off. Swallow taps for 3.5s — long enough
+    // to cover the slowest chain (itms-apps → extbrowser @1.5s → https @3s) — and unlock
+    // as soon as the page comes back to the foreground so a returning user can retry.
+    // The lock is PER STORE: a mis-tap on the small "Also on …" link must not swallow the
+    // user's immediate tap on the big button for their own store.
+    var now = Date.now();
+    var locks = window.__storeLocks || (window.__storeLocks = {});
+    if (locks[store] && now - locks[store] < 3500) return false;
+    locks[store] = now;
+    // A tap on the other store supersedes any hand-off still in flight: drop its fallback
+    // timers so they can't hijack this navigation.
+    if (window.__handoffCancel) { try { window.__handoffCancel(); } catch(e){} window.__handoffCancel = null; }
+    window.markHandoff('tap');
+    // Visible "Opening…" state, so the user sees the tap registered instead of tapping again.
+    // One shared timer, so an earlier tap's timeout can't clear a later tap's state early.
+    clearTimeout(window.__openingT);
+    clearOpening();
+    announceOpening(store);
+    if (el && el.classList) {
+      el.classList.add('is-opening');
+      window.__openingT = setTimeout(clearOpening, 3500);
+    }
+    var ua = navigator.userAgent || '';
+    var isIOSInApp = /iphone|ipad|ipod/i.test(ua) &&
+                     /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    if (isIOSInApp && store === 'AppStore') {
+      try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+      // PROVEN flow from the old page (russian_stories1.html, in production May–Aug):
+      // fire itms-apps:// inside the tap gesture — Meta's webview hands it to the App
+      // Store app — and only fall back after a FULL 1.5s. The hand-off takes ~0.5–1s;
+      // the 350ms fallback this replaces fired while it was still in flight and
+      // hijacked the pending navigation, so the tap looked dead (Clarity showed users
+      // tapping repeatedly with nothing happening). If the App Store does open, the
+      // page is backgrounded → pagehide/visibilitychange cancels every fallback.
+      var IOS_ROUTE  = (location === 'alt') ? 'alt' : 'tap';
+      var IOS_NATIVE = window.appStoreUrl(IOS_ROUTE, true);
+      var IOS_WEB    = window.appStoreUrl(IOS_ROUTE, false);
+      var isIG = /instagram/i.test(ua);
+      var timers = [];
+      var cancel = function(){ while (timers.length) { try { clearTimeout(timers.pop()); } catch(e){} } };
+      window.__handoffCancel = cancel;
+      window.addEventListener('pagehide', cancel, { once:true });
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) cancel(); }, { once:true });
+      if (isIG) {
+        // Instagram's own escape scheme opens the URL in the EXTERNAL browser (Safari),
+        // and since Nov 2025 apps.apple.com 301s iOS straight into the native App Store
+        // from there. Try it if itms-apps:// went unanswered; plain https is the last
+        // resort (inside the IG webview that 301 can dead-end, so it goes last).
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          try { window.location.href = 'instagram://extbrowser/?url=' + encodeURIComponent(IOS_WEB); } catch(e){}
+        }, 1500));
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 3000));
+      } else {
+        timers.push(setTimeout(function(){
+          if (document.hidden) return;
+          window.location.href = IOS_WEB;
+        }, 1500));
+      }
+      try { window.location.href = IOS_NATIVE; } catch(e){}
+      return false; // we drive the navigation ourselves
+    }
+    openStore(store, location);
+    return false;
+  };
+  // Back from the store (bfcache restore or the webview re-shown) → allow a fresh tap.
+  // pageshow ALSO fires on the initial load, after 'load' — only a bfcache restore
+  // (e.persisted) is a real return; otherwise it would unlock a tap made before 'load'.
+  window.addEventListener('pageshow', function(e){
+    if (e && e.persisted) { window.__storeLocks = {}; clearOpening(); }
+  });
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) { window.__storeLocks = {}; clearOpening(); }
+  });
+  // App Store install attribution: App Store Connect campaign link (provider token pt,
+  // campaign token ct ≤ 40 chars). App Analytics → Campaigns then shows product-page views
+  // and downloads per ct. ct = <source>_<route>: source 'meta' for Instagram/Facebook
+  // traffic, 'web' otherwise; route tap | alt | auto. Kept coarse on purpose — Apple hides
+  // small counts, so per-campaign ct values would mostly show up as hidden.
+  window.appStoreUrl = function(route, nativeScheme){
+    var src = 'web';
+    try {
+      if (/[?&](fbclid=|utm_source=(ig|fb|facebook|instagram|an|msg|meta)(&|$))/i.test(window.location.search) ||
+          /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(navigator.userAgent || '')) src = 'meta';
+    } catch(e){}
+    return (nativeScheme ? 'itms-apps' : 'https') +
+      '://apps.apple.com/app/id6740998772?pt=10625926&ct=' + src + '_' + route + '&mt=8';
+  };
+
+  // Google Play install attribution: '&referrer=…' on every Play URL. Play Console's
+  // acquisition reports (and the Install Referrer API) then split installs by ad source /
+  // campaign / ad (copied from the landing URL's utm_*) and by HOW the user got to the
+  // store (utm_medium = tap | tap_alt). Values are sanitised to
+  // [A-Za-z0-9_.-] and capped, since they come straight from the query string.
+  window.playReferrer = function(route){
+    try {
+      var q = new URLSearchParams(window.location.search);
+      var clean = function(v, d){
+        v = (v == null || v === '') ? d : String(v);
+        return v.replace(/[^A-Za-z0-9_.\-]/g, '_').slice(0, 100);
+      };
+      var ref = 'utm_source=' + clean(q.get('utm_source'), 'landing') +
+                '&utm_medium=' + clean(route, 'tap') +
+                '&utm_campaign=' + clean(q.get('utm_campaign') || q.get('utm_id'), 'none');
+      if (q.get('utm_content')) ref += '&utm_content=' + clean(q.get('utm_content'), '');
+      return '&referrer=' + encodeURIComponent(ref);
+    } catch(e){ return ''; }
+  };
+
+  // Opens the store reliably (native scheme first, https fallback). Defined here so a
+  // tap before the bottom script is ready still works. trackStoreClick is guarded — it
+  // just no-ops on an ultra-early tap; the full version below adds tracking.
+  window.openStore = function(store, location){
+    try { if (window.trackStoreClick) window.trackStoreClick(store, location); } catch(e){}
+    var ua = navigator.userAgent || '';
+    var isIOS = /iphone|ipad|ipod/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var IOS_URL = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', false);
+    var IOS_NATIVE = window.appStoreUrl(location === 'alt' ? 'alt' : 'tap', true);
+    var AND_PKG = 'com.luna.russianstories';
+    var AND_REF = window.playReferrer(location === 'alt' ? 'tap_alt' : 'tap');
+    var AND_HTTPS = 'https://play.google.com/store/apps/details?id=' + AND_PKG + AND_REF;
+    // Instagram/Facebook/Messenger in-app browsers silently drop custom-scheme
+    // navigations (itms-apps://, intent://) AND window.open — only plain https
+    // top-level navigation is reliable there.
+    var isInApp = /instagram|fbav|fban|fb_iab|fbios|messenger/i.test(ua);
+    var goAndroid = (store === 'GooglePlay');
+    var goIOS = (store === 'AppStore');
+    if (!store) { goAndroid = isAndroid; goIOS = isIOS; }
+    if (isInApp) {
+      // iOS in-app + App Store is handled entirely by openStoreFromLink (itms-apps://
+      // first, https fallback). Everything else here goes straight to plain https.
+      window.location.href = goAndroid ? AND_HTTPS : IOS_URL;
+      return;
+    }
+    if (goAndroid && isAndroid) {
+      var intentUrl = 'intent://details?id=' + AND_PKG + AND_REF +
+        '#Intent;scheme=market;package=com.android.vending;' +
+        'S.browser_fallback_url=' + encodeURIComponent(AND_HTTPS) + ';end';
+      var t = setTimeout(function(){ window.location.href = AND_HTTPS; }, 900);
+      var clear = function(){ try { clearTimeout(t); } catch(e){} };
+      window.__handoffCancel = clear;
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear(); }, { once:true });
+      window.addEventListener('pagehide', clear, { once:true });
+      try { window.location.href = intentUrl; } catch(e){ clear(); window.location.href = AND_HTTPS; }
+      return;
+    }
+    if (goIOS && isIOS) {
+      var t2 = setTimeout(function(){ window.location.href = IOS_URL; }, 900);
+      var clear2 = function(){ try { clearTimeout(t2); } catch(e){} };
+      window.__handoffCancel = clear2;
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clear2(); }, { once:true });
+      window.addEventListener('pagehide', clear2, { once:true });
+      try { window.location.href = IOS_NATIVE; } catch(e){ clear2(); window.location.href = IOS_URL; }
+      return;
+    }
+    // Cross-platform fallback (e.g. App Store button tapped on Android, or desktop).
+    // In-app browsers (Instagram/Facebook) silently block window.open, so try it but
+    // fall back to a top-level navigation which always works.
+    var fallbackUrl = goAndroid ? AND_HTTPS : IOS_URL;
+    var popup = null;
+    try { popup = window.open(fallbackUrl, '_blank'); } catch(e){}
+    if (!popup) { window.location.href = fallbackUrl; }
+  };
+</script>
+
+<link rel="stylesheet" href="../luna/redesign.css">
+<meta name="description" content="Aprende ruso, inglés, turco, alemán y español con historias, audio, traducción de letras y noticias. Descarga Luna Reader para iOS y Android.">
 <link rel="canonical" href="https://lunasoft.com.tr/es/">
+<meta property="og:title" content="Luna Reader — Aprende idiomas con historias, música y noticias">
+<meta property="og:description" content="Aprende ruso, inglés, turco, alemán y español con historias, audio, traducción de letras y noticias. Descarga Luna Reader para iOS y Android.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://lunasoft.com.tr/es/">
+<meta property="og:site_name" content="Luna Reader">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta property="og:image:alt" content="Luna Reader">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="el_GR">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Luna Reader — Aprende idiomas con historias, música y noticias">
+<meta name="twitter:description" content="Aprende ruso, inglés, turco, alemán y español con historias, audio, traducción de letras y noticias. Descarga Luna Reader para iOS y Android.">
+<meta name="twitter:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
+<meta name="twitter:image:alt" content="Luna Reader">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://lunasoft.com.tr/#organization", "name": "Lunasoft", "url": "https://lunasoft.com.tr/", "logo": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png"}, {"@type": "WebSite", "@id": "https://lunasoft.com.tr/#website", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "SoftwareApplication", "@id": "https://lunasoft.com.tr/#app", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "applicationCategory": "EducationalApplication", "operatingSystem": "iOS, Android", "description": "Aprende ruso, inglés, turco, alemán y español con historias, audio, traducción de letras y noticias. Descarga Luna Reader para iOS y Android.", "image": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png", "downloadUrl": ["https://apps.apple.com/app/id6740998772", "https://play.google.com/store/apps/details?id=com.luna.russianstories"], "featureList": ["Historias y audio", "Palabras que se traducen con un toque", "Música y traducción de letras", "Noticias en el idioma que se aprende", "Contenido para aprender ruso, inglés, turco, alemán y español"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Descarga gratuita. Hay funciones de pago y suscripciones opcionales."}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "WebPage", "@id": "https://lunasoft.com.tr/es/#page", "url": "https://lunasoft.com.tr/es/", "name": "Luna Reader — Aprende idiomas con historias, música y noticias", "description": "Aprende ruso, inglés, turco, alemán y español con historias, audio, traducción de letras y noticias. Descarga Luna Reader para iOS y Android.", "inLanguage": "es", "isPartOf": {"@id": "https://lunasoft.com.tr/#website"}, "about": {"@id": "https://lunasoft.com.tr/#app"}}, {"@type": "FAQPage", "@id": "https://lunasoft.com.tr/es/#faq", "inLanguage": "es", "isPartOf": {"@id": "https://lunasoft.com.tr/es/#page"}, "mainEntity": [{"@type": "Question", "name": "¿Qué es Luna Reader?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader es una app para aprender idiomas en iOS y Android que gira en torno a la lectura. Lees y escuchas historias en el idioma que estás aprendiendo, tocas cualquier palabra para ver su significado y practicas las palabras que guardas."}}, {"@type": "Question", "name": "¿Qué idiomas puedo aprender con Luna Reader?", "acceptedAnswer": {"@type": "Answer", "text": "Puedes leer en ruso, inglés, turco, alemán y español. La interfaz de la app y las traducciones de palabras están disponibles en más de 30 idiomas, así que puedes seguir cada texto con traducciones a tu propio idioma."}}, {"@type": "Question", "name": "¿Luna Reader es gratis?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader se descarga gratis e incluye historias gratuitas en todos los niveles. Luna Premium es una suscripción opcional, mensual o anual, para quienes quieren más."}}, {"@type": "Question", "name": "¿Qué nivel necesito para empezar?", "acceptedAnswer": {"@type": "Answer", "text": "Las historias están agrupadas por nivel, a partir de A1. Elige textos acordes con lo que ya puedes leer y sube de nivel cuando empiecen a resultarte cómodos."}}, {"@type": "Question", "name": "¿Cómo funciona la traducción de palabras?", "acceptedAnswer": {"@type": "Answer", "text": "Toca una palabra mientras lees para ver qué significa en tu idioma. Puedes guardar palabras y volver a ellas más tarde con tarjetas y ejercicios de completar espacios en blanco, formar frases y comprensión auditiva creados a partir de las historias que has leído."}}, {"@type": "Question", "name": "¿Puedo aprender con canciones y noticias?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Además de historias, puedes escuchar canciones mientras sigues la letra traducida y leer noticias en el idioma que estás aprendiendo."}}]}]}</script>
+<style id="homepage-polish">
+/* Homepage presentation. */
+body { background: #07080c; }
+.header { border-bottom: 1px solid #ffffff12; }
+.header nav a { padding-block: 12px; }
+.header .brand img { border-radius: 10px; }
+.hero { isolation: isolate; }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at 76% 42%, #42305d35, transparent 65%);
+  pointer-events: none;
+}
+.hero h1 { text-wrap: balance; }
+.hero .intro { color: #cbc7d1; }
+.store { min-height: 52px; }
+.store:active { transform: scale(.98); }
+.store:focus-visible, .language-card:focus-visible, .seo-guide-grid a:focus-visible {
+  outline: 2px solid #f2d9ae;
+  outline-offset: 4px;
+}
+.languages-section { padding-block: clamp(38px, 6vw, 72px); }
+.language-card, .seo-guide-grid > a {
+  background: linear-gradient(145deg, #181822, #101117);
+  border-color: #ffffff24;
+}
+.language-card .card-copy { padding-bottom: 20px; }
+.feature-showcase, .experience { gap: clamp(28px, 6vw, 76px); }
+.download {
+  background: radial-gradient(ellipse at top, #382b4b 0%, #15131e 58%, #101116);
+  border-color: #d8bb8845;
+}
+.faq summary { min-height: 44px; padding-block: 10px; }
+@media (max-width: 800px) {
+  .hero { min-height: 0; padding-bottom: 26px; }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; }
+  .hero-art {
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: min(100%, 480px);
+    height: auto;
+    aspect-ratio: 1;
+    margin: 24px auto 0;
+    opacity: 1;
+  }
+  .hero-art img { width: 184.46%; height: auto; left: -84.46%; top: -10.77%; }
+  .feature-strip { margin-top: 28px; width: 100%; padding-top: 0; }
+  .feature-strip p { text-wrap: balance; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .store, .language-card { transition: none; }
+  .store:hover, .store:active, .language-card:hover { transform: none; }
+}
+</style>
+
+<style id="practice-styles">
+.practice { padding-block: clamp(32px, 6vw, 72px); }
+.practice > p { color: var(--muted); max-width: 62ch; margin-top: 16px; }
+.practice-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; margin-top: 24px; }
+.practice-card { padding: clamp(18px, 3vw, 30px); border: 1px solid var(--line); border-radius: 18px; background: #15151e; }
+.practice-card p { margin-top: 14px; }
+.practice-card details { margin-top: 12px; }
+.practice-card summary { min-height: 44px; padding-block: 10px; cursor: pointer; color: var(--gold); }
+.practice-words { display: flex; flex-wrap: wrap; gap: 8px; }
+.practice-words span { padding: 4px 10px; border: 1px solid var(--line); border-radius: 8px; }
+@media (max-width: 650px) { .practice-grid { grid-template-columns: 1fr; } }
+</style>
 <link rel="alternate" hreflang="en" href="https://lunasoft.com.tr/">
 <link rel="alternate" hreflang="tr" href="https://lunasoft.com.tr/tr/">
 <link rel="alternate" hreflang="ru" href="https://lunasoft.com.tr/ru/">
@@ -18,30 +412,234 @@
 <link rel="alternate" hreflang="ja" href="https://lunasoft.com.tr/ja/">
 <link rel="alternate" hreflang="ko" href="https://lunasoft.com.tr/ko/">
 <link rel="alternate" hreflang="x-default" href="https://lunasoft.com.tr/">
-<meta property="og:title" content="Aprende idiomas con historias | Luna Reader">
-<meta property="og:description" content="Lee historias de tu nivel, escucha la narración y toca una palabra para ver su traducción.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://lunasoft.com.tr/es/">
-<meta property="og:site_name" content="Luna Reader">
-<meta property="og:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
-<link rel="icon" href="../luna/assets/Luna_logo_180.png">
-<link rel="stylesheet" href="../luna/redesign.css">
-<link rel="stylesheet" href="../luna/localized-home.css">
-<script src="../luna/seo-navigation.js" defer></script>
 </head>
 <body>
-<header class="wrap localized-header"><a class="brand" href="../"><img src="../luna/assets/Luna_logo_180.png" width="42" height="42" alt="">Luna Reader</a><a class="button" href="#download">Descargar la aplicación</a></header>
-<main class="wrap localized-home">
-<section class="localized-hero">
-<div><p class="eyebrow">Lectura y comprensión auditiva</p><h1>Aprende idiomas con historias</h1><p>Lee historias de tu nivel, escucha la narración y toca una palabra para ver su traducción.</p><a class="text-link" href="#download">Descargar la aplicación</a></div>
-<div class="reading-mascot" aria-hidden="true"></div>
+<p id="sr-status" class="sr-only" aria-live="polite"></p>
+<header class="header wrap"><a class="brand" href="#" aria-label="Inicio de Luna Reader"><img src="../luna/assets/Luna_logo_180.png" width="42" height="42" alt="">Luna Reader</a><button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="Abrir menú">☰</button><nav id="navigation" aria-label="Navegación principal"><a href="#features" data-i="features">Funciones</a><a href="#languages" data-i="languages">Idiomas</a><a href="#stories" data-i="stories">Historias gratis</a><a href="#journal" data-i="blog">Blog</a><a href="#about" data-i="about">Acerca de</a></nav><div class="header-actions"><label class="language-label"><span aria-hidden="true">◎</span><span class="sr-only">Idioma del sitio web</span><select id="site-language" aria-label="Idioma del sitio web"><option value="en" data-url=".././">English</option><option value="tr" data-url="../tr/">Türkçe</option><option value="ru" data-url="../ru/">Русский</option><option value="ar" data-url="../ar/">العربية</option><option value="fr" data-url="../fr/">Français</option><option value="zh-Hans" data-url="../zh-hans/">简体中文</option><option value="de" data-url="../de/">Deutsch</option><option value="el" data-url="../el/">Ελληνικά</option><option value="es" data-url="../es/" selected>Español</option><option value="ja" data-url="../ja/">日本語</option><option value="ko" data-url="../ko/">한국어</option></select></label><a class="button small" href="#download" data-i="get">Descarga la app</a></div></header>
+<main>
+<section class="hero wrap"><div class="hero-copy"><h1 data-i="headline">Aprende idiomas<br>con <em>historias.</em></h1><p class="intro" data-i="intro">Descubre idiomas a través de historias, música y noticias. Lee, escucha y encuentra el significado de cada palabra.</p><div class="store-links"><a class="badge store apple" data-store="ios" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8"  onclick="return openStoreFromLink('AppStore','main',this);"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M16 5c1.6-1.8 1.5-3.6 1.4-4.2-1.5.1-3.3 1-4.3 2.2-1.1 1.3-1.8 2.8-1.6 4.2 1.7.1 3.3-.7 4.5-2.2ZM20 15c0-3 2.5-4.5 2.6-4.6-1.4-2.1-3.6-2.4-4.4-2.4-1.9-.2-3.7 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.2 0-4.3 1.3-5.4 3.2-2.3 4 .6 10 2.8 13.2 1.1 1.5 2.3 3.1 3.9 3 1.5-.1 2.1-1 4-1s2.4 1 4.1 1c1.7 0 2.8-1.5 3.8-3 .9-1.2 1.5-2.6 1.8-3.3-3.5-1.4-4.4-4.4-4.4-6.1Z"/></svg><span><small><span class="default">Descárgala en el</span><span class="opening">Abriendo el</span></small><strong>App Store</strong></span></a><a class="badge store play" data-store="android" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"  onclick="return openStoreFromLink('GooglePlay','main',this);"><svg viewBox="0 0 30 34" aria-hidden="true"><path fill="#d9e4ed" d="M1 1 18 17 1 33Z"/><path fill="#fff" d="m1 1 22 12-5 4Z"/><path fill="#b1b7c1" d="m1 33 22-12-5-4Z"/><path fill="#ead6b2" d="m18 17 5-4 6 4-6 4Z"/></svg><span><small><span class="default">DISPONIBLE EN</span><span class="opening">ABRIENDO</span></small><strong>Google Play</strong></span></a></div><div class="feature-strip"><div><span>♧</span><p data-i="f1">Historias para<br>cada día</p></div><div><span>♬</span><p data-i="f2">Contenido<br>en audio</p></div><div><span>文</span><p data-i="f3">Toca para<br>traducir</p></div><div><span>▥</span><p data-i="f4">Aprende<br>a tu nivel</p></div></div></div><div class="hero-art" role="img" aria-label="Un mago simpático con un sombrero azul estrellado que lee un libro mágico"><img src="../luna/assets/design-reference.webp" alt="" width="1199" height="1312" fetchpriority="high"></div></section>
+<section class="languages-section" id="languages"><div class="wrap"><div class="section-heading"><h2 data-i="explore">Explora los idiomas</h2><p data-i="exploreText">Aprende ruso, inglés, turco, alemán y español con historias que atrapan.</p></div><div class="language-grid"><a class="language-card" href="learn/learn-russian-with-stories/" data-language="ru"><div class="landmark russian"></div><div class="card-copy"><span class="flag">🇷🇺</span><h3 data-i="russian">Aprende ruso</h3><p data-i="readListen">Lee · Escucha · Descubre</p><span class="circle">↗</span></div></a><a class="language-card" href="learn/learn-english-with-stories/" data-language="en"><div class="landmark english"></div><div class="card-copy"><span class="flag">🇬🇧</span><h3 data-i="english">Aprende inglés</h3><p data-i="readListen">Lee · Escucha · Descubre</p><span class="circle">↗</span></div></a><a class="language-card" href="learn/learn-turkish-with-stories/" data-language="tr"><div class="landmark turkish"></div><div class="card-copy"><span class="flag">🇹🇷</span><h3 data-i="turkish">Aprende turco</h3><p data-i="readListen">Lee · Escucha · Descubre</p><span class="circle">↗</span></div></a><a class="language-card" href="learn/learn-german-with-stories/" data-language="de"><div class="landmark german"></div><div class="card-copy"><span class="flag">🇩🇪</span><h3 data-i="german">Aprende alemán</h3><p data-i="readListen">Lee · Escucha · Descubre</p><span class="circle">↗</span></div></a><a class="language-card" href="learn/learn-spanish-with-stories/" data-language="es"><div class="landmark spanish" aria-hidden="true"><span>¡Hola!</span></div><div class="card-copy"><span class="flag">🇪🇸</span><h3 data-i="spanish">Aprende español</h3><p data-i="readListen">Lee · Escucha · Descubre</p><span class="circle">↗</span></div></a></div></section>
+<nav class="feature-jump wrap" aria-label="Explora las funciones de la app"><a href="#features" data-i="jumpStories">Historias y audio</a><a href="#music" data-i="jumpMusic">Música y letras</a><a href="#news" data-i="jumpNews">Noticias y lectura</a></nav><section class="experience wrap" id="features"><div class="reading-mascot" role="img" aria-label="El mago de Luna leyendo un libro de cuentos"></div><div class="experience-copy"><span class="eyebrow" data-i="magic">UN POCO CADA DÍA</span><h2 data-i="featureTitle">Piérdete en una historia.<br>Encuentra tus palabras.</h2><p data-i="featureText">Sigue la historia, escucha el idioma y toca una palabra cuando necesites un poco de ayuda. Haz que la lectura forme parte de tu día a día.</p><div class="feature-detail"><span>01</span><div><h3 data-i="featureOne">Lee con curiosidad</h3><p data-i="featureOneText">Descubre el idioma en contexto, historia a historia.</p></div></div><div class="feature-detail"><span>02</span><div><h3 data-i="featureTwo">Escucha mientras lees</h3><p data-i="featureTwoText">Conecta las palabras de la página con su sonido.</p></div></div><a class="text-link" href="learn/learn-russian-with-stories/" data-i="start">Empieza tu próximo capítulo</a></div></section>
+
+<section class="feature-showcase music-feature wrap" id="music">
+  <div class="showcase-copy"><span class="eyebrow" data-i="musicEyebrow">EL IDIOMA TIENE RITMO</span>
+    <h2 data-i="musicTitle">Tus canciones favoritas.<br>Un significado totalmente nuevo.</h2>
+    <p data-i="musicText">Escucha música y traduce las letras sobre la marcha. Descubre qué significan las palabras de las canciones que te encantan.</p>
+    <div class="feature-pills"><span data-i="musicPill1">Escucha música</span><span data-i="musicPill2">Traduce letras</span></div>
+    <div class="lyric-preview"><span class="preview-label" data-i="lyricLabel">UN PEQUEÑO EJEMPLO</span><p>“Every day, a new beginning.”</p><p class="lyric-translation">“Cada día, un nuevo comienzo.”</p><span class="preview-note" data-i="lyricNote">Una frase ilustrativa, no una captura de pantalla de la app.</span></div>
+    <a class="text-link" href="learn/learn-languages-with-music/" data-i="musicCta">Descubre cómo aprender con música</a>
+  </div>
+  <figure class="showcase-art"><img src="../luna/assets/wizard-music.webp" srcset="../luna/assets/wizard-music-640.webp 640w, ../luna/assets/wizard-music-800.webp 800w, ../luna/assets/wizard-music.webp 1254w" sizes="(max-width: 800px) 92vw, 500px" width="1254" height="1254" loading="lazy" decoding="async" alt="El mago de Luna escuchando música con auriculares y con un teléfono en la mano"></figure>
 </section>
-<section class="localized-cards" aria-label="Luna Reader"><article><h3>Música y noticias</h3><p>Escucha canciones, traduce sus letras y lee noticias en el idioma que estás aprendiendo.</p></article><article><h3>Ejercicios interactivos</h3><p>Completa las palabras que faltan y ordénalas para formar frases.</p></article><article><h3>Idiomas para aprender</h3><p>Ruso, inglés, turco, alemán y español.</p></article></section>
-<section class="seo-guides"><h2>Guías de aprendizaje</h2><ul><li><a class="text-link" href="learn/learn-russian-with-stories/">Aprende ruso con historias</a></li><li><a class="text-link" href="learn/learn-english-with-stories/">Aprende inglés con historias</a></li><li><a class="text-link" href="learn/learn-turkish-with-stories/">Aprende turco con historias</a></li><li><a class="text-link" href="learn/learn-german-with-stories/">Aprende alemán con historias</a></li><li><a class="text-link" href="learn/learn-spanish-with-stories/">Aprende español con historias</a></li><li><a class="text-link" href="learn/learn-english-with-news/">Aprende inglés con noticias</a></li><li><a class="text-link" href="learn/learn-languages-with-music/">Aprende idiomas con canciones</a></li></ul></section>
-<section class="download" id="download"><h2>Descargar la aplicación</h2><div class="store-links" dir="ltr"><a class="store apple" href="https://apps.apple.com/app/id6740998772">App Store</a><a class="store play" href="https://play.google.com/store/apps/details?id=com.luna.russianstories">Google Play</a></div></section>
-</main>
-<footer class="wrap"><nav class="locale-links" aria-label="Idioma del sitio"><a data-locale-link href=".././" lang="en" hreflang="en">English</a><a data-locale-link href="../tr/" lang="tr" hreflang="tr">Türkçe</a><a data-locale-link href="../ru/" lang="ru" hreflang="ru">Русский</a><a data-locale-link href="../ar/" lang="ar" hreflang="ar">العربية</a><a data-locale-link href="../fr/" lang="fr" hreflang="fr">Français</a><a data-locale-link href="../zh-hans/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a><a data-locale-link href="../de/" lang="de" hreflang="de">Deutsch</a><a data-locale-link href="../el/" lang="el" hreflang="el">Ελληνικά</a><a data-locale-link href="../es/" lang="es" hreflang="es" aria-current="page">Español</a><a data-locale-link href="../ja/" lang="ja" hreflang="ja">日本語</a><a data-locale-link href="../ko/" lang="ko" hreflang="ko">한국어</a></nav></footer>
+<section class="feature-showcase news-feature wrap" id="news">
+  <figure class="showcase-art"><img src="../luna/assets/wizard-news.webp" srcset="../luna/assets/wizard-news-640.webp 640w, ../luna/assets/wizard-news-800.webp 800w, ../luna/assets/wizard-news.webp 1254w" sizes="(max-width: 800px) 92vw, 500px" width="1254" height="1254" loading="lazy" decoding="async" alt="El mismo mago de Luna leyendo un periódico"></figure>
+  <div class="showcase-copy"><span class="eyebrow" data-i="newsEyebrow">UNA NUEVA FORMA DE VER EL MUNDO</span>
+    <h2 data-i="newsTitle">Lee el mundo.<br>En el idioma que estás aprendiendo.</h2>
+    <p data-i="newsText">Lee noticias en el idioma que estás aprendiendo. Haz que los temas que te importan formen parte de tu práctica diaria de lectura.</p>
+    <div class="feature-pills"><span data-i="newsPill1">Lee las noticias</span><span data-i="newsPill2">Aprende en contexto</span></div>
+    <div class="news-note"><span aria-hidden="true">◎</span><p data-i="newsNote">Una historia te conecta con un mundo nuevo. Las noticias te conectan con este.</p></div>
+    <a class="text-link" href="learn/learn-english-with-news/" data-i="newsCta">Explora las noticias con Luna</a>
+  </div>
+</section>
+<section class="stories-section wrap" id="stories"><div class="section-heading"><span class="eyebrow" data-i="try">UNA PRUEBA DE LUNA</span><h2 data-i="storyTitle">Tu primera historia empieza aquí.</h2><p data-i="storyText">Prueba una breve muestra de lectura. Selecciona una palabra resaltada para descubrir su significado.</p></div><div class="story-tabs" role="group" aria-label="Idioma de la historia"><button class="active" data-story="en" aria-pressed="true">English</button><button data-story="tr" aria-pressed="false">Türkçe</button><button data-story="ru" aria-pressed="false">Русский</button><button data-story="de" aria-pressed="false">Deutsch</button><button data-story="es" aria-pressed="false">Español</button></div><article class="reading-card"><div class="reading-meta"><span data-i="sample">MUESTRA DE LECTURA INTERACTIVA</span><span>☾</span></div><h3 id="story-name">The little bookshop</h3><p id="story-body" lang="en">Every morning, Anna walks past a small bookshop. Today, the door is open. Inside, she finds a story about a distant city. She sits by the window and begins to read.</p><div id="translation" role="status" aria-live="polite" data-i="hint">Toca una palabra resaltada para descubrir su significado.</div></article></section>
+<section class="wrap practice" id="exercises">
+  <h2>Pon en práctica lo que lees</h2>
+  <p>Completa las palabras que faltan y forma frases a partir de las historias que lees en Luna Reader. Prueba aquí abajo dos ejemplos breves en ruso.</p>
+  <div class="practice-grid">
+    <article class="practice-card">
+      <h3>Completa los espacios en blanco</h3>
+      <p lang="ru">Анна ___ книгу.</p>
+      <p>Anna está leyendo un libro.</p>
+      <details><summary>Mostrar respuesta</summary><p lang="ru">Анна <strong>читает</strong> книгу.</p></details>
+    </article>
+    <article class="practice-card">
+      <h3>Forma una frase</h3>
+      <p>Ordena estas palabras para decir «Leo en casa».</p>
+      <p class="practice-words" lang="ru"><span>дома</span><span>читаю</span><span>Я</span></p>
+      <details><summary>Mostrar respuesta</summary><p lang="ru"><strong>Я читаю дома.</strong></p></details>
+    </article>
+  </div>
+  <a class="text-link" href="#download">Prueba los ejercicios en Luna Reader</a>
+</section>
+<section class="journal wrap" id="journal"><div><span class="eyebrow">DIARIO DE LUNA</span><h2 data-i="journalTitle">Pequeños hábitos. Nuevos mundos.</h2></div><details><summary data-i="tip1">Cómo crear un hábito de lectura diario</summary><p data-i="tip1Text">Elige una historia corta y un momento fijo del día. Lee un poco, vuelve mañana y concéntrate en disfrutar de la historia más que en entender cada palabra.</p></details><details><summary data-i="tip2">Lee y escucha a la vez</summary><p data-i="tip2Text">Primero lee un pasaje; después escúchalo y síguelo con la vista. Vuelve a una frase que te haya gustado y dila en voz alta a tu ritmo.</p></details></section>
+<section class="about wrap" id="about"><img src="../luna/assets/Luna_logo_180.png" width="56" height="56" alt=""><h2 data-i="aboutTitle">Un mundo de historias en tu bolsillo.</h2><p data-i="aboutText">Luna Reader reúne historias, audio y traducción de palabras para que explores un idioma a través de algo que disfrutas.</p></section>
+<section class="journal faq wrap" id="faq"><div><span class="eyebrow">PREGUNTAS FRECUENTES</span><h2>Preguntas sobre Luna Reader</h2></div><details><summary>¿Qué es Luna Reader?</summary><p>Luna Reader es una app para aprender idiomas en iOS y Android que gira en torno a la lectura. Lees y escuchas historias en el idioma que estás aprendiendo, tocas cualquier palabra para ver su significado y practicas las palabras que guardas.</p></details><details><summary>¿Qué idiomas puedo aprender con Luna Reader?</summary><p>Puedes leer en ruso, inglés, turco, alemán y español. La interfaz de la app y las traducciones de palabras están disponibles en más de 30 idiomas, así que puedes seguir cada texto con traducciones a tu propio idioma.</p></details><details><summary>¿Luna Reader es gratis?</summary><p>Luna Reader se descarga gratis e incluye historias gratuitas en todos los niveles. Luna Premium es una suscripción opcional, mensual o anual, para quienes quieren más.</p></details><details><summary>¿Qué nivel necesito para empezar?</summary><p>Las historias están agrupadas por nivel, a partir de A1. Elige textos acordes con lo que ya puedes leer y sube de nivel cuando empiecen a resultarte cómodos.</p></details><details><summary>¿Cómo funciona la traducción de palabras?</summary><p>Toca una palabra mientras lees para ver qué significa en tu idioma. Puedes guardar palabras y volver a ellas más tarde con tarjetas y ejercicios de completar espacios en blanco, formar frases y comprensión auditiva creados a partir de las historias que has leído.</p></details><details><summary>¿Puedo aprender con canciones y noticias?</summary><p>Sí. Además de historias, puedes escuchar canciones mientras sigues la letra traducida y leer noticias en el idioma que estás aprendiendo.</p></details></section>
+<section class="download wrap" id="download"><span class="eyebrow" data-i="next">TU PRÓXIMO CAPÍTULO TE ESPERA</span><h2 data-i="downloadTitle">Que empiece tu historia.</h2><p data-i="downloadText">Encuentra Luna Reader en el App Store y en Google Play.</p><div id="download-links" class="store-links"><a class="badge store apple" data-store="ios" href="https://apps.apple.com/app/id6740998772?pt=10625926&amp;ct=web_nojs&amp;mt=8"  onclick="return openStoreFromLink('AppStore','footer',this);"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M16 5c1.6-1.8 1.5-3.6 1.4-4.2-1.5.1-3.3 1-4.3 2.2-1.1 1.3-1.8 2.8-1.6 4.2 1.7.1 3.3-.7 4.5-2.2ZM20 15c0-3 2.5-4.5 2.6-4.6-1.4-2.1-3.6-2.4-4.4-2.4-1.9-.2-3.7 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.2 0-4.3 1.3-5.4 3.2-2.3 4 .6 10 2.8 13.2 1.1 1.5 2.3 3.1 3.9 3 1.5-.1 2.1-1 4-1s2.4 1 4.1 1c1.7 0 2.8-1.5 3.8-3 .9-1.2 1.5-2.6 1.8-3.3-3.5-1.4-4.4-4.4-4.4-6.1Z"/></svg><span><small><span class="default">Descárgala en el</span><span class="opening">Abriendo el</span></small><strong>App Store</strong></span></a><a class="badge store play" data-store="android" href="https://play.google.com/store/apps/details?id=com.luna.russianstories&amp;referrer=utm_source%3Dlanding%26utm_medium%3Dno_js"  onclick="return openStoreFromLink('GooglePlay','footer',this);"><svg viewBox="0 0 30 34" aria-hidden="true"><path fill="#d9e4ed" d="M1 1 18 17 1 33Z"/><path fill="#fff" d="m1 1 22 12-5 4Z"/><path fill="#b1b7c1" d="m1 33 22-12-5-4Z"/><path fill="#ead6b2" d="m18 17 5-4 6 4-6 4Z"/></svg><span><small><span class="default">DISPONIBLE EN</span><span class="opening">ABRIENDO</span></small><strong>Google Play</strong></span></a></div><p class="download-note">Descarga gratuita. Hay funciones de pago y suscripciones opcionales.</p></section>
+<p class="tracking-notice">Esta página usa cookies con fines de analítica y medición publicitaria. <a href="../privacy.html">Política de privacidad</a></p><section class="seo-guides wrap"><h2>Explora formas de aprender</h2><p>Ideas prácticas para leer, escuchar y descubrir palabras en contexto.</p><div class="seo-guide-grid"><a href="learn/learn-languages-with-music/"><h3>Aprende un idioma con las canciones que te encantan</h3><p>Escucha música y traduce letras de canciones con Luna Reader. Descubre una rutina de escucha sencilla que une palabras, significado y pronunciación.</p></a><a href="learn/learn-english-with-news/"><h3>Haz de las noticias en inglés parte de tu práctica de lectura</h3><p>Lee noticias en inglés con Luna Reader y crea un hábito de lectura diario y llevadero. Aprende a elegir un tema y a entender las palabras en contexto.</p></a><a href="learn/learn-russian-with-stories/"><h3>Lee historias en ruso, frase a frase</h3><p>Explora historias en ruso con audio y toca cualquier palabra para traducirla en Luna Reader. Prueba una muestra de lectura original y una rutina práctica.</p></a><a href="learn/learn-turkish-with-stories/"><h3>Lee historias en turco y observa cómo se construyen las palabras</h3><p>Lee historias en turco con audio en Luna Reader, toca cualquier palabra para ver su significado y practica con ejercicios creados a partir de lo que lees.</p></a><a href="learn/learn-english-with-stories/"><h3>Lee historias en inglés y escucha cómo suenan las palabras</h3><p>Lee historias en inglés con audio en Luna Reader, toca cualquier palabra para ver su significado y practica con ejercicios creados a partir de lo que lees.</p></a><a href="learn/learn-german-with-stories/"><h3>Lee historias en alemán y desarma las palabras largas</h3><p>Lee historias en alemán con audio en Luna Reader, toca cualquier palabra para ver su significado y practica con ejercicios creados a partir de lo que lees.</p></a><a href="learn/learn-spanish-with-stories/"><h3>Lee historias en español y observa cómo cambian los verbos</h3><p>Lee historias en español con audio en Luna Reader, toca cualquier palabra para ver su significado y practica con ejercicios creados a partir de lo que lees.</p></a></div></section></main><footer class="wrap"><a class="brand" href="#"><img src="../luna/assets/Luna_logo_180.png" width="30" alt="">Luna Reader</a><span>© <span id="year"></span> Luna Reader</span><a href="../privacy.html" data-i="privacy">Política de privacidad</a><nav class="locale-links" aria-label="Idioma del sitio web"><a data-locale-link href=".././" lang="en" hreflang="en">English</a><a data-locale-link href="../tr/" lang="tr" hreflang="tr">Türkçe</a><a data-locale-link href="../ru/" lang="ru" hreflang="ru">Русский</a><a data-locale-link href="../ar/" lang="ar" hreflang="ar">العربية</a><a data-locale-link href="../fr/" lang="fr" hreflang="fr">Français</a><a data-locale-link href="../zh-hans/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a><a data-locale-link href="../de/" lang="de" hreflang="de">Deutsch</a><a data-locale-link href="../el/" lang="el" hreflang="el">Ελληνικά</a><a data-locale-link href="../es/" lang="es" hreflang="es" aria-current="page">Español</a><a data-locale-link href="../ja/" lang="ja" hreflang="ja">日本語</a><a data-locale-link href="../ko/" lang="ko" hreflang="ko">한국어</a></nav></footer>
+
+<!-- Page locale for ad measurement and UI -->
+<script>
+var adLang = window.location.search.match(/[?&]lang=(tr|en|ru)(?:&|$)/i);
+window.__lunaLang = adLang ? adLang[1].toLowerCase() : (document.documentElement.dataset.siteLanguage || 'en');
+try { localStorage.setItem('luna_lang', window.__lunaLang); } catch(e){}
+</script>
+<!-- Tracking -->
+<script>
+(function() {
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
+    return m ? m[1] : undefined;
+  }
+  // Meta cookie domain, found the way fbevents.js finds it: try the shortest domain first
+  // ('tr', 'com.tr', 'lunasoft.com.tr'), keep the first one the browser accepts, and use its
+  // position as the index in the 'fb.<index>.' prefix (here: fb.2 on .lunasoft.com.tr).
+  // This page used to write host-only 'fb.1.' cookies. The pixel then derived '.com.tr' (a
+  // public suffix the browser rejects) whenever it tried to update them, so a refreshed fbc
+  // (IG's brid/aem suffix, a newer ad click) never persisted and CAPI kept the stale value.
+  var FB_CK = (function(){
+    try {
+      var parts = window.location.hostname.split('.');
+      for (var i = 0; i < parts.length; i++) {
+        var dom = parts.slice(parts.length - 1 - i).join('.');
+        document.cookie = '__luna_ck=1;path=/;domain=.' + dom;
+        if (/(?:^|; )__luna_ck=1/.test(document.cookie)) {
+          document.cookie = '__luna_ck=;max-age=0;path=/;domain=.' + dom;
+          return { idx: i, domain: dom };
+        }
+      }
+    } catch(e){}
+    return { idx: 1, domain: '' }; // every test write failed (cookies blocked / sandboxed): host-only, as before
+  })();
+  function setFbCookie(name, payload, days){
+    try {
+      var d = new Date();
+      d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+      // Drop a host-only copy first so reads can't return a stale duplicate.
+      if (FB_CK.domain) document.cookie = name + '=;max-age=0;path=/';
+      document.cookie = name + '=fb.' + FB_CK.idx + '.' + payload + ';expires=' + d.toUTCString() +
+        ';path=/;SameSite=Lax' + (FB_CK.domain ? ';domain=.' + FB_CK.domain : '');
+    } catch(e) {}
+  }
+  // One-time migration for returning visitors: re-home cookies written the old way (host-only
+  // 'fb.1.') with the right index + domain, keeping their timestamp and value — same _fbp id.
+  (function(){
+    try {
+      if (!FB_CK.domain) return;
+      ['_fbc', '_fbp'].forEach(function(n){
+        var v = getCookie(n);
+        if (v && v.indexOf('fb.1.') === 0) setFbCookie(n, v.slice(5), 90);
+      });
+    } catch(e){}
+  })();
+  (function(){
+    try {
+      var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+      if (!m) return;
+      var fbclid = m[1];
+      // Raw query value goes into document.cookie: accept only real fbclid characters, so a
+      // crafted link can't inject cookie attributes (';domain=…', ';expires=…').
+      if (!/^[A-Za-z0-9_\-]{1,500}$/.test(fbclid)) return;
+      var existing = getCookie('_fbc');
+      if (existing && existing.indexOf(fbclid) !== -1) return;
+      // Same payload the pixel builds (its cookie config maps IG's 'brid' to an '_aem_' suffix):
+      // otherwise the landing PageView's CAPI copy is sent before the pixel refreshes the cookie
+      // and lacks the suffix its browser copy carries.
+      var bm = window.location.search.match(/[?&]brid=([^&]+)/);
+      var brid = (bm && /^[A-Za-z0-9_\-]{1,500}$/.test(bm[1])) ? bm[1] : '';
+      setFbCookie('_fbc', Date.now() + '.' + fbclid + (brid ? '_aem_' + brid : ''), 90);
+    } catch(e){}
+  })();
+  (function(){
+    try {
+      if (getCookie('_fbp')) return;
+      setFbCookie('_fbp', Date.now() + '.' + Math.floor(Math.random()*2147483647), 90);
+    } catch(e){}
+  })();
+  // Kalıcı external_id — dedup match anahtarı (Meta için "Harici Kod")
+  function getExternalId(){
+    try {
+      var eid = localStorage.getItem('luna_eid');
+      if (!eid) {
+        eid = 'eid_' + Date.now().toString(36) + '_' +
+              Math.random().toString(36).slice(2, 10) +
+              Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('luna_eid', eid);
+      }
+      return eid;
+    } catch(e){ return ''; }
+  }
+  // Reuse the id the <head> already handed to fbq('init') so pixel and CAPI always carry the
+  // SAME external_id — even when localStorage.setItem throws and nothing was persisted.
+  window.__lunaEid = window.__lunaEid || getExternalId();
+
+  function sendCAPI(eventName, eventId, extra){
+    try {
+      var payload = {
+        event_name: eventName, event_id: eventId,
+        event_time: Math.floor(Date.now() / 1000),  // browser zamanı — server-browser timing match için
+        url: window.location.href,
+        fbc: getCookie('_fbc'), fbp: getCookie('_fbp'),
+        external_id: window.__lunaEid || getExternalId(),
+        custom_data: extra || {}
+      };
+      fetch('/api/capi', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        keepalive:true, body:JSON.stringify(payload)
+      }).catch(function(){});
+    } catch(e){}
+  }
+  window.trackStoreClick = function(store, location){
+    try {
+      var prefix = (store === 'AppStore') ? 'as_' : 'gp_';
+      var customName = (store === 'AppStore') ? 'AppStoreClick' : 'GooglePlayClick';
+      var leadId = prefix + 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var customId = prefix + 'cc_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      var data = { content_name: store, location: location, lang: (window.__lunaLang || 'en') };
+      // Both badges show on every phone, so an Android user can tap App Store (or an iPhone
+      // user Google Play). They can't install from there — record the click, but not a Lead.
+      var ua = navigator.userAgent || '';
+      var wrongStore = (store === 'AppStore' && /android/i.test(ua)) ||
+                       (store === 'GooglePlay' && /iphone|ipad|ipod/i.test(ua));
+      if (wrongStore) data.wrong_store = true;
+      // One Lead per browser per 24 h: a visitor who taps again later (or taps both badges)
+      // is still one lead, so Lead-optimised delivery doesn't overweight repeat tappers.
+      // AppStoreClick / GooglePlayClick still fire on every tap (the exclusion audience uses them).
+      var sendLead = !wrongStore;
+      if (sendLead) {
+        try {
+          var lastLead = parseInt(localStorage.getItem('luna_lead_at') || '0', 10);
+          if (Date.now() - lastLead < 24 * 60 * 60 * 1000) sendLead = false;
+          else localStorage.setItem('luna_lead_at', String(Date.now()));
+        } catch(e){}
+      }
+      if (window.fbq) {
+        if (sendLead) fbq('track', 'Lead', data, { eventID: leadId });
+        fbq('trackCustom', customName, data, { eventID: customId });
+      }
+      if (sendLead) sendCAPI('Lead', leadId, data);
+      sendCAPI(customName, customId, data);
+      // GA4 event
+      if (window.gtag) {
+        gtag('event', 'store_click', {
+          store: store,
+          location: location,
+          wrong_store: wrongStore,
+          lang: (window.__lunaLang || 'en')
+        });
+      }
+      // Clarity custom event + tag
+      if (window.clarity) {
+        clarity('event', 'store_click');
+        clarity('set', 'store', store);
+        clarity('set', 'click_location', location);
+      }
+    } catch(e){}
+  };
+  // openStoreFromLink + openStore are defined EARLY in the <head> so a tap that lands
+  // before this script runs still opens the store. On iOS they fire itms-apps://, which
+  // iOS routes to the App Store app itself — never a web page inside the in-app browser.
+
+  try {
+    var pvId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    if (window.fbq) fbq('track', 'PageView', {}, { eventID: pvId });
+    sendCAPI('PageView', pvId, { lang: (window.__lunaLang || 'en') });
+  } catch(e){}
+})();
+</script>
+
+
+
+<script src="../luna/seo-navigation.js"></script>
+<script src="../luna/redesign-ui.js"></script>
 </body>
 </html>
