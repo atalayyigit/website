@@ -300,6 +300,75 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 <meta name="twitter:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
 <meta name="twitter:image:alt" content="Luna Reader">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://lunasoft.com.tr/#organization", "name": "Lunasoft", "url": "https://lunasoft.com.tr/", "logo": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png"}, {"@type": "WebSite", "@id": "https://lunasoft.com.tr/#website", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "SoftwareApplication", "@id": "https://lunasoft.com.tr/#app", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "applicationCategory": "EducationalApplication", "operatingSystem": "iOS, Android", "description": "Rusça, İngilizce, Türkçe, Almanca ve İspanyolca öğren. Sesli hikâyeler, şarkı sözü çevirisi ve haberlerle Luna Reader’ı iOS ve Android’de keşfet.", "image": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png", "downloadUrl": ["https://apps.apple.com/app/id6740998772", "https://play.google.com/store/apps/details?id=com.luna.russianstories"], "featureList": ["Stories and audio", "Tap-to-translate words", "Music and lyric translation", "News in the language being learned", "Russian, English, Turkish, German and Spanish learning content"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Ücretsiz indirilebilir. İsteğe bağlı ücretli özellikler ve abonelikler bulunur."}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "WebPage", "@id": "https://lunasoft.com.tr/tr/#page", "url": "https://lunasoft.com.tr/tr/", "name": "Luna Reader — Hikâyeler, Müzik ve Haberlerle Dil Öğren", "description": "Rusça, İngilizce, Türkçe, Almanca ve İspanyolca öğren. Sesli hikâyeler, şarkı sözü çevirisi ve haberlerle Luna Reader’ı iOS ve Android’de keşfet.", "inLanguage": "tr", "isPartOf": {"@id": "https://lunasoft.com.tr/#website"}, "about": {"@id": "https://lunasoft.com.tr/#app"}}, {"@type": "FAQPage", "@id": "https://lunasoft.com.tr/tr/#faq", "inLanguage": "tr", "isPartOf": {"@id": "https://lunasoft.com.tr/tr/#page"}, "mainEntity": [{"@type": "Question", "name": "Luna Reader nedir?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader, okuma üzerine kurulu bir dil öğrenme uygulamasıdır; iOS ve Android’de kullanılır. Öğrendiğin dilde hikâyeler okur ve dinler, bilmediğin kelimeye dokunarak anlamını görür, kaydettiğin kelimelerle pratik yaparsın."}}, {"@type": "Question", "name": "Luna Reader ile hangi dilleri öğrenebilirim?", "acceptedAnswer": {"@type": "Answer", "text": "Rusça, İngilizce, Türkçe, Almanca ve İspanyolca okuyabilirsin. Uygulama arayüzü ve kelime çevirileri 30’dan fazla dilde sunulur; metinleri kendi dilindeki çevirilerle takip edebilirsin."}}, {"@type": "Question", "name": "Luna Reader ücretsiz mi?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader ücretsiz indirilir ve her seviyede ücretsiz hikâyeler içerir. Luna Premium, daha fazlasını isteyenler için isteğe bağlı aylık veya yıllık bir aboneliktir."}}, {"@type": "Question", "name": "Başlamak için hangi seviyede olmalıyım?", "acceptedAnswer": {"@type": "Answer", "text": "Hikâyeler A1’den başlayarak seviyelere ayrılmıştır. Rahat okuyabildiğin metinlerle başla, kolay gelmeye başladığında bir üst seviyeye geç."}}, {"@type": "Question", "name": "Kelime çevirisi nasıl çalışır?", "acceptedAnswer": {"@type": "Answer", "text": "Okurken bir kelimeye dokunduğunda kendi dilindeki anlamını görürsün. Kelimeleri kaydedebilir, sonra okuduğun hikâyelerden oluşturulan kelime kartları, boşluk doldurma, cümle kurma ve dinleme alıştırmalarıyla tekrar edebilirsin."}}, {"@type": "Question", "name": "Şarkılar ve haberlerle de öğrenebilir miyim?", "acceptedAnswer": {"@type": "Answer", "text": "Evet. Hikâyelerin yanında şarkı dinlerken sözlerin çevirisini takip edebilir, öğrendiğin dilde haber okuyabilirsin."}}]}]}</script>
+<style id="homepage-polish">
+/* Homepage presentation. */
+body { background: #07080c; }
+.header { border-bottom: 1px solid #ffffff12; }
+.header nav a { padding-block: 12px; }
+.header .brand img { border-radius: 10px; }
+.hero { isolation: isolate; }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at 76% 42%, #42305d35, transparent 65%);
+  pointer-events: none;
+}
+.hero h1 { text-wrap: balance; }
+.hero .intro { color: #cbc7d1; }
+.store { min-height: 52px; }
+.store:active { transform: scale(.98); }
+.store:focus-visible, .language-card:focus-visible, .seo-guide-grid a:focus-visible {
+  outline: 2px solid #f2d9ae;
+  outline-offset: 4px;
+}
+.languages-section { padding-block: clamp(38px, 6vw, 72px); }
+.language-card, .seo-guide-grid > a {
+  background: linear-gradient(145deg, #181822, #101117);
+  border-color: #ffffff24;
+}
+.language-card .card-copy { padding-bottom: 20px; }
+.feature-showcase, .experience { gap: clamp(28px, 6vw, 76px); }
+.download {
+  background: radial-gradient(ellipse at top, #382b4b 0%, #15131e 58%, #101116);
+  border-color: #d8bb8845;
+}
+.faq summary { min-height: 44px; padding-block: 10px; }
+@media (max-width: 800px) {
+  .hero { min-height: 0; padding-bottom: 26px; }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; }
+  .hero-art {
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: min(100%, 480px);
+    height: auto;
+    aspect-ratio: 1;
+    margin: 24px auto 0;
+    opacity: 1;
+  }
+  .hero-art img { width: 184.46%; height: auto; left: -84.46%; top: -10.77%; }
+  .feature-strip { margin-top: 28px; width: 100%; padding-top: 0; }
+  .feature-strip p { text-wrap: balance; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .store, .language-card { transition: none; }
+  .store:hover, .store:active, .language-card:hover { transform: none; }
+}
+</style>
+<style id="practice-styles">
+.practice { padding-block: clamp(32px, 6vw, 72px); }
+.practice > p { color: var(--muted); max-width: 62ch; margin-top: 16px; }
+.practice-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; margin-top: 24px; }
+.practice-card { padding: clamp(18px, 3vw, 30px); border: 1px solid var(--line); border-radius: 18px; background: #15151e; }
+.practice-card p { margin-top: 14px; }
+.practice-card details { margin-top: 12px; }
+.practice-card summary { min-height: 44px; padding-block: 10px; cursor: pointer; color: var(--gold); }
+.practice-words { display: flex; flex-wrap: wrap; gap: 8px; }
+.practice-words span { padding: 4px 10px; border: 1px solid var(--line); border-radius: 8px; }
+@media (max-width: 650px) { .practice-grid { grid-template-columns: 1fr; } }
+</style>
 <link rel="alternate" hreflang="en" href="https://lunasoft.com.tr/">
 <link rel="alternate" hreflang="tr" href="https://lunasoft.com.tr/tr/">
 <link rel="alternate" hreflang="ru" href="https://lunasoft.com.tr/ru/">
@@ -342,6 +411,25 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   </div>
 </section>
 <section class="stories-section wrap" id="stories"><div class="section-heading"><span class="eyebrow" data-i="try">LUNA’DAN BİR TADIM</span><h2 data-i="storyTitle">İlk hikâyen burada başlıyor.</h2><p data-i="storyText">Kısa bir okuma örneğini dene. Anlamını görmek için vurgulanan kelimeye dokun.</p></div><div class="story-tabs" role="group" aria-label="Story language"><button data-story="en" aria-pressed="false">English</button><button class="active" data-story="tr" aria-pressed="true">Türkçe</button><button data-story="ru" aria-pressed="false">Русский</button><button data-story="de" aria-pressed="false">Deutsch</button><button data-story="es" aria-pressed="false">Español</button></div><article class="reading-card"><div class="reading-meta"><span data-i="sample">ETKİLEŞİMLİ OKUMA ÖRNEĞİ</span><span>☾</span></div><h3 id="story-name">Küçük kitapçı</h3><p id="story-body" lang="tr">Anna her sabah küçük bir kitapçının önünden geçer. Bugün kapı açıktır. İçeride uzak bir şehir hakkında bir hikâye bulur. Pencerenin yanına oturur ve okumaya başlar.</p><div id="translation" role="status" aria-live="polite" data-i="hint">Anlamını keşfetmek için vurgulanan kelimeye dokun.</div></article></section>
+<section class="wrap practice" id="exercises">
+  <h2>Okuduklarını pratiğe dök</h2>
+  <p>Luna Reader’da okuduğun hikâyelerden eksik kelimeleri tamamla ve cümleler kur. Aşağıda iki kısa Rusça örneği dene.</p>
+  <div class="practice-grid">
+    <article class="practice-card">
+      <h3>Boşluk doldurma</h3>
+      <p lang="ru">Анна ___ книгу.</p>
+      <p>Anna kitap okuyor.</p>
+      <details><summary>Cevabı göster</summary><p lang="ru">Анна <strong>читает</strong> книгу.</p></details>
+    </article>
+    <article class="practice-card">
+      <h3>Cümle kurma</h3>
+      <p>Bu kelimeleri “Evde okuyorum.” anlamına gelecek şekilde sırala.</p>
+      <p class="practice-words" lang="ru"><span>дома</span><span>читаю</span><span>Я</span></p>
+      <details><summary>Cevabı göster</summary><p lang="ru"><strong>Я читаю дома.</strong></p></details>
+    </article>
+  </div>
+  <a class="text-link" href="#download">Alıştırmaları Luna Reader’da dene</a>
+</section>
 <section class="journal wrap" id="journal"><div><span class="eyebrow">LUNA JOURNAL</span><h2 data-i="journalTitle">Küçük alışkanlıklar. Yeni dünyalar.</h2></div><details><summary data-i="tip1">Günlük okuma alışkanlığı nasıl kazanılır?</summary><p data-i="tip1Text">Kısa bir hikâye ve gün içinde düzenli bir zaman seç. Biraz oku, yarın tekrar gel. Her kelimeyi anlamak yerine hikâyeden keyif almaya odaklan.</p></details><details><summary data-i="tip2">Birlikte oku ve dinle</summary><p data-i="tip2Text">Önce bir bölümü oku, sonra dinlerken takip et. Sevdiğin bir cümleye dön ve kendi hızında sesli söyle.</p></details></section>
 <section class="about wrap" id="about"><img src="../luna/assets/Luna_logo_180.png" width="56" height="56" alt=""><h2 data-i="aboutTitle">Cebinde bir hikâye dünyası.</h2><p data-i="aboutText">Luna Reader; hikâyeleri, sesli anlatımı ve kelime çevirilerini bir araya getirir. Böylece sevdiğin bir şeyle uğraşırken dili keşfedersin.</p></section>
 <section class="journal faq wrap" id="faq"><div><span class="eyebrow">SIK SORULANLAR</span><h2>Luna Reader hakkında sorular</h2></div><details><summary>Luna Reader nedir?</summary><p>Luna Reader, okuma üzerine kurulu bir dil öğrenme uygulamasıdır; iOS ve Android’de kullanılır. Öğrendiğin dilde hikâyeler okur ve dinler, bilmediğin kelimeye dokunarak anlamını görür, kaydettiğin kelimelerle pratik yaparsın.</p></details><details><summary>Luna Reader ile hangi dilleri öğrenebilirim?</summary><p>Rusça, İngilizce, Türkçe, Almanca ve İspanyolca okuyabilirsin. Uygulama arayüzü ve kelime çevirileri 30’dan fazla dilde sunulur; metinleri kendi dilindeki çevirilerle takip edebilirsin.</p></details><details><summary>Luna Reader ücretsiz mi?</summary><p>Luna Reader ücretsiz indirilir ve her seviyede ücretsiz hikâyeler içerir. Luna Premium, daha fazlasını isteyenler için isteğe bağlı aylık veya yıllık bir aboneliktir.</p></details><details><summary>Başlamak için hangi seviyede olmalıyım?</summary><p>Hikâyeler A1’den başlayarak seviyelere ayrılmıştır. Rahat okuyabildiğin metinlerle başla, kolay gelmeye başladığında bir üst seviyeye geç.</p></details><details><summary>Kelime çevirisi nasıl çalışır?</summary><p>Okurken bir kelimeye dokunduğunda kendi dilindeki anlamını görürsün. Kelimeleri kaydedebilir, sonra okuduğun hikâyelerden oluşturulan kelime kartları, boşluk doldurma, cümle kurma ve dinleme alıştırmalarıyla tekrar edebilirsin.</p></details><details><summary>Şarkılar ve haberlerle de öğrenebilir miyim?</summary><p>Evet. Hikâyelerin yanında şarkı dinlerken sözlerin çevirisini takip edebilir, öğrendiğin dilde haber okuyabilirsin.</p></details></section>

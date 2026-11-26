@@ -27,12 +27,12 @@
 .seo-guide-grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
 
 /* Right-to-left pages (Arabic): the hero artwork moves to the left side, mirrored so the wizard faces the text. */
-[dir=rtl] .hero-art{right:auto;left:-50px;transform:scaleX(-1)}
+[dir=rtl] .hero-art{right:auto;left:-50px;transform:scaleX(-1);direction:ltr}
 [dir=rtl] .guide-body ul{padding-left:0;padding-right:22px}
 @media(min-width:1400px){[dir=rtl] .hero-art{left:-20px}}
 @media(max-width:1050px){[dir=rtl] .hero-art{left:-28px}[dir=rtl] .hero-copy:before{background:radial-gradient(ellipse at right,#050608 10%,#050608aa 55%,transparent 75%)}}
-@media(max-width:800px){[dir=rtl] .hero-art{left:-28px;transform:translateX(455px) scale(-.7,.7);transform-origin:top left}}
-@media(max-width:480px){[dir=rtl] .hero-art{left:-18px;transform:translateX(403px) scale(-.62,.62)}}
+@media(max-width:800px){[dir=rtl] .hero-art{left:auto;transform:scaleX(-1);transform-origin:center}}
+@media(max-width:480px){[dir=rtl] .hero-art{left:auto;transform:scaleX(-1);transform-origin:center}}
 /* Left-to-right example text inside right-to-left pages keeps its own direction. */
 [dir=rtl] #story-body,[dir=rtl] #story-name{direction:ltr;text-align:left}
 [dir=rtl] .practice-card [lang=ru],[dir=rtl] .lyric-preview p:not(.lyric-translation){direction:ltr;text-align:right}

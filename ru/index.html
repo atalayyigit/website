@@ -300,6 +300,75 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
 <meta name="twitter:image" content="https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png">
 <meta name="twitter:image:alt" content="Luna Reader">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://lunasoft.com.tr/#organization", "name": "Lunasoft", "url": "https://lunasoft.com.tr/", "logo": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png"}, {"@type": "WebSite", "@id": "https://lunasoft.com.tr/#website", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "SoftwareApplication", "@id": "https://lunasoft.com.tr/#app", "name": "Luna Reader", "url": "https://lunasoft.com.tr/", "applicationCategory": "EducationalApplication", "operatingSystem": "iOS, Android", "description": "Изучайте русский, английский, турецкий, немецкий и испанский с аудиорассказами, переводом песен и новостями. Luna Reader для iOS и Android.", "image": "https://lunasoft.com.tr/luna/assets/Luna_logo_1024.png", "downloadUrl": ["https://apps.apple.com/app/id6740998772", "https://play.google.com/store/apps/details?id=com.luna.russianstories"], "featureList": ["Stories and audio", "Tap-to-translate words", "Music and lyric translation", "News in the language being learned", "Russian, English, Turkish, German and Spanish learning content"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Приложение можно скачать бесплатно. Есть дополнительные платные функции и подписки."}, "publisher": {"@id": "https://lunasoft.com.tr/#organization"}}, {"@type": "WebPage", "@id": "https://lunasoft.com.tr/ru/#page", "url": "https://lunasoft.com.tr/ru/", "name": "Luna Reader — Изучайте языки с рассказами, музыкой и новостями", "description": "Изучайте русский, английский, турецкий, немецкий и испанский с аудиорассказами, переводом песен и новостями. Luna Reader для iOS и Android.", "inLanguage": "ru", "isPartOf": {"@id": "https://lunasoft.com.tr/#website"}, "about": {"@id": "https://lunasoft.com.tr/#app"}}, {"@type": "FAQPage", "@id": "https://lunasoft.com.tr/ru/#faq", "inLanguage": "ru", "isPartOf": {"@id": "https://lunasoft.com.tr/ru/#page"}, "mainEntity": [{"@type": "Question", "name": "Что такое Luna Reader?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader — приложение для изучения языков через чтение, доступное на iOS и Android. Вы читаете и слушаете истории на изучаемом языке, нажимаете на любое слово, чтобы увидеть его значение, и повторяете сохранённые слова."}}, {"@type": "Question", "name": "Какие языки можно изучать с Luna Reader?", "acceptedAnswer": {"@type": "Answer", "text": "Читать можно на русском, английском, турецком, немецком и испанском. Интерфейс приложения и переводы слов доступны более чем на 30 языках, поэтому тексты можно читать с переводом на свой язык."}}, {"@type": "Question", "name": "Luna Reader бесплатный?", "acceptedAnswer": {"@type": "Answer", "text": "Luna Reader можно скачать бесплатно, и на каждом уровне есть бесплатные истории. Luna Premium — необязательная подписка на месяц или на год для тех, кому нужно больше."}}, {"@type": "Question", "name": "Какой уровень нужен, чтобы начать?", "acceptedAnswer": {"@type": "Answer", "text": "Истории распределены по уровням, начиная с A1. Выбирайте тексты, которые уже можете читать, и переходите на следующий уровень, когда они станут даваться легко."}}, {"@type": "Question", "name": "Как работает перевод слов?", "acceptedAnswer": {"@type": "Answer", "text": "Нажмите на слово во время чтения, чтобы увидеть его значение на своём языке. Слова можно сохранять и повторять позже с помощью карточек, упражнений на заполнение пропусков, составление предложений и аудирование, созданных на основе прочитанных историй."}}, {"@type": "Question", "name": "Можно ли учиться по песням и новостям?", "acceptedAnswer": {"@type": "Answer", "text": "Да. Помимо историй, можно слушать песни и следить за переводом текста, а также читать новости на изучаемом языке."}}]}]}</script>
+<style id="homepage-polish">
+/* Homepage presentation. */
+body { background: #07080c; }
+.header { border-bottom: 1px solid #ffffff12; }
+.header nav a { padding-block: 12px; }
+.header .brand img { border-radius: 10px; }
+.hero { isolation: isolate; }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at 76% 42%, #42305d35, transparent 65%);
+  pointer-events: none;
+}
+.hero h1 { text-wrap: balance; }
+.hero .intro { color: #cbc7d1; }
+.store { min-height: 52px; }
+.store:active { transform: scale(.98); }
+.store:focus-visible, .language-card:focus-visible, .seo-guide-grid a:focus-visible {
+  outline: 2px solid #f2d9ae;
+  outline-offset: 4px;
+}
+.languages-section { padding-block: clamp(38px, 6vw, 72px); }
+.language-card, .seo-guide-grid > a {
+  background: linear-gradient(145deg, #181822, #101117);
+  border-color: #ffffff24;
+}
+.language-card .card-copy { padding-bottom: 20px; }
+.feature-showcase, .experience { gap: clamp(28px, 6vw, 76px); }
+.download {
+  background: radial-gradient(ellipse at top, #382b4b 0%, #15131e 58%, #101116);
+  border-color: #d8bb8845;
+}
+.faq summary { min-height: 44px; padding-block: 10px; }
+@media (max-width: 800px) {
+  .hero { min-height: 0; padding-bottom: 26px; }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; }
+  .hero-art {
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: min(100%, 480px);
+    height: auto;
+    aspect-ratio: 1;
+    margin: 24px auto 0;
+    opacity: 1;
+  }
+  .hero-art img { width: 184.46%; height: auto; left: -84.46%; top: -10.77%; }
+  .feature-strip { margin-top: 28px; width: 100%; padding-top: 0; }
+  .feature-strip p { text-wrap: balance; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .store, .language-card { transition: none; }
+  .store:hover, .store:active, .language-card:hover { transform: none; }
+}
+</style>
+<style id="practice-styles">
+.practice { padding-block: clamp(32px, 6vw, 72px); }
+.practice > p { color: var(--muted); max-width: 62ch; margin-top: 16px; }
+.practice-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; margin-top: 24px; }
+.practice-card { padding: clamp(18px, 3vw, 30px); border: 1px solid var(--line); border-radius: 18px; background: #15151e; }
+.practice-card p { margin-top: 14px; }
+.practice-card details { margin-top: 12px; }
+.practice-card summary { min-height: 44px; padding-block: 10px; cursor: pointer; color: var(--gold); }
+.practice-words { display: flex; flex-wrap: wrap; gap: 8px; }
+.practice-words span { padding: 4px 10px; border: 1px solid var(--line); border-radius: 8px; }
+@media (max-width: 650px) { .practice-grid { grid-template-columns: 1fr; } }
+</style>
 <link rel="alternate" hreflang="en" href="https://lunasoft.com.tr/">
 <link rel="alternate" hreflang="tr" href="https://lunasoft.com.tr/tr/">
 <link rel="alternate" hreflang="ru" href="https://lunasoft.com.tr/ru/">
@@ -342,6 +411,25 @@ src="https://www.facebook.com/tr?id=2013897989521001&ev=PageView&noscript=1"/></
   </div>
 </section>
 <section class="stories-section wrap" id="stories"><div class="section-heading"><span class="eyebrow" data-i="try">ПОПРОБУЙТЕ LUNA</span><h2 data-i="storyTitle">Ваш первый рассказ начинается здесь.</h2><p data-i="storyText">Прочитайте небольшой отрывок. Нажмите на выделенное слово, чтобы увидеть перевод.</p></div><div class="story-tabs" role="group" aria-label="Story language"><button data-story="en" aria-pressed="false">English</button><button data-story="tr" aria-pressed="false">Türkçe</button><button class="active" data-story="ru" aria-pressed="true">Русский</button><button data-story="de" aria-pressed="false">Deutsch</button><button data-story="es" aria-pressed="false">Español</button></div><article class="reading-card"><div class="reading-meta"><span data-i="sample">ИНТЕРАКТИВНЫЙ ПРИМЕР</span><span>☾</span></div><h3 id="story-name">Маленький книжный магазин</h3><p id="story-body" lang="ru">Каждое утро Анна проходит мимо маленького книжного магазина. Сегодня дверь открыта. Внутри она находит рассказ о далёком городе. Она садится у окна и начинает читать.</p><div id="translation" role="status" aria-live="polite" data-i="hint">Нажмите на выделенное слово, чтобы узнать его значение.</div></article></section>
+<section class="wrap practice" id="exercises">
+  <h2>Применяйте прочитанное на практике</h2>
+  <p>Вставляйте пропущенные слова и составляйте предложения по историям, которые читаете в Luna Reader. Ниже — два коротких примера на русском.</p>
+  <div class="practice-grid">
+    <article class="practice-card">
+      <h3>Заполните пропуск</h3>
+      <p lang="ru">Анна ___ книгу.</p>
+      <p>Вставьте пропущенное слово.</p>
+      <details><summary>Показать ответ</summary><p lang="ru">Анна <strong>читает</strong> книгу.</p></details>
+    </article>
+    <article class="practice-card">
+      <h3>Составьте предложение</h3>
+      <p>Расставьте слова по порядку, чтобы получилось предложение о чтении дома.</p>
+      <p class="practice-words" lang="ru"><span>дома</span><span>читаю</span><span>Я</span></p>
+      <details><summary>Показать ответ</summary><p lang="ru"><strong>Я читаю дома.</strong></p></details>
+    </article>
+  </div>
+  <a class="text-link" href="#download">Попробуйте упражнения в Luna Reader</a>
+</section>
 <section class="journal wrap" id="journal"><div><span class="eyebrow">LUNA JOURNAL</span><h2 data-i="journalTitle">Маленькие привычки. Новые миры.</h2></div><details><summary data-i="tip1">Как читать каждый день</summary><p data-i="tip1Text">Выберите короткий рассказ и удобное время дня. Читайте понемногу и возвращайтесь завтра. Наслаждайтесь историей, не пытаясь понять каждое слово.</p></details><details><summary data-i="tip2">Читайте и слушайте вместе</summary><p data-i="tip2Text">Сначала прочитайте отрывок, затем слушайте и следите за текстом. Повторите понравившуюся фразу вслух в своём темпе.</p></details></section>
 <section class="about wrap" id="about"><img src="../luna/assets/Luna_logo_180.png" width="56" height="56" alt=""><h2 data-i="aboutTitle">Мир рассказов в вашем кармане.</h2><p data-i="aboutText">Luna Reader объединяет рассказы, аудио и перевод слов, чтобы вы открывали язык с удовольствием.</p></section>
 <section class="journal faq wrap" id="faq"><div><span class="eyebrow">ЧАСТЫЕ ВОПРОСЫ</span><h2>Вопросы о Luna Reader</h2></div><details><summary>Что такое Luna Reader?</summary><p>Luna Reader — приложение для изучения языков через чтение, доступное на iOS и Android. Вы читаете и слушаете истории на изучаемом языке, нажимаете на любое слово, чтобы увидеть его значение, и повторяете сохранённые слова.</p></details><details><summary>Какие языки можно изучать с Luna Reader?</summary><p>Читать можно на русском, английском, турецком, немецком и испанском. Интерфейс приложения и переводы слов доступны более чем на 30 языках, поэтому тексты можно читать с переводом на свой язык.</p></details><details><summary>Luna Reader бесплатный?</summary><p>Luna Reader можно скачать бесплатно, и на каждом уровне есть бесплатные истории. Luna Premium — необязательная подписка на месяц или на год для тех, кому нужно больше.</p></details><details><summary>Какой уровень нужен, чтобы начать?</summary><p>Истории распределены по уровням, начиная с A1. Выбирайте тексты, которые уже можете читать, и переходите на следующий уровень, когда они станут даваться легко.</p></details><details><summary>Как работает перевод слов?</summary><p>Нажмите на слово во время чтения, чтобы увидеть его значение на своём языке. Слова можно сохранять и повторять позже с помощью карточек, упражнений на заполнение пропусков, составление предложений и аудирование, созданных на основе прочитанных историй.</p></details><details><summary>Можно ли учиться по песням и новостям?</summary><p>Да. Помимо историй, можно слушать песни и следить за переводом текста, а также читать новости на изучаемом языке.</p></details></section>
